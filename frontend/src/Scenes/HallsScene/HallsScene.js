@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-// import { Grid, Row, Col } from 'react-flexbox-grid';
+import { Grid, Row, Col } from 'react-flexbox-grid';
 import './HallsScene.css';
 import Navigation from "../../Component/Navigation/Navigation";
 
-class Main extends Component {
+export default class HallsScene extends Component {
+
     render() {
 
         return (
@@ -20,5 +21,3 @@ class Main extends Component {
         );
     }
 }
-
-export default Main;

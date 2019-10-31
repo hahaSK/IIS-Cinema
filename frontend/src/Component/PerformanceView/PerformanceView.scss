@@ -101,10 +101,14 @@ html, body, .app {
           }
           &:first-of-type {
             background-color: #282c34;
-            color: #09d3ac;
-            &:hover {
+            cursor: auto;
+            .col-xs-12 {
               background-color: #282c34;
               color: #09d3ac;
+              &:hover {
+                background-color: #282c34;
+                color: #09d3ac;
+              }
             }
           }
         }

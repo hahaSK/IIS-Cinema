@@ -1,0 +1,74 @@
+html, body, .app {
+  margin: 0;
+  padding: 0;
+  position: relative;
+  width: 100%;
+  height: 100vh; }
+
+.popup {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  background-color: rgba(0, 0, 0, 0.5); }
+  .popup .popup_inner {
+    overflow: auto;
+    position: absolute;
+    left: 4%;
+    right: 4%;
+    top: 8%;
+    bottom: 8%;
+    padding: 1rem;
+    background-color: #282c34; }
+    .popup .popup_inner h1 {
+      margin: 0;
+      padding: 0;
+      font-weight: bold; }
+    .popup .popup_inner h3 {
+      margin: 0; }
+      .popup .popup_inner h3 span {
+        font-weight: lighter; }
+    .popup .popup_inner p {
+      margin-top: 0; }
+    .popup .popup_inner .header-and-close {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1.5rem; }
+      .popup .popup_inner .header-and-close .font-awesome-icon {
+        font-size: 2.5rem; }
+        .popup .popup_inner .header-and-close .font-awesome-icon:hover {
+          cursor: pointer;
+          color: gray; }
+    .popup .popup_inner .schema-and-stats {
+      display: flex;
+      justify-content: flex-start; }
+      .popup .popup_inner .schema-and-stats .stats {
+        width: 20%; }
+      .popup .popup_inner .schema-and-stats .schema {
+        width: 70%;
+        margin-bottom: 2rem; }
+        .popup .popup_inner .schema-and-stats .schema .row {
+          width: 100%;
+          margin: 0 !important; }
+        .popup .popup_inner .schema-and-stats .schema .col-xs-12 {
+          background-color: #09d3ac;
+          margin: 0.1rem;
+          color: #282c34;
+          text-align: center; }
+        .popup .popup_inner .schema-and-stats .schema .col-xs {
+          background-color: #09d3ac;
+          margin: 0.1rem; }
+          .popup .popup_inner .schema-and-stats .schema .col-xs:hover {
+            background-color: #9dfbe8;
+            cursor: pointer; }
+          .popup .popup_inner .schema-and-stats .schema .col-xs:active {
+            background-color: red; }
+    .popup .popup_inner .continue-button {
+      display: flex;
+      justify-content: flex-end; }
+
+/*# sourceMappingURL=ReservationPopUp.css.map */

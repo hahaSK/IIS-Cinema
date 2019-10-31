@@ -1,7 +1,7 @@
 {
 "version": 3,
-"mappings": "AAAA,KAAM;EACJ,UAAU,EAAE,MAAM;EAClB,QAAG;IACD,SAAS,EAAE,IAAI;IACf,aAAa,EAAE,CAAC;EAElB,QAAG;IACD,YAAY,EAAE,IAAI;IAClB,aAAa,EAAE,IAAI",
-"sources": ["HomeScene.scss"],
+"mappings": "",
+"sources": [],
 "names": [],
-"file": "HomeScene.css"
+"file": "HallsScene.css"
 }

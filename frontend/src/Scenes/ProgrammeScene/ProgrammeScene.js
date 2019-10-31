@@ -5,6 +5,8 @@ import Navigation from "../../Component/Navigation/Navigation";
 import MasterGetter from "../../Models/Utils/MasterGetter";
 import PerformanceView from "../../Component/PerformanceView/PerformanceView";
 import PerformanceForm from "../../Component/PerformanceForm/PerformanceForm";
+import axios from "axios";
+import ReservationPopUp from "../../Component/ReservationPopUp/ReservationPopUp";
 
 class Programme extends Component {
 
@@ -13,6 +15,7 @@ class Programme extends Component {
         showEvent: false,
         showPerformanceForm: false,
         performanceType: "",
+        showReservationPopUp: false,
     };
 
     handleChange = (event) => {
@@ -41,6 +44,13 @@ class Programme extends Component {
     togglePerformanceForm = () => {
         this.setState({
             showPerformanceForm: !this.state.showPerformanceForm
+        });
+    };
+
+    toggleReservationPopUp = (event) => {
+        this.setState({
+            showReservationPopUp: !this.state.showReservationPopUp,
+            event: event,
         });
     };
 
@@ -154,7 +164,7 @@ class Programme extends Component {
                                                     <Col xs={4} onClick={()=>this.onEventClick(dayEvent)}>{dayEvent.name}</Col>
                                                     <Col xs={1} onClick={()=>this.onEventClick(dayEvent)}>{dayEvent.time}</Col>
                                                     <Col xs={5}>
-                                                        <button onClick={()=> {alert("Vstupenky")}}>Koupit vstupenky</button>
+                                                        <button onClick={()=>this.toggleReservationPopUp(dayEvent)}>Koupit vstupenky</button>
                                                         <button onClick={()=> {alert("Editovat")}}>Editovat</button>
                                                         <button onClick={()=> {alert("Zrušit")}}>Zrušit</button>
                                                     </Col>
@@ -181,8 +191,15 @@ class Programme extends Component {
 
                     {(this.state.showPerformanceForm) ?
                         <PerformanceForm
-                        event={this.state.event}
-                        closePopup={this.togglePerformanceForm.bind(this)}
+                            closePopup={this.togglePerformanceForm.bind(this)}
+                        />
+                        : null
+                    }
+
+                    {(this.state.showReservationPopUp) ?
+                        <ReservationPopUp
+                            event={this.state.event}
+                            closePopup={this.toggleReservationPopUp.bind(this)}
                         />
                         : null
                     }
