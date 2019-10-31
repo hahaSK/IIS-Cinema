@@ -1,0 +1,88 @@
+html, body, .app {
+  margin: 0;
+  padding: 0;
+  position: relative;
+  width: 100%;
+  height: 100vh; }
+
+.popup {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  background-color: rgba(0, 0, 0, 0.5); }
+  .popup .popup_inner {
+    overflow: auto;
+    position: absolute;
+    left: 4%;
+    right: 4%;
+    top: 8%;
+    bottom: 8%;
+    padding: 1rem;
+    background-color: #282c34; }
+    .popup .popup_inner h1 {
+      margin: 0;
+      padding: 0;
+      font-weight: bold; }
+    .popup .popup_inner h3 {
+      margin: 0; }
+      .popup .popup_inner h3 span {
+        font-weight: lighter; }
+    .popup .popup_inner img {
+      width: 15rem; }
+    .popup .popup_inner p {
+      margin-top: 0; }
+    .popup .popup_inner .header-and-close {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1.5rem; }
+      .popup .popup_inner .header-and-close .font-awesome-icon {
+        font-size: 2.5rem; }
+        .popup .popup_inner .header-and-close .font-awesome-icon:hover {
+          cursor: pointer;
+          color: gray; }
+    .popup .popup_inner .film-description div {
+      padding-left: 0.4rem;
+      padding-right: 0.4rem; }
+    .popup .popup_inner .film-description p {
+      text-align: justify; }
+    .popup .popup_inner .row {
+      margin-left: 0;
+      margin-right: 0; }
+    .popup .popup_inner .player-and-schedule {
+      display: flex;
+      justify-content: space-between; }
+      .popup .popup_inner .player-and-schedule .player-wrapper {
+        width: 50%;
+        height: auto; }
+      .popup .popup_inner .player-and-schedule .react-player {
+        padding-top: 56.25%;
+        position: relative; }
+      .popup .popup_inner .player-and-schedule .react-player > div {
+        position: absolute; }
+      .popup .popup_inner .player-and-schedule .schedule {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+        width: 50%; }
+        .popup .popup_inner .player-and-schedule .schedule h2 {
+          margin-top: 0; }
+        .popup .popup_inner .player-and-schedule .schedule .row {
+          text-align: center;
+          background-color: #09d3ac;
+          color: #282c34; }
+          .popup .popup_inner .player-and-schedule .schedule .row:hover {
+            cursor: pointer;
+            background-color: #282c34;
+            color: #09d3ac; }
+          .popup .popup_inner .player-and-schedule .schedule .row:first-of-type {
+            background-color: #282c34;
+            color: #09d3ac; }
+            .popup .popup_inner .player-and-schedule .schedule .row:first-of-type:hover {
+              background-color: #282c34;
+              color: #09d3ac; }
+
+/*# sourceMappingURL=PerformanceForm.css.css.map */

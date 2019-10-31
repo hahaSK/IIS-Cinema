@@ -1,0 +1,115 @@
+html, body, .app {
+  margin: 0;
+  padding: 0;
+  position: relative;
+  width: 100%;
+  height: 100vh;
+}
+.popup {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+  .popup_inner {
+    overflow: auto;
+    position: absolute;
+    left: 4%;
+    right: 4%;
+    top: 8%;
+    bottom: 8%;
+    padding: 1rem;
+    background-color: #282c34;
+    h1 {
+      margin: 0;
+      padding: 0;
+      font-weight: bold;
+    }
+    h3 {
+      margin: 0;
+      span {
+        font-weight: lighter;
+      }
+    }
+    p {
+      margin-top: 0;
+    }
+    input, textarea {
+      background-color: #09d3ac;
+      color: #282c34;
+      border: none;
+      padding-left: 0.5rem;
+      width: 100%;
+      font-size: 1rem;
+    }
+    textarea {
+      height: 15rem;
+      resize: none;
+    }
+
+    .header-and-close {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      .name-form {
+        display: flex;
+        input {
+          margin-top: .5rem;
+          height: 2.25rem;
+          font-size: 1.45rem;
+          width: 30rem;
+        }
+      }
+      .font-awesome-icon {
+        font-size: 2.5rem;
+        &:hover {
+          cursor: pointer;
+          color: gray;
+        }
+      }
+    }
+    .film-description {
+      div {
+        padding-left: 0.4rem;
+        padding-right: 0.4rem;
+      }
+      p {
+        text-align: justify;
+      }
+    }
+    .row {
+      margin-left: 0;
+      margin-right: 0;
+      margin-bottom: .50rem;
+    }
+    .image-input {
+      width: 100%;
+      height: 5rem;
+      border: 1px dashed #09d3ac;
+    }
+    .files-dropzone {
+      text-align: center;
+      padding: 0.5rem !important;
+      &:hover {
+        cursor: pointer;
+      }
+    }
+    .right-side {
+      width: 75%;
+      .ytb-href {
+        input {
+          width: 50%;
+        }
+      }
+      button {
+        position: absolute;
+        right: 1rem;
+        bottom: 1rem;
+      }
+    }
+  }
+}

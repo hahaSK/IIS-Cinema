@@ -1,0 +1,57 @@
+.login {
+  display: flex;
+  justify-content: center;
+  &-box {
+    margin-top: 1rem;
+    width: 25%;
+    text-align: center;
+    input {
+      width: 80%;
+      height: 1.5rem;
+      margin-bottom: 0.5rem;
+      background-color: #09d3ac;
+      color: #282c34;
+      font-size: 1.2rem;
+      font-family: 'Cairo';
+      padding-left: 0.5rem;
+      border: 1px solid #09d3ac;
+      border-radius: 0.1rem;
+    }
+    button {
+      width: 40%;
+      background-color: #09d3ac;
+      color: #282c34;
+      font-family: 'Cairo';
+      font-size: 1.25rem;
+      border: 1px solid #09d3ac;
+      border-radius: 0.1rem;
+      margin-top: 1rem;
+
+      &:hover {
+        background-color: gray;
+        border: 1px solid gray;
+        cursor: pointer;
+      }
+    }
+
+    ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+      color: #646e82;
+      opacity: 1; /* Firefox */
+    }
+
+    :-ms-input-placeholder { /* Internet Explorer 10-11 */
+      color: #646e82;
+    }
+
+    ::-ms-input-placeholder { /* Microsoft Edge */
+      color: #646e82;
+    }
+    p {
+      a {
+        text-decoration: underline;
+        color: #09d3ac;
+      }
+    }
+  }
+}
+

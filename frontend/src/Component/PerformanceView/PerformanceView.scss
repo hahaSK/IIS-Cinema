@@ -1,0 +1,115 @@
+html, body, .app {
+  margin: 0;
+  padding: 0;
+  position: relative;
+  width: 100%;
+  height: 100vh;
+}
+.popup {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+  .popup_inner {
+    overflow: auto;
+    position: absolute;
+    left: 4%;
+    right: 4%;
+    top: 8%;
+    bottom: 8%;
+    padding: 1rem;
+    background-color: #282c34;
+    h1 {
+      margin: 0;
+      padding: 0;
+      font-weight: bold;
+    }
+    h3 {
+      margin: 0;
+      span {
+        font-weight: lighter;
+      }
+    }
+    img {
+      width: 15rem;
+    }
+    p {
+      margin-top: 0;
+    }
+    .header-and-close {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      .font-awesome-icon {
+        font-size: 2.5rem;
+        &:hover {
+          cursor: pointer;
+          color: gray;
+        }
+      }
+    }
+    .film-description {
+      div {
+        padding-left: 0.4rem;
+        padding-right: 0.4rem;
+      }
+      p {
+        text-align: justify;
+      }
+    }
+    .row {
+      margin-left: 0;
+      margin-right: 0;
+    }
+    .player-and-schedule {
+      display:flex;
+      justify-content: space-between;
+
+      .player-wrapper {
+        width: 50%; // Reset width
+        height: auto; // Reset height
+      }
+      .react-player {
+        padding-top: 56.25%; // Percentage ratio for 16:9
+        position: relative; // Set to relative
+      }
+
+      .react-player > div {
+        position: absolute; // Scaling will occur since parent is relative now
+      }
+
+      .schedule {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+        width: 50%;
+        h2 {
+          margin-top: 0;
+        }
+        .row {
+          text-align: center;
+          background-color: #09d3ac;
+          color: #282c34;
+          &:hover {
+            cursor: pointer;
+            background-color: #282c34;
+            color: #09d3ac;
+          }
+          &:first-of-type {
+            background-color: #282c34;
+            color: #09d3ac;
+            &:hover {
+              background-color: #282c34;
+              color: #09d3ac;
+            }
+          }
+        }
+      }
+
+    }
+  }
+}
