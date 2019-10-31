@@ -6,6 +6,9 @@ import {connect} from "react-redux";
 class Navigation extends Component {
 
     render() {
+
+        let style = {borderBottom: '1px solid #09d3ac'};
+
         return (
             <div className={"navigation"}>
                 <div className={"menu"}>
@@ -22,12 +25,46 @@ class Navigation extends Component {
                 </div>
                  <div className={"menu"}>
                     <ul>
-                        <li>
-                            <NavLink activeClassName="active" to="/programme">PROGRAM</NavLink>
-                        </li>
-                        <li>
-                            <NavLink activeClassName="active" to="/login">PŘIHLÁSIT SE</NavLink>
-                        </li>
+                        {(window.location.pathname === "/programme") ?
+                            <li style={style}>
+                                <NavLink activeClassName="active" to="/programme">PROGRAM</NavLink>
+                            </li>
+                            : <li>
+                                <NavLink activeClassName="active" to="/programme">PROGRAM</NavLink>
+                            </li>
+                        }
+                        {(window.location.pathname === "/halls") ?
+                            <li style={style}>
+                                <NavLink activeClassName="active" to="/halls">SÁLY</NavLink>
+                            </li>
+                            : <li>
+                                <NavLink activeClassName="active" to="/halls">SÁLY</NavLink>
+                            </li>
+                        }
+                        {(window.location.pathname === "/users") ?
+                            <li style={style}>
+                                <NavLink activeClassName="active" to="/users">UŽIVATELÉ</NavLink>
+                            </li>
+                            : <li>
+                                <NavLink activeClassName="active" to="/users">UŽIVATELÉ</NavLink>
+                            </li>
+                        }
+                        {(window.location.pathname === "/reservations") ?
+                            <li style={style}>
+                                <NavLink activeClassName="active" to="/reservations">REZERVACE</NavLink>
+                            </li>
+                            : <li>
+                                <NavLink activeClassName="active" to="/reservations">REZERVACE</NavLink>
+                            </li>
+                        }
+                        {(window.location.pathname === "/login") ?
+                            <li style={style}>
+                                <NavLink activeClassName="active" to="/login">PŘIHLÁSIT SE</NavLink>
+                            </li>
+                            : <li>
+                                <NavLink activeClassName="active" to="/login">PŘIHLÁSIT SE</NavLink>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
