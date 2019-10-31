@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'address',
     'user',
+    'cinema',
 ]
 
 MIDDLEWARE = [
