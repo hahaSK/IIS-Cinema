@@ -1,7 +1,7 @@
 // @flow
 
 import PropTypes from "prop-types";
-import {attr, fk} from "redux-orm";
+import {attr} from "redux-orm";
 
 import CRUDModel from "../ORM/CRUDModel";
 

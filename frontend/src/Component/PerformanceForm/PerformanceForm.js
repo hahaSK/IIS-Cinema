@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Grid, Row, Col } from "react-flexbox-grid";
+import { Grid, Row } from "react-flexbox-grid";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome/index.es";
 import { faWindowClose } from '@fortawesome/free-solid-svg-icons';
 import Files from 'react-files';

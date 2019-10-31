@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
-import { NavLink, Link } from 'react-router-dom'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome } from '@fortawesome/free-solid-svg-icons'
+import { NavLink } from 'react-router-dom'
 import './Navigation.css'
-import {withRouter} from "react-router";
 import {connect} from "react-redux";
 
 class Navigation extends Component {

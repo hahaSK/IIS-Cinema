@@ -1,7 +1,7 @@
 // @flow
 
 import PropTypes from "prop-types";
-import {attr, fk} from "redux-orm";
+import {attr } from "redux-orm";
 import forrest_gump from '../../Pictures/forrest_gump.jpg';
 import sluha_dvou_panu from '../../Pictures/sluha_dvou_panu.jpg';
 

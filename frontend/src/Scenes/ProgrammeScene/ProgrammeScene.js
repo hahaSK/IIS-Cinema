@@ -57,8 +57,7 @@ class Programme extends Component {
     };
 
     MonthAsString = (monthIndex) => {
-        let d = new Date();
-        let month = new Array();
+        let month = [];
         month[0] = "ledna";
         month[1] = "února";
         month[2] = "března";
@@ -98,7 +97,8 @@ class Programme extends Component {
         let nextMonth = this.GetDates(today, 14);
 
         let dayEventList;
-        let i;
+        let i = 0;
+        let x = 0;
 
         return (
             <div className="App">
@@ -126,23 +126,23 @@ class Programme extends Component {
                     </div>
                     <Grid className={"result-table"}>
 
+
                     {nextMonth.map(weekday => {
                         dayEventList = [];
-                        i = 0;
+                        x++;
                         return (
-                            <div>
+                            <div key={x}>
                                 {events.toModelArray().map(event => {
                                     if (weekday.getDate() === event._fields.date.getDate() && weekday.getMonth() === event._fields.date.getMonth() && weekday.getFullYear() === event._fields.date.getFullYear()){
                                         dayEventList.push(event);
-                                        return "";
                                     }
+                                    return "";
                                 })}
                                 {dayEventList.map(dayEvent => {
                                     if(dayEventList.length !== 0) {
-                                        console.log(dayEventList.length);
                                         i++;
                                         return (
-                                            <div>
+                                            <div key={i}>
                                                 {(i === 1) ?
                                                     <span>
                                                     <h1>{this.DayAsString(weekday.getDay()) + ", " + weekday.getDate() + ". " + this.MonthAsString(weekday.getMonth())}</h1>

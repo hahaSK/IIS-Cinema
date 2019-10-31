@@ -34,6 +34,7 @@ class LoginScene extends Component {
                     });
                 }
             }
+            return "";
         });
 
         if (this.state.access === null) {
