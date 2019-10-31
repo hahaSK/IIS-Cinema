@@ -1,0 +1,49 @@
+.navigation {
+  background-color: #282c34;
+  padding-top: 1rem;
+  width: 80%;
+  display: flex;
+  justify-content: space-between; }
+  @media (max-width: 767px) {
+    .navigation {
+      width: 100%; } }
+  .navigation .menu ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden; }
+    .navigation .menu ul li {
+      background-color: #282c34;
+      border: none;
+      background-color: #282c34;
+      color: #09d3ac;
+      font-size: 1.1rem;
+      font-weight: bold;
+      padding: 0.75rem;
+      padding-left: .75rem;
+      padding-right: .75rem;
+      margin-left: .50rem;
+      margin-right: .50rem;
+      float: left; }
+      .navigation .menu ul li:hover {
+        border-bottom: 1px solid #09d3ac;
+        cursor: pointer; }
+        .navigation .menu ul li:hover a {
+          color: #09d3ac; }
+          .navigation .menu ul li:hover a:visited {
+            text-decoration: none;
+            color: #09d3ac; }
+      .navigation .menu ul li a {
+        display: block;
+        text-decoration: none;
+        color: #09d3ac; }
+        .navigation .menu ul li a:visited {
+          text-decoration: none;
+          color: #09d3ac; }
+    .navigation .menu ul .main-icon {
+      font-family: "Parisienne";
+      font-size: 2rem; }
+      .navigation .menu ul .main-icon:hover {
+        border-bottom: none; }
+
+/*# sourceMappingURL=Navigation.css.map */

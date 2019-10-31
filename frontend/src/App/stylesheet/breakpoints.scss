@@ -1,0 +1,31 @@
+// WIDTH IS IN POINTS NOT IN PIXELS - OVERWRITE NEEDED
+$screen-sm-max: 767px; //576px
+$screen-md-min: 768px; //768px
+$screen-md-max: 899px;
+$screen-lg-min: 900px; //992px
+$screen-lg-max: 1199px;
+$screen-xl-min: 1200px; //1200px
+
+@mixin sm {
+  @media (max-width: #{$screen-sm-max}) {
+    @content;
+  }
+}
+
+@mixin md {
+  @media (min-width: #{$screen-md-min}) and (max-width: #{$screen-md-max}) {
+    @content;
+  }
+}
+
+@mixin lg {
+  @media (min-width: #{$screen-lg-min}) and (max-width: #{$screen-lg-max}) {
+    @content;
+  }
+}
+
+@mixin xl {
+  @media (min-width: #{$screen-xl-min}) {
+    @content;
+  }
+}
