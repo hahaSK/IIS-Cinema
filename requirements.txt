@@ -19,3 +19,4 @@ pyzmq
 channels_redis
 python-dotenv
 psycopg2-binary
+Pillow==6.2.1
