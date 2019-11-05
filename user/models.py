@@ -1,4 +1,5 @@
 from django.db import models
+from address.models import Address
 
 
 class NotRegistered(models.Model):
@@ -8,16 +9,13 @@ class NotRegistered(models.Model):
 
 
 class Registered(NotRegistered):
-    # TODO address
-    # address = AddressField(on_delete=models.CASCADE)
+    address = models.ForeignKey(Address, on_delete=models.CASCADE)
     date_of_birth = models.DateField(blank=False)
 
 
 class Cashier(Registered):
-    # TODO
     pass
 
 
 class Redactor(Registered):
-    # TODO
     pass
