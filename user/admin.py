@@ -1,7 +1,7 @@
 from django.contrib import admin
 from user.models import NotRegistered, Registered, Cashier, Redactor
 
-base_list_display = ('id', 'name', 'surname', 'email', 'type')
+base_list_display = ('id', 'name', 'surname', 'email')
 extented_list = base_list_display + ('date_of_birth',)
 
 
