@@ -1,7 +1,5 @@
 from django.db import models
 
-# Create your models here.
-from address.models import AddressField
 from user.models import NotRegistered
 
 
@@ -98,7 +96,7 @@ class Seat(models.Model):
     # is_available = models.BooleanField(blank=False, default=False)
 
     def __str__(self):
-        return self.hall + " " + str(self.row) + ":" + str(self.seat_No)
+        return self.hall.name + " " + str(self.row) + ":" + str(self.seat_No)
 
 
 class SeatInEvent(models.Model):
