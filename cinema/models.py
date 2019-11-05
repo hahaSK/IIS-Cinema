@@ -45,8 +45,6 @@ class Act(models.Model):
     type = models.CharField(max_length=50, blank=False, default="Unknown Type")
     length = models.PositiveSmallIntegerField(blank=False, default=0)
     picture = models.ImageField()
-    # genre = models.CharField(max_length=50, blank=False, default="Unknown Genre")
-    # cast = models.CharField(max_length=200, blank=False, default="Unknown Cast")
     genre = models.ManyToManyField(Genre)
     cast = models.ManyToManyField(Actor)
     director = models.ManyToManyField(Director)
@@ -74,10 +72,9 @@ class Seat(models.Model):
     hall = models.ForeignKey(Hall,
                              related_name="corresponding_hall",
                              on_delete=models.CASCADE)
-    # is_available = models.BooleanField(blank=False, default=False)
 
     def __str__(self):
-        return self.hall.name + " " + str(self.row) + ":" + str(self.seat_No)
+        return self.hall.name + " r" + str(self.row) + ":s" + str(self.seat_No)
 
     @receiver(models.signals.post_save, sender=Hall)
     def create_instance(sender, instance, created, **kwargs):
@@ -87,7 +84,6 @@ class Seat(models.Model):
             for row in range(rows):
                 for column in range(columns):
                     Seat.objects.create(hall=instance, row=row+1, seat_No=column+1)
-
 
 
 class Event(models.Model):
@@ -101,19 +97,8 @@ class Event(models.Model):
                             on_delete=models.CASCADE)
     members = models.ManyToManyField(Seat, through='SeatInEvent')
 
-    # def save(self, *args, **kwargs):
-    #     super(Event, self).save(*args,**kwargs)
-    #     self.hall=
-    # @classmethod
-    # def create(cls, hall, date, price, act):
-    #     event = cls(hall=hall, date=date, price=price, act=act)
-    #     # do something with the book
-    #     # kwargs = {'seat':Seat.objects.first()}
-    #     post_save.send(sender=Event, event=event, seat=1)
-    #     # se1 = SeatInEvent.create_catalog(seat=Seat.objects.first(), event=event)
-    #         # SeatInEvent.objects.create(seat=1, event=event, is_available=True)
-    #     # se1.save()
-    #     return event
+    def __str__(self):
+        return self.act.name + " AT '" + self.hall.name + "' ON: " + str(self.date.date())
 
 
 class Reservation(models.Model):
@@ -126,11 +111,9 @@ class Reservation(models.Model):
     paid = models.BooleanField(blank=False, default=False)
     seats = models.ManyToManyField(Seat)
 
+    def __str__(self):
+        return self.user.name + "'s reservation for '" + self.event.__str__()
 
-from django.db.models.signals import post_save, post_save, post_save
-
-
-# method for updating
 
 class SeatInEvent(models.Model):
     seat = models.ForeignKey(Seat,
