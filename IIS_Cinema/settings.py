@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'address',
     'user',
     'cinema',
@@ -50,6 +51,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'IIS_Cinema.urls'
@@ -82,7 +84,7 @@ DATABASES = {
         # 'ENGINE': 'django.db.backends.sqlite3',
         # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'iis-cinema',
+        'NAME': 'iis_cinema',
         'USER': 'postgres',
         'PASSWORD': 'trgovacky',
         'HOST': 'localhost',
@@ -131,3 +133,30 @@ STATIC_URL = '/static/'
 GOOGLE_API_KEY = 'AIzaSyBDenLMHH_ejibEByxvS_OX2XwcLhzV9Rk'
 
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 20
+
+
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost:3000/',
+    'http://localhost:3001/',
+    'http://127.0.0.1:9000/',
+    'http://127.0.0.1:8000/',
+)
+
+CORS_ALLOW_METHODS = (
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+)
+
+CORS_ALLOW_HEADERS = (
+    'Access-Control-Allow-Origin',
+    'X-Requested-With',
+    'Authorization',
+    'X-CSRFToken',
+)
