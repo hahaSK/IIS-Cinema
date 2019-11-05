@@ -1,4 +1,5 @@
 from django.db import models
+from django.dispatch import receiver
 
 from user.models import NotRegistered
 
@@ -32,6 +33,8 @@ class Hall(models.Model):
     name =  models.CharField(max_length=120, blank=False, default="Unknown Hall")
     # address = AddressField(on_delete=models.CASCADE)
     seats_count = models.PositiveSmallIntegerField(blank=False, default=0)
+    rows = models.PositiveSmallIntegerField(blank=False, default=0)
+    columns = models.PositiveSmallIntegerField(blank=False, default=0)
     # seat_matrix
 
     def __str__(self):
@@ -42,8 +45,6 @@ class Act(models.Model):
     type = models.CharField(max_length=50, blank=False, default="Unknown Type")
     length = models.PositiveSmallIntegerField(blank=False, default=0)
     picture = models.ImageField()
-    # genre = models.CharField(max_length=50, blank=False, default="Unknown Genre")
-    # cast = models.CharField(max_length=200, blank=False, default="Unknown Cast")
     genre = models.ManyToManyField(Genre)
     cast = models.ManyToManyField(Actor)
     director = models.ManyToManyField(Director)
@@ -65,6 +66,26 @@ class Act(models.Model):
         return "\n".join([p.genre for p in obj.genre.all()])
 
 
+class Seat(models.Model):
+    row = models.PositiveSmallIntegerField(blank=False, default=0)
+    seat_No = models.PositiveSmallIntegerField(blank=False, default=0)
+    hall = models.ForeignKey(Hall,
+                             related_name="corresponding_hall",
+                             on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.hall.name + " r" + str(self.row) + ":s" + str(self.seat_No)
+
+    @receiver(models.signals.post_save, sender=Hall)
+    def create_instance(sender, instance, created, **kwargs):
+        if instance and created:
+            rows = instance.rows
+            columns = instance.columns
+            for row in range(rows):
+                for column in range(columns):
+                    Seat.objects.create(hall=instance, row=row+1, seat_No=column+1)
+
+
 class Event(models.Model):
     hall = models.ForeignKey(Hall,
                              related_name="in_hall",
@@ -74,6 +95,10 @@ class Event(models.Model):
     act = models.ForeignKey(Act,
                             related_name="act_of_event",
                             on_delete=models.CASCADE)
+    members = models.ManyToManyField(Seat, through='SeatInEvent')
+
+    def __str__(self):
+        return self.act.name + " AT '" + self.hall.name + "' ON: " + str(self.date.date())
 
 
 class Reservation(models.Model):
@@ -84,19 +109,10 @@ class Reservation(models.Model):
                               related_name="booked_event",
                               on_delete=models.CASCADE)
     paid = models.BooleanField(blank=False, default=False)
-    #seats
-
-
-class Seat(models.Model):
-    row = models.PositiveSmallIntegerField(blank=False, default=0)
-    seat_No = models.PositiveSmallIntegerField(blank=False, default=0)
-    hall = models.ForeignKey(Hall,
-                             related_name="corresponding_hall",
-                             on_delete=models.CASCADE)
-    # is_available = models.BooleanField(blank=False, default=False)
+    seats = models.ManyToManyField(Seat)
 
     def __str__(self):
-        return self.hall.name + " " + str(self.row) + ":" + str(self.seat_No)
+        return self.user.name + "'s reservation for '" + self.event.__str__()
 
 
 class SeatInEvent(models.Model):
@@ -106,4 +122,11 @@ class SeatInEvent(models.Model):
     event = models.ForeignKey(Event,
                               related_name="selected_event",
                               on_delete=models.CASCADE)
-    is_available = models.BooleanField(blank=False, default=False)
+    is_available = models.BooleanField(blank=False, default=True)
+
+    @receiver(models.signals.post_save, sender=Event)
+    def create_instance(sender, instance, created, **kwargs):
+        if instance and created:
+            seats = Seat.objects.filter(hall=instance.hall)
+            for seat in seats:
+                SeatInEvent.objects.create(seat=seat, event=instance, is_available=True)
