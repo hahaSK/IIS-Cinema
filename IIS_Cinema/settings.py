@@ -79,8 +79,14 @@ WSGI_APPLICATION = 'IIS_Cinema.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        # 'ENGINE': 'django.db.backends.sqlite3',
+        # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'iis-cinema',
+        'USER': 'postgres',
+        'PASSWORD': 'trgovacky',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -123,3 +129,5 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 GOOGLE_API_KEY = 'AIzaSyBDenLMHH_ejibEByxvS_OX2XwcLhzV9Rk'
+
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 20
