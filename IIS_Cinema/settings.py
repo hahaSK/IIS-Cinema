@@ -38,12 +38,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
+    'rest_framework',
     'address',
     'user',
     'cinema',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -51,7 +53,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'IIS_Cinema.urls'
@@ -138,10 +139,10 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = 20
 CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ORIGIN_WHITELIST = (
-    'http://localhost:3000/',
-    'http://localhost:3001/',
-    'http://127.0.0.1:9000/',
-    'http://127.0.0.1:8000/',
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'http://localhost:9000',
+    'http://localhost:8000',
 )
 
 CORS_ALLOW_METHODS = (

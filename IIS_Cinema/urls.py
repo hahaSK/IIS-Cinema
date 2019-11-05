@@ -14,8 +14,22 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from rest_framework import routers
+from user import views as userviews
+from cinema import views as cinemaviews
+
+router = routers.DefaultRouter()
+router.register(r'actors', cinemaviews.EventView, 'actor')
+router.register(r'directors', cinemaviews.DirectorView, 'directors')
+router.register(r'genres', cinemaviews.GenreView, 'genre')
+router.register(r'halls', cinemaviews.HallView, 'hall')
+router.register(r'acts', cinemaviews.ActView, 'act')
+router.register(r'events', cinemaviews.EventView, 'event')
+router.register(r'reservations', cinemaviews.ReservationView, 'reservation')
+router.register(r'seats', cinemaviews.SeatView, 'seat')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/', include(router.urls)),
 ]
