@@ -7,11 +7,16 @@ class NotRegistered(models.Model):
     surname = models.CharField(max_length=120, blank=False)
     email = models.EmailField()
 
+    def __str__(self):
+        return self.name + " " + self.surname
+
 
 class Registered(NotRegistered):
     address = models.ForeignKey(Address, on_delete=models.CASCADE)
     date_of_birth = models.DateField(blank=False)
 
+    def __str__(self):
+        return self.name + " " + self.surname
 
 class Cashier(Registered):
     pass
