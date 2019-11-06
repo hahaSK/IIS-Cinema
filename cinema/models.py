@@ -76,14 +76,14 @@ class Seat(models.Model):
     def __str__(self):
         return self.hall.name + " r" + str(self.row) + ":s" + str(self.seat_No)
 
-    @receiver(models.signals.post_save, sender=Hall)
-    def create_instance(sender, instance, created, **kwargs):
-        if instance and created:
-            rows = instance.rows
-            columns = instance.columns
-            for row in range(rows):
-                for column in range(columns):
-                    Seat.objects.create(hall=instance, row=row+1, seat_No=column+1)
+@receiver(models.signals.post_save, sender=Hall)
+def generate_hall_seats(sender, instance, created, **kwargs):
+    if instance and created:
+        rows = instance.rows
+        columns = instance.columns
+        for row in range(rows):
+            for column in range(columns):
+                Seat.objects.create(hall=instance, row=row+1, seat_No=column+1)
 
 
 class Event(models.Model):
@@ -109,7 +109,10 @@ class Reservation(models.Model):
                               related_name="booked_event",
                               on_delete=models.CASCADE)
     paid = models.BooleanField(blank=False, default=False)
-    seats = models.ManyToManyField(Seat)
+    seats = models.ManyToManyField(Seat, related_name="selected_seats")
+
+    def get_seats(self):
+        return self.seats.all()
 
     def __str__(self):
         return self.user.name + "'s reservation for '" + self.event.__str__()
@@ -124,9 +127,31 @@ class SeatInEvent(models.Model):
                               on_delete=models.CASCADE)
     is_available = models.BooleanField(blank=False, default=True)
 
-    @receiver(models.signals.post_save, sender=Event)
-    def create_instance(sender, instance, created, **kwargs):
-        if instance and created:
-            seats = Seat.objects.filter(hall=instance.hall)
-            for seat in seats:
-                SeatInEvent.objects.create(seat=seat, event=instance, is_available=True)
+@receiver(models.signals.post_save, sender=Event)
+def add_seat_to_event(sender, instance, created, **kwargs):
+    if instance and created:
+        seats = Seat.objects.filter(hall=instance.hall)
+        for seat in seats:
+            SeatInEvent.objects.create(seat=seat, event=instance, is_available=True)
+
+
+@receiver(models.signals.m2m_changed, sender=Reservation.seats.through)
+def reserve_seats(sender, action, instance, **kwargs):
+    if action == "post_add":
+        seats = instance.get_seats()
+        for seat in seats:
+            se = SeatInEvent.objects.get(event_id=instance.event.id, seat_id=seat.id)
+            se.is_available = False
+            se.save()
+
+
+@receiver(models.signals.pre_delete, sender=Reservation)
+def remove_reserved_seats(sender, instance, **kwargs):
+    print("som v delete")
+    if instance:
+        seats = instance.get_seats()
+        print(seats)
+        for seat in seats:
+            se = SeatInEvent.objects.get(event_id=instance.event.id, seat_id=seat.id)
+            se.is_available = True
+            se.save()
