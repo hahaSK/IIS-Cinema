@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.admin.views.main import ChangeList
 
 # Register your models here.
-from cinema.models import Event, Act, Hall, Reservation, Seat, Actor, Director, Genre, SeatInEvent
+from cinema.models import Event, Act, Hall, Reservation, Seat, Actor, Director, Genre, SeatInEvent, ActType
 from cinema.forms import MovieChangeListForm
 
 
@@ -32,6 +32,12 @@ class MovieAdmin(admin.ModelAdmin):
 
     def get_changelist_form(self, request, **kwargs):
         return MovieChangeListForm
+
+
+@admin.register(ActType)
+class ActTypeAdmin(admin.ModelAdmin):
+    list_display = ('name', )
+
 
 @admin.register(Actor)
 class ActorAdmin(admin.ModelAdmin):

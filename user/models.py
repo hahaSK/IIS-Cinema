@@ -18,6 +18,7 @@ class Registered(NotRegistered):
     def __str__(self):
         return self.name + " " + self.surname
 
+
 class Cashier(Registered):
     pass
 

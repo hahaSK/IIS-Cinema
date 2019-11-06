@@ -1,13 +1,13 @@
 from django.db import models
-from django.dispatch import receiver
 
+from address.models import Address
 from user.models import NotRegistered
 
 
 class Actor(models.Model):
     name = models.CharField(max_length=120, blank=False, default="John Doe")
     year = models.PositiveSmallIntegerField(blank=False, default=0)
-    picture = models.ImageField()
+    picture = models.ImageField(upload_to='images')
 
     def __str__(self):
         return self.name
@@ -16,7 +16,7 @@ class Actor(models.Model):
 class Director(models.Model):
     name = models.CharField(max_length=120, blank=False, default="John Doe")
     year = models.PositiveSmallIntegerField(blank=False, default=0)
-    picture = models.ImageField()
+    picture = models.ImageField(upload_to='images')
 
     def __str__(self):
         return self.name
@@ -29,9 +29,16 @@ class Genre(models.Model):
         return self.name
 
 
+class ActType(models.Model):
+    name = models.CharField(max_length=120, blank=False, default="Unknown Type")
+
+    def __str__(self):
+        return self.name
+
+
 class Hall(models.Model):
-    name =  models.CharField(max_length=120, blank=False, default="Unknown Hall")
-    # address = AddressField(on_delete=models.CASCADE)
+    name = models.CharField(max_length=120, blank=False, default="Unknown Hall")
+    address = models.ForeignKey(Address, on_delete=models.CASCADE)
     seats_count = models.PositiveSmallIntegerField(blank=False, default=0)
     rows = models.PositiveSmallIntegerField(blank=False, default=0)
     columns = models.PositiveSmallIntegerField(blank=False, default=0)
@@ -40,11 +47,12 @@ class Hall(models.Model):
     def __str__(self):
         return self.name
 
+
 class Act(models.Model):
     name = models.CharField(max_length=120, blank=False, default="Unknown Act")
-    type = models.CharField(max_length=50, blank=False, default="Unknown Type")
+    type = models.ForeignKey(ActType, on_delete=models.CASCADE)
     length = models.PositiveSmallIntegerField(blank=False, default=0)
-    picture = models.ImageField()
+    picture = models.ImageField(upload_to='images')
     genre = models.ManyToManyField(Genre)
     cast = models.ManyToManyField(Actor)
     director = models.ManyToManyField(Director)
@@ -76,15 +84,6 @@ class Seat(models.Model):
     def __str__(self):
         return self.hall.name + " r" + str(self.row) + ":s" + str(self.seat_No)
 
-@receiver(models.signals.post_save, sender=Hall)
-def generate_hall_seats(sender, instance, created, **kwargs):
-    if instance and created:
-        rows = instance.rows
-        columns = instance.columns
-        for row in range(rows):
-            for column in range(columns):
-                Seat.objects.create(hall=instance, row=row+1, seat_No=column+1)
-
 
 class Event(models.Model):
     hall = models.ForeignKey(Hall,
@@ -109,7 +108,7 @@ class Reservation(models.Model):
                               related_name="booked_event",
                               on_delete=models.CASCADE)
     paid = models.BooleanField(blank=False, default=False)
-    seats = models.ManyToManyField(Seat, related_name="selected_seats")
+    seats = models.ManyToManyField(Seat, related_name="reserved_seats")
 
     def get_seats(self):
         return self.seats.all()
@@ -126,32 +125,3 @@ class SeatInEvent(models.Model):
                               related_name="selected_event",
                               on_delete=models.CASCADE)
     is_available = models.BooleanField(blank=False, default=True)
-
-@receiver(models.signals.post_save, sender=Event)
-def add_seat_to_event(sender, instance, created, **kwargs):
-    if instance and created:
-        seats = Seat.objects.filter(hall=instance.hall)
-        for seat in seats:
-            SeatInEvent.objects.create(seat=seat, event=instance, is_available=True)
-
-
-@receiver(models.signals.m2m_changed, sender=Reservation.seats.through)
-def reserve_seats(sender, action, instance, **kwargs):
-    if action == "post_add":
-        seats = instance.get_seats()
-        for seat in seats:
-            se = SeatInEvent.objects.get(event_id=instance.event.id, seat_id=seat.id)
-            se.is_available = False
-            se.save()
-
-
-@receiver(models.signals.pre_delete, sender=Reservation)
-def remove_reserved_seats(sender, instance, **kwargs):
-    print("som v delete")
-    if instance:
-        seats = instance.get_seats()
-        print(seats)
-        for seat in seats:
-            se = SeatInEvent.objects.get(event_id=instance.event.id, seat_id=seat.id)
-            se.is_available = True
-            se.save()
