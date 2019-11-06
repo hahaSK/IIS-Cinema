@@ -3,10 +3,13 @@ from django.db import models
 
 class Address(models.Model):
     street1 = models.CharField(blank=True, max_length=300)
-    street2 = models.CharField(blank=False, max_length=300)
-    houseNumber = models.CharField(blank=False, max_length=300)
-    city = models.CharField(blank=False, max_length=300)
-    psc = models.CharField(blank=False, max_length=30)
+    street2 = models.CharField(blank=False, max_length=300, default="Unknown street")
+    houseNumber = models.CharField(blank=False, max_length=300, default="Unknown number")
+    city = models.CharField(blank=False, max_length=300, default="Unknown city")
+    psc = models.CharField(blank=False, max_length=30, default="Unknown ZIP code")
+
+    class Meta:
+        unique_together = ["street1", "street2", "houseNumber", "city", "psc"]
 
     def __str__(self):
         return self.street2
