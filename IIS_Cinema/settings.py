@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'address',
     'user',
     'cinema',
+    'django_countries',
 ]
 
 MIDDLEWARE = [
