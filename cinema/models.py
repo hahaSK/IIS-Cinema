@@ -39,7 +39,6 @@ class ActType(models.Model):
 class Hall(models.Model):
     name = models.CharField(max_length=120, blank=False, default="Unknown Hall")
     address = models.ForeignKey(Address, on_delete=models.CASCADE)
-    seats_count = models.PositiveSmallIntegerField(blank=False, default=0)
     rows = models.PositiveSmallIntegerField(blank=False, default=0)
     columns = models.PositiveSmallIntegerField(blank=False, default=0)
     # seat_matrix
@@ -94,7 +93,7 @@ class Event(models.Model):
     act = models.ForeignKey(Act,
                             related_name="act_of_event",
                             on_delete=models.CASCADE)
-    members = models.ManyToManyField(Seat, through='SeatInEvent')
+    seats = models.ManyToManyField(Seat, through='SeatInEvent')
 
     def __str__(self):
         return self.act.name + " AT '" + self.hall.name + "' ON: " + str(self.date.date())
