@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from django.views.decorators.cache import never_cache
 from rest_framework import viewsets
-from .serializers import ActorSerializer, DirectorSerializer, GenreSerializer, HallSerializer,\
-  ActSerializer, EventSerializer, ReservationSerializer, SeatSerializer
-from .models import Actor, Director, Genre, Hall, Act, Event, Reservation, Seat, SeatInEvent
+from .serializers import ActorSerializer, DirectorSerializer, GenreSerializer, HallSerializer, \
+  ActSerializer, EventSerializer, ReservationSerializer, SeatSerializer, ActTypeSerializer
+from .models import Actor, Director, Genre, Hall, Act, Event, Reservation, Seat, SeatInEvent, ActType
 
 
 class ActorView(viewsets.ModelViewSet):
@@ -20,6 +20,9 @@ class GenreView(viewsets.ModelViewSet):
   serializer_class = GenreSerializer
   queryset = Genre.objects.all()
 
+class ActTypeView(viewsets.ModelViewSet):
+  serializer_class = ActTypeSerializer
+  queryset = ActType.objects.all()
 
 class HallView(viewsets.ModelViewSet):
   serializer_class = HallSerializer

@@ -1,7 +1,7 @@
 # todo/serializers.py
 
 from rest_framework import serializers
-from .models import Actor, Director, Genre, Hall, Act, Event, Reservation, Seat, SeatInEvent
+from .models import Actor, Director, Genre, Hall, Act, Event, Reservation, Seat, SeatInEvent, ActType
 
 
 class ActorSerializer(serializers.ModelSerializer):
@@ -21,6 +21,10 @@ class GenreSerializer(serializers.ModelSerializer):
         model = Genre
         fields = '__all__'
 
+class ActTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ActType
+        fieleds = '__all__'
 
 class HallSerializer(serializers.ModelSerializer):
     class Meta:

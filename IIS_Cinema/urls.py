@@ -16,18 +16,23 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
+from address import views as addressviews
 from user import views as userviews
 from cinema import views as cinemaviews
 
 router = routers.DefaultRouter()
-router.register(r'actors', cinemaviews.EventView, 'actor')
-router.register(r'directors', cinemaviews.DirectorView, 'directors')
+router.register(r'actors', cinemaviews.ActorView, 'actor')
+router.register(r'directors', cinemaviews.DirectorView, 'director')
 router.register(r'genres', cinemaviews.GenreView, 'genre')
+router.register(r'actTypes', cinemaviews.ActTypeView, 'actType')
 router.register(r'halls', cinemaviews.HallView, 'hall')
 router.register(r'acts', cinemaviews.ActView, 'act')
 router.register(r'events', cinemaviews.EventView, 'event')
 router.register(r'reservations', cinemaviews.ReservationView, 'reservation')
 router.register(r'seats', cinemaviews.SeatView, 'seat')
+router.register(r'addresses', addressviews.AddressView, 'address')
+router.register(r'notRegisteredUsers', userviews.NotRegisteredView, 'notRegisteredUser')
+router.register(r'registeredUsers', userviews.RegisteredView, 'registeredUser')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
