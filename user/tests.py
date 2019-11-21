@@ -45,7 +45,7 @@ class NotRegisteredUpdateTestCase(TestCase):
         self.assertEqual(user.last_name, "Scastny")
         self.assertEqual(user.email, "scastny@manbearpig.com")
 
-        NotRegistered.objects.create(first_name='Stefan', last_name='Scastny', email="scastny@manbearpig.com")
+        # NotRegistered.objects.create(first_name='Stefan', last_name='Scastny', email="scastny@manbearpig.com")
 
 
 class RegisteredTestCase(TestCase):
