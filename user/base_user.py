@@ -39,12 +39,6 @@ class UserManager(BaseUserManager):
             raise ValueError(_('The Username must be set'))
         if not email:
             raise ValueError(_('The Email must be set'))
-
-        # need to check for users with the same username
-        existing_users = list(get_user_model()._default_manager.filter(username=username))
-        if len(existing_users) > 0:
-            raise Exception(_("Username already exists"))
-
         email = self.normalize_email(email)
         username = self.model.normalize_username(username)
         user = self.model(username=username, email=email, **extra_fields)
@@ -123,3 +117,27 @@ class AbstractUser(AbstractBaseUser, PermissionsMixin):
 
     def get_short_name(self):
         return self.email
+
+    def save(self, *args, **kwargs):
+        # If the save user without username, we don't have to check for duplicity
+        # and can just save.
+        if not self.has_username:
+            super().save()
+
+        user = get_user_model()._default_manager.filter(email=self.email)
+        if not user:
+            # We are adding new user so need to check for username duplicity.
+            if len(list(get_user_model()._default_manager.filter(username=self.username))) > 0:
+                raise Exception("Username already exists")
+            super().save()
+            return
+        elif user.first().username == self.username:    # If the user exists and is not changing username just save.
+            # (Is updating user for example is changing password or last login).
+            super().save()
+            return
+
+        # Now we know that the user exist and is changing username so we need to check for username duplicity.
+        if len(list(get_user_model()._default_manager.filter(username=self.username))) > 0:
+            raise Exception("Username already exists")
+
+        super().save()
