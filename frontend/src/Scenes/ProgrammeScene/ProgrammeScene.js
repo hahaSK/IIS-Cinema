@@ -5,8 +5,13 @@ import Navigation from "../../Component/Navigation/Navigation";
 import MasterGetter from "../../Models/Utils/MasterGetter";
 import PerformanceView from "../../Component/PerformanceView/PerformanceView";
 import PerformanceForm from "../../Component/PerformanceForm/PerformanceForm";
-import axios from "axios";
-import ReservationPopUp from "../../Component/ReservationPopUp/ReservationPopUp";
+import BackendRequest from "../../Models/REST/BackendRequest";
+import MasterDispatcher from "../../Models/Utils/MasterDispatcher";
+import { withRouter } from "react-router-dom";
+import connect from "react-redux/es/connect/connect";
+import orm from "../../Models/ORM/index";
+import moment from "moment";
+import "moment/min/locales";
 
 class Programme extends Component {
 
@@ -15,7 +20,6 @@ class Programme extends Component {
         showEvent: false,
         showPerformanceForm: false,
         performanceType: "",
-        showReservationPopUp: false,
     };
 
     handleChange = (event) => {
@@ -47,68 +51,52 @@ class Programme extends Component {
         });
     };
 
-    toggleReservationPopUp = (event) => {
-        this.setState({
-            showReservationPopUp: !this.state.showReservationPopUp,
-            event: event,
-        });
+    fetchActTypes = () => {
+
+        /**
+         * On Success
+         * @param response
+         */
+        const onSuccess = (response) => {
+
+            console.log("Act Types");
+            console.log(response.data);
+            MasterDispatcher.dispatch(response.data);
+        };
+
+        BackendRequest("get", "act-types", null, onSuccess);
     };
 
-    GetDates = (startDate, daysToAdd) => {
-        let aryDates = [];
+    fetchEvents = () => {
 
-        for (let i = 0; i <= daysToAdd; i++) {
-            let currentDate = new Date();
-            currentDate.setDate(startDate.getDate() + i);
-            aryDates.push(currentDate);
-        }
+        /**
+         * On Success
+         * @param response
+         */
+        const onSuccess = (response) => {
 
-        return aryDates;
+            console.log("Events");
+            console.log(response.data);
+            MasterDispatcher.dispatch(response.data);
+        };
+
+        BackendRequest("get", "events", null, onSuccess);
     };
 
-    MonthAsString = (monthIndex) => {
-        let month = [];
-        month[0] = "ledna";
-        month[1] = "února";
-        month[2] = "března";
-        month[3] = "dubna";
-        month[4] = "května";
-        month[5] = "června";
-        month[6] = "července";
-        month[7] = "srpna";
-        month[8] = "září";
-        month[9] = "října";
-        month[10] = "listopadu";
-        month[11] = "prosince";
-
-        return month[monthIndex];
-    };
-
-    DayAsString = (dayIndex) => {
-        let weekdays = new Array(7);
-        weekdays[0] = "Neděle";
-        weekdays[1] = "Pondělí";
-        weekdays[2] = "Úterý";
-        weekdays[3] = "Středa";
-        weekdays[4] = "Čtvrtek";
-        weekdays[5] = "Pátek";
-        weekdays[6] = "Sobota";
-
-        return weekdays[dayIndex];
-    };
+    componentDidMount() {
+        this.fetchActTypes();
+        this.fetchEvents();
+        moment.locale('cs');
+    }
 
     render() {
 
         const {entities} = this.props;
-        const session = MasterGetter.getSession(entities);
-        const events = session.Event.all();
+        const session = orm.session(entities);
+        const events = session.Event.all().orderBy("date");
+        const actTypes = session.ActType.all();
 
         let today = new Date();
-        let nextMonth = this.GetDates(today, 14);
-
-        let dayEventList;
-        let i = 0;
-        let x = 0;
 
         return (
             <div className="App">
@@ -118,68 +106,111 @@ class Programme extends Component {
                 </div>
                 <hr />
                 <div className={"body programme"}>
-                    <div className={"create-new"}>
-                        <button onClick={()=>this.togglePerformanceForm()}>Vytvořit představení</button>
-                        <button>Vytvořit událost</button>
-                    </div>
-                    <div>
-                        <h3 style={{margin: '0'}}>Typ představení:</h3>
-                        <select name={"performanceType"} onChange={this.handleChange} value={this.state.performanceType}>
-                            <option disabled>Zvolte typ představení</option>
-                            <option key={0} defaultValue={"vsechny"}>Všechny</option>
-                            <option key={1} value={"film"} >Film</option>
-                            <option key={2} value={"cinohra"}>Činohra</option>
-                            {/*{types.toModelArray().map(type => {*/}
-                            {/*return <option key={type.id} value={type.name}>{type.name}</option>;*/}
-                            {/*})}*/}
-                        </select>
-                    </div>
-                    <Grid className={"result-table"}>
-
-
-                    {nextMonth.map(weekday => {
-                        dayEventList = [];
-                        x++;
-                        return (
-                            <div key={x}>
-                                {events.toModelArray().map(event => {
-                                    if (weekday.getDate() === event._fields.date.getDate() && weekday.getMonth() === event._fields.date.getMonth() && weekday.getFullYear() === event._fields.date.getFullYear()){
-                                        dayEventList.push(event);
-                                    }
-                                    return "";
+                    <div className={"top-line"}>
+                        <div className={"filter-events"}>
+                            <h3 style={{margin: '0'}}>Typ představení:</h3>
+                            <select name={"performanceType"} onChange={this.handleChange} value={this.state.performanceType}>
+                                <option disabled>Zvolte typ představení</option>
+                                <option key={0} defaultValue={"all"}>Všechny</option>
+                                {actTypes.toModelArray().map(actType => {
+                                    return <option key={actType.id} value={actType.name}>{actType.name}</option>;
                                 })}
-                                {dayEventList.map(dayEvent => {
-                                    if(dayEventList.length !== 0) {
-                                        i++;
-                                        return (
-                                            <div key={i}>
-                                                {(i === 1) ?
-                                                    <span>
-                                                    <h1>{this.DayAsString(weekday.getDay()) + ", " + weekday.getDate() + ". " + this.MonthAsString(weekday.getMonth())}</h1>
-                                                    <hr/>
-                                                    </span>
-                                                    : ""}
-                                                <Row>
-                                                    <Col xs={2} onClick={()=>this.onEventClick(dayEvent)}>{dayEvent.type}</Col>
-                                                    <Col xs={4} onClick={()=>this.onEventClick(dayEvent)}>{dayEvent.name}</Col>
-                                                    <Col xs={1} onClick={()=>this.onEventClick(dayEvent)}>{dayEvent.time}</Col>
-                                                    <Col xs={5}>
-                                                        <button onClick={()=>this.toggleReservationPopUp(dayEvent)}>Koupit vstupenky</button>
-                                                        <button onClick={()=> {alert("Editovat")}}>Editovat</button>
-                                                        <button onClick={()=> {alert("Zrušit")}}>Zrušit</button>
-                                                    </Col>
-                                                </Row>
-                                            </div>
-                                        );
-                                    }
-                                    else {
-                                        return "";
-                                    }
-                                })}
-                            </div>
-                        );
-                    })}
-                    </Grid>
+                            </select>
+                        </div>
+                        <div className={"create-new"}>
+                            <button onClick={()=>this.togglePerformanceForm()}>Vytvořit představení</button>
+                            <button>Vytvořit událost</button>
+                        </div>
+                    </div>
+
+                    {(events.count() === 0) ? "Žádné nadcházející události" :
+                        <Grid className={"result-table"}>
+                            <Row>
+                                <Col xs={3}>Název</Col>
+                                <Col xs={1}>Datum</Col>
+                                <Col xs={1}>Čas</Col>
+                                <Col xs={2}>Sál</Col>
+                                <Col xs={1}>Cena</Col>
+                                <Col xs={4}/>
+                            </Row>
+                        {events.toModelArray().map((event) => {
+                            if (moment(event.date)._d >= today) {
+                                return (
+                                    <Row>
+                                        <Col xs={3} onClick={() => this.onEventClick(event)}>{event._fields.act}</Col>
+                                        <Col xs={1}
+                                             onClick={() => this.onEventClick(event)}>{moment(event.date).format("D. MMMM")}</Col>
+                                        <Col xs={1}
+                                             onClick={() => this.onEventClick(event)}>{moment(event.date).format("HH:mm")}</Col>
+                                        <Col xs={2} onClick={() => this.onEventClick(event)}>{event._fields.hall}</Col>
+                                        <Col xs={1}
+                                             onClick={() => this.onEventClick(event)}>{parseInt(event.price)} Kč</Col>
+                                        <Col xs={4}>
+                                            <button onClick={() => {
+                                                alert("Vstupenky")
+                                            }}>Koupit vstupenky
+                                            </button>
+                                            <button onClick={() => {
+                                                alert("Editovat")
+                                            }}>Editovat
+                                            </button>
+                                            <button onClick={() => {
+                                                alert("Zrušit")
+                                            }}>Zrušit
+                                            </button>
+                                        </Col>
+                                    </Row>
+                                );
+                            }
+                        })}
+                        </Grid>
+                    }
+
+                    {/*<Grid className={"result-table"}>*/}
+
+                    {/*{nextMonth.map(weekday => {*/}
+                        {/*dayEventList = [];*/}
+                        {/*i = 0;*/}
+                        {/*return (*/}
+                            {/*<div>*/}
+                                {/*{events.toModelArray().map(event => {*/}
+                                    {/*if (weekday.getDate() === event._fields.date.getDate() && weekday.getMonth() === event._fields.date.getMonth() && weekday.getFullYear() === event._fields.date.getFullYear()){*/}
+                                        {/*dayEventList.push(event);*/}
+                                        {/*return "";*/}
+                                    {/*}*/}
+                                {/*})}*/}
+                                {/*{dayEventList.map(dayEvent => {*/}
+                                    {/*if(dayEventList.length !== 0) {*/}
+                                        {/*i++;*/}
+                                        {/*return (*/}
+                                            {/*<div>*/}
+                                                {/*{(i === 1) ?*/}
+                                                    {/*<span>*/}
+                                                    {/*<h1>{this.DayAsString(weekday.getDay()) + ", " + weekday.getDate() + ". " + this.MonthAsString(weekday.getMonth())}</h1>*/}
+                                                    {/*<hr/>*/}
+                                                    {/*</span>*/}
+                                                    {/*: ""}*/}
+                                                {/*<Row>*/}
+                                                    {/*<Col xs={2} onClick={()=>this.onEventClick(dayEvent)}>{dayEvent.type}</Col>*/}
+                                                    {/*<Col xs={4} onClick={()=>this.onEventClick(dayEvent)}>{dayEvent.name}</Col>*/}
+                                                    {/*<Col xs={1} onClick={()=>this.onEventClick(dayEvent)}>{dayEvent.time}</Col>*/}
+                                                    {/*<Col xs={5}>*/}
+                                                        {/*<button onClick={()=> {alert("Vstupenky")}}>Koupit vstupenky</button>*/}
+                                                        {/*<button onClick={()=> {alert("Editovat")}}>Editovat</button>*/}
+                                                        {/*<button onClick={()=> {alert("Zrušit")}}>Zrušit</button>*/}
+                                                    {/*</Col>*/}
+                                                {/*</Row>*/}
+                                            {/*</div>*/}
+                                        {/*);*/}
+                                    {/*}*/}
+                                    {/*else {*/}
+                                        {/*return "";*/}
+                                    {/*}*/}
+                                {/*})}*/}
+                            {/*</div>*/}
+                        {/*);*/}
+                    {/*})}*/}
+                    {/*</Grid>*/}
 
                     {(this.state.showEvent) ?
                         <PerformanceView
@@ -191,15 +222,8 @@ class Programme extends Component {
 
                     {(this.state.showPerformanceForm) ?
                         <PerformanceForm
-                            closePopup={this.togglePerformanceForm.bind(this)}
-                        />
-                        : null
-                    }
-
-                    {(this.state.showReservationPopUp) ?
-                        <ReservationPopUp
-                            event={this.state.event}
-                            closePopup={this.toggleReservationPopUp.bind(this)}
+                        event={this.state.event}
+                        closePopup={this.togglePerformanceForm.bind(this)}
                         />
                         : null
                     }
@@ -209,4 +233,37 @@ class Programme extends Component {
     }
 }
 
-export default Programme;
+/**
+ * This function maps actions to props
+ * and binds them so they can be called
+ * directly.
+ *
+ * In this case all actions are mapped
+ * to the `actions` prop.
+ */
+const mapDispatchToProps = dispatch => (
+    {
+        dispatch: (something) => {
+            dispatch(something);
+        }
+    }
+);
+
+/**
+ * This function maps the state to a
+ * prop called `state`.
+ *
+ * In larger apps it is often good
+ * to be more selective and only
+ * map the part of the state tree
+ * that is necessary.
+ */
+const mapStateToProps = state => (
+    {
+        entities: state.entities,
+    });
+
+/**
+ * Exporting part of the React.Component file
+ */
+export default withRouter(connect(mapStateToProps, mapDispatchToProps())(Programme));

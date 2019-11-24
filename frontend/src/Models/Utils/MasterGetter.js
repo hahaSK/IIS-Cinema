@@ -6,6 +6,15 @@ import orm from "../ORM/index";
  */
 export default class MasterGetter {
 
+    /**
+     * Gets Orm Session
+     * @returns {Session}
+     */
+    static getORMSession() {
+        const state = store.getState();
+        return orm.session(state.entities);
+    }
+
 	/**
 	 * Get entities
 	 * @returns {*}

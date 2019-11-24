@@ -1,4 +1,4 @@
-import orm from "../ORM/index";
+import orm from "../ORM";
 import MasterGetter from "./MasterGetter";
 import InstantAction from "./InstantAction";
 import {appLoading} from "../../App/App.actions";
@@ -45,44 +45,36 @@ export default class MasterDispatcher {
         });
 
         this.currentModelName = name;
+
         return this.ormSession.initialState.hasOwnProperty(this.currentModelName);
 
     }
 
     /**
      * Proceed Unit
-     * @param payload
+     * @param item
      */
-    processUnit(payload: Object) {
+    processUnit(item: Object) {
 
         this.modelInstance = this.ormSession[this.currentModelName];
 
-        if (payload === undefined || payload === null) {
-            // Case of error
-            console.error(this.modelInstance, payload);
+        if (item === undefined || item === null) {
             return;
         }
 
-        // Case of error and missing id
-        if (!Array.isArray(payload)) {
-            if (payload.id === undefined) {
-                console.error(payload);
-                return;
-            }
+        if (item.id === undefined) {
+            return;
         }
+
 
         /**
          * Check if model with id exists
          */
-        if (Array.isArray(payload)) {
-            this.dispatchFunction = "BULK_" + this.rawModelName.toUpperCase();
-        } else {
-            this.dispatchFunction = ((this.modelInstance.idExists(payload.id)) ? "UPDATE_" : "ADD_") + this.rawModelName.toUpperCase();
-        }
+        this.dispatchFunction = ((this.modelInstance.idExists(item.id)) ? "UPDATE_" : "ADD_") + this.rawModelName.toUpperCase();
 
         InstantAction.dispatch({
             type: this.dispatchFunction,
-            payload: payload,
+            payload: item,
         });
     }
 
@@ -90,6 +82,8 @@ export default class MasterDispatcher {
      * Process all objects
      */
     processAll() {
+
+        // InstantAction.dispatch(setAppLoaded(false));
 
         this.keys.forEach((key) => {
             /**
@@ -102,12 +96,23 @@ export default class MasterDispatcher {
                 if (this.payload === null) {
                     return;
                 }
-
                 /**
                  * Check if item has multiple items in array
                  */
-                this.processUnit(this.payload[key]);
+                if (Array.isArray(this.payload[key])) {
+                    /**
+                     * Is Array
+                     */
+                    this.payload[key].forEach((item) => {
+                        this.processUnit(item);
+                    });
 
+                } else {
+                    /**
+                     * Is Unit object
+                     */
+                    this.processUnit(this.payload[key]);
+                }
             } else {
                 console.log("Model hasn't accessible model", key);
             }

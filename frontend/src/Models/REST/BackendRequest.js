@@ -1,16 +1,19 @@
 import Axios from "axios";
 import qs from "qs";
-import {getCookie} from "../../System/Cookies";
-// import {getCookie} from "./Cookies";
-import InstantAction from "../Utils/InstantAction";
-import localStorageProxy from "../Utils/localStorage";
-import localStorage from "../Utils/localStorage";
-import MasterDispatcher from "../Utils/MasterDispatcher";
+//import {getTokenFromStorage} from "./JWT";
+import {getCookie} from "../Utils/Cookies";
+import InstantActions from "../Utils/InstantAction";
+//import localStorageProxy from "./localStorage";
+//import {setLoggingInProgress} from "../Aurora/Aurora.actions";
 
 /**
- * BackendRequest
- * @param configuration
- * @constructor
+ * AuroraRequest
+ * @param method
+ * @param actionURL
+ * @param data
+ * @param onSuccess
+ * @param onActionError
+ * @param onServerError
  */
 export default function BackendRequest(method: string, actionURL: string, data: Object, onSuccess: Function = () => {
 }, onActionError: Function = () => {
@@ -20,7 +23,7 @@ export default function BackendRequest(method: string, actionURL: string, data: 
      * Api URL BASE
      * @type {string}
      */
-    const ApiUrlBase = process.env.REACT_APP_BACKEND;
+    const ApiUrlBase = process.env.REACT_APP_BACKEND_SERVER;
     let formData = null;
     let contentType = null;
     // Assign Action Name
@@ -60,7 +63,7 @@ export default function BackendRequest(method: string, actionURL: string, data: 
         headers: {
             "Access-Control-Allow-Origin": "*",
             "X-Requested-With": "XMLHttpRequest",
-            "Authorization": "JWT " + getTokenFromStorage(),
+            //"Authorization": "JWT " + getTokenFromStorage(),
             "X-CSRFToken": csrftoken,
             ...contentType
         },
@@ -104,22 +107,23 @@ export default function BackendRequest(method: string, actionURL: string, data: 
                      * Remove JWT
                      */
 
-                    InstantActions.closePopupModule();
-                    localStorageProxy.removeItem("JWT");
+                    //InstantActions.closePopupModule();
+                    //localStorageProxy.removeItem("JWT");
                     /**
                      * Redirect to Landing Page / Login
                      */
-
-                    InstantActions.redirect("/login");
+                    console.log("401");
+                    InstantActions.redirect("/");
 
                     InstantActions.resetStore();
                     // InstantActions.dispatch(setAppLoaded(true));
-                    InstantActions.dispatch(setLoggingInProgress(false));
+                    //InstantActions.dispatch(setLoggingInProgress(false));
 
                 }
 
                 if (error.response.status === 503) {
-                    InstantActions.openPopupModule("service-error", error.response.data);
+                    console.log("503");
+                    //InstantActions.openPopupModule("service-error", error.response.data);
                 }
             }
 
@@ -129,6 +133,5 @@ export default function BackendRequest(method: string, actionURL: string, data: 
                 onServerError(error.response);
             }
         });
+
 }
-
-

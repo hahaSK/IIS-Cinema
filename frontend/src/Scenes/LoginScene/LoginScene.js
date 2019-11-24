@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {connect} from "react-redux";
+//import { Grid, Row, Col } from 'react-flexbox-grid';
 import MasterGetter from "../../Models/Utils/MasterGetter";
 import './LoginScene.css';
 import Navigation from "../../Component/Navigation/Navigation";
@@ -32,7 +33,6 @@ class LoginScene extends Component {
                     });
                 }
             }
-            return "";
         });
 
         if (this.state.access === null) {

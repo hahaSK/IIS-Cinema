@@ -3,8 +3,7 @@
 import MasterDispatcher from "./MasterDispatcher";
 import {RESET_STORE} from "../../App/App.actions";
 import {withRouter} from "react-router";
-import {Event} from "../Models";
-import {User} from "../Models";
+import {dispatcher} from "../../Config/store";
 
 /**
  * Instant Action
@@ -20,13 +19,6 @@ class InstantAction {
          * Initiate fixtures
          * @type {{trademark_type: *[]}}
          */
-        let fixtures = {
-            event: Event.fixtures,
-            user: User.fixtures,
-        };
-
-        MasterDispatcher.dispatch(fixtures);
-
 
         // /**
         //  * After Success
@@ -62,7 +54,7 @@ class InstantAction {
      * @param data
      */
     static dispatch(data) {
-        InstantAction.dispatcher(data);
+        dispatcher(data);
     }
 
     /**
