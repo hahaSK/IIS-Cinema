@@ -8,7 +8,7 @@ import Actor from "../Entities/Actor";
 import ActType from "../Entities/ActType";
 import Address from "../Entities/Address";
 import Director from "../Entities/Director";
-import Event from "../Entities/Group";
+import Event from "../Entities/Event";
 import EventSeat from "../Entities/EventSeat";
 import Genre from "../Entities/Genre";
 import Reservation from "../Entities/Reservation";
