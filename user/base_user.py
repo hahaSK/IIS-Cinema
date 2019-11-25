@@ -103,17 +103,17 @@ class AbstractUser(AbstractBaseUser, PermissionsMixin):
     def get_short_name(self):
         return self.email
 
-    def save(self, *args, **kwargs):
-        # Check if the username already exists
-        # !!! For users with only email the username = email.
-        # For users with username and email the username = username.
-        # !!!
-        existing_users = list(
-            get_user_model()._default_manager.filter(username=self.username))
-
-        if self.has_username:
-            if not self.username:
-                raise Exception("Username cannot be empty")
-            if len(existing_users) > 0:
-                raise Exception("Username already exists")
-        super().save(args, kwargs)
+    # def save(self, *args, **kwargs):
+    #     # Check if the username already exists
+    #     # !!! For users with only email the username = email.
+    #     # For users with username and email the username = username.
+    #     # !!!
+    #     existing_users = list(
+    #         get_user_model()._default_manager.filter(username=self.username))
+    #
+    #     if self.has_username:
+    #         if not self.username:
+    #             raise Exception("Username cannot be empty")
+    #         if len(existing_users) > 0:
+    #             raise Exception("Username already exists")
+    #     super().save(args, kwargs)

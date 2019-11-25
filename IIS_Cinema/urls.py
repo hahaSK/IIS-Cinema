@@ -20,21 +20,27 @@ from address import views as addressviews
 from user import views as userviews
 from cinema import views as cinemaviews
 
-router = routers.DefaultRouter()
-router.register(r'actors', cinemaviews.ActorView, 'actor')
-router.register(r'directors', cinemaviews.DirectorView, 'director')
-router.register(r'genres', cinemaviews.GenreView, 'genre')
-router.register(r'actTypes', cinemaviews.ActTypeView, 'actType')
-router.register(r'halls', cinemaviews.HallView, 'hall')
-router.register(r'acts', cinemaviews.ActView, 'act')
-router.register(r'events', cinemaviews.EventView, 'event')
-router.register(r'reservations', cinemaviews.ReservationView, 'reservation')
-router.register(r'seats', cinemaviews.SeatView, 'seat')
-router.register(r'addresses', addressviews.AddressView, 'address')
-router.register(r'notRegisteredUsers', userviews.NotRegisteredView, 'notRegisteredUser')
-router.register(r'registeredUsers', userviews.RegisteredView, 'registeredUser')
+# router = routers.DefaultRouter()
+# router.register(r'actors', cinemaviews.ActorView, 'actor')
+# router.register(r'directors', cinemaviews.DirectorView, 'director')
+# router.register(r'genres', cinemaviews.GenreView, 'genre')
+# router.register(r'actTypes', cinemaviews.ActTypeView, 'actType')
+# router.register(r'halls', cinemaviews.HallView, 'hall')
+# router.register(r'acts', cinemaviews.ActView, 'act')
+# router.register(r'events', cinemaviews.EventView, 'event')
+# router.register(r'reservations', cinemaviews.ReservationView, 'reservation')
+# router.register(r'seats', cinemaviews.SeatView, 'seat')
+# router.register(r'addresses', addressviews.AddressView, 'address')
+# router.register(r'notRegisteredUsers', userviews.NotRegisteredView, 'notRegisteredUser')
+# router.register(r'registeredUsers', userviews.RegisteredView, 'registeredUser')
+
+app_name = 'api'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include(router.urls)),
+    path('events', cinemaviews.EventView.as_view()),
+    path('acts', cinemaviews.ActView.as_view()),
+    path('acts/<uuid:act_id>', cinemaviews.ActView.as_view()),
+    path('halls', cinemaviews.HallView.as_view()),
+    path('act-types/', cinemaviews.ActTypeView.as_view()),
 ]

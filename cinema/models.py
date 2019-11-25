@@ -63,14 +63,37 @@ class Act(models.Model):
     def __str__(self):
         return self.name
 
-    def get_cast(self, obj):
-        return "\n".join([p.cast for p in obj.cast.all()])
+    # def get_cast(self, obj):
+    #     return "\n".join([p.cast for p in obj.cast.all()])
+    #
+    # def get_directors(self, obj):
+    #     return "\n".join([p.director for p in obj.director.all()])
+    #
+    # def get_genres(self, obj):
+    #     return "\n".join([p.genre for p in obj.genre.all()])
 
-    def get_directors(self, obj):
-        return "\n".join([p.director for p in obj.director.all()])
+    def add_to_genre(self, genre):
 
-    def get_genres(self, obj):
-        return "\n".join([p.genre for p in obj.genre.all()])
+        self.genre.add(genre)
+
+    def add_to_cast(self, cast):
+
+        self.cast.add(cast)
+
+    def add_to_director(self, director):
+
+        self.director.add(director)
+
+    @staticmethod
+    def register_new_act(name, type, length, genre, cast, director, rating, description):
+
+        new_act = Act.objects.create(name=name, type=type, length=length, rating=rating, description=description)
+        new_act.add_to_genre(genre)
+        new_act.add_to_cast(cast)
+        new_act.add_to_director(director)
+        new_act.save()
+
+        return new_act
 
 
 class Seat(models.Model):
