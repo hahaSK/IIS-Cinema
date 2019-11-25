@@ -10,6 +10,7 @@ class NotRegisteredUserCreationForm(UserCreationForm):
     """
     User creation form only with required fields and without passwords.
     """
+
     class Meta:
         model = NotRegistered
         fields = NotRegistered.REQUIRED_FIELDS
@@ -33,6 +34,7 @@ class RegisteredUserCreationForm(UserCreationForm):
     """
     User creation form only with required fields and passwords.
     """
+
     class Meta:
         fields = Registered.REQUIRED_FIELDS
 

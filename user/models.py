@@ -1,4 +1,3 @@
-
 from django.db import models
 from address.models import Address
 from django.contrib.auth.models import AbstractUser
