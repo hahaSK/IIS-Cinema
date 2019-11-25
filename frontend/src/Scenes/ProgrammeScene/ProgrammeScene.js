@@ -59,8 +59,6 @@ class Programme extends Component {
          */
         const onSuccess = (response) => {
 
-            console.log("Act Types");
-            console.log(response.data);
             MasterDispatcher.dispatch(response.data);
         };
 
@@ -83,9 +81,39 @@ class Programme extends Component {
         BackendRequest("get", "events", null, onSuccess);
     };
 
+    fetchActs = () => {
+
+        /**
+         * On Success
+         * @param response
+         */
+        const onSuccess = (response) => {
+
+            MasterDispatcher.dispatch(response.data);
+        };
+
+        BackendRequest("get", "acts", null, onSuccess);
+    };
+
+    fetchHalls = () => {
+
+        /**
+         * On Success
+         * @param response
+         */
+        const onSuccess = (response) => {
+
+            MasterDispatcher.dispatch(response.data);
+        };
+
+        BackendRequest("get", "halls", null, onSuccess);
+    };
+
     componentDidMount() {
         this.fetchActTypes();
         this.fetchEvents();
+        this.fetchActs();
+        this.fetchHalls();
         moment.locale('cs');
     }
 
@@ -134,6 +162,11 @@ class Programme extends Component {
                                 <Col xs={4}/>
                             </Row>
                         {events.toModelArray().map((event) => {
+                            let act = session.Act.withId(event._fields.act);
+                            let hall = session.Hall.withId(event._fields.hall);
+                            console.log("names");
+                            console.log(act);
+                            console.log(hall);
                             if (moment(event.date)._d >= today) {
                                 return (
                                     <Row>
