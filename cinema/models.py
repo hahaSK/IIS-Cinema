@@ -1,7 +1,7 @@
 from django.db import models
 
 from address.models import Address
-from user.models import NotRegistered
+from user.models import *
 
 
 class Actor(models.Model):
@@ -88,7 +88,11 @@ class Act(models.Model):
     def register_new_act(name, type, length, genre, cast, director, rating, description):
 
         new_act = Act.objects.create(name=name, type=type, length=length, rating=rating, description=description)
-        new_act.add_to_genre(genre)
+
+        for current_item in genre:
+            new_act.add_to_genre(current_item)
+        # print(genre)
+        # new_act.add_to_cast(genre)
         new_act.add_to_cast(cast)
         new_act.add_to_director(director)
         new_act.save()
@@ -123,6 +127,7 @@ class Event(models.Model):
 
 
 class Reservation(models.Model):
+    # user = models.EmailField()
     user = models.ForeignKey(NotRegistered,
                              related_name="reservation_maker",
                              on_delete=models.CASCADE)
@@ -131,6 +136,11 @@ class Reservation(models.Model):
                               on_delete=models.CASCADE)
     paid = models.BooleanField(blank=False, default=False)
     seats = models.ManyToManyField(Seat, related_name="reserved_seats")
+
+    # def get_user_from_email(self):
+    #     ujco = UserRole.objects.get(email=self.user)
+    #     if ujco:
+    #         return ujco
 
     def get_seats(self):
         return self.seats.all()
