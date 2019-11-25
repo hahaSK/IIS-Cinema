@@ -12,18 +12,66 @@ from .models import Actor, Director, Genre, Hall, Act, Event, Reservation, Seat,
 
 
 class ActorView(APIView):
-  serializer_class = ActorSerializer
-  queryset = Actor.objects.all()
+  @never_cache
+  def get(self, request, actor_id=None):
+    """
+    Get Events
+    :param request:
+    :param area_id:
+    :return:
+    """
+
+    actors = Actor.objects.all()
+
+    actor_serializer = ActorSerializer(actors, many=True)
+
+    payload = {
+      "actor": actor_serializer.data,
+    }
+
+    return Response(payload, status=status.HTTP_200_OK)
 
 
 class DirectorView(APIView):
-  serializer_class = DirectorSerializer
-  queryset = Director.objects.all()
+  @never_cache
+  def get(self, request, director_id=None):
+    """
+    Get Events
+    :param request:
+    :param area_id:
+    :return:
+    """
+
+    directors = Director.objects.all()
+
+    director_serializer = DirectorSerializer(directors, many=True)
+
+    payload = {
+      "director": director_serializer.data,
+    }
+
+    return Response(payload, status=status.HTTP_200_OK)
 
 
 class GenreView(APIView):
-  serializer_class = GenreSerializer
-  queryset = Genre.objects.all()
+  @never_cache
+  def get(self, request, genre_id=None):
+    """
+    Get Events
+    :param request:
+    :param area_id:
+    :return:
+    """
+
+    genres = Genre.objects.all()
+
+    genre_serializer = GenreSerializer(genres, many=True)
+
+    payload = {
+      "genre": genre_serializer.data,
+    }
+
+    return Response(payload, status=status.HTTP_200_OK)
 
 class ActTypeView(APIView):
 
