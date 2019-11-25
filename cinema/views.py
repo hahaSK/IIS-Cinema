@@ -134,18 +134,20 @@ class ActView(APIView):
     genre = []
     for current_element in data["genre"]:
         genre.append(Genre.objects.get(id=int(current_element)))
-        print(genre)
 
-    # genre_id = int(data['genre'])
-    # genre = Genre.objects.get(id=genre_id)
-    cast_id = int(data['cast'])
-    cast = Actor.objects.get(id=cast_id)
-    director_id = int(data['director'])
-    director = Director.objects.get(id=director_id)
+    cast = []
+    for current_element in data["cast"]:
+        cast.append(Actor.objects.get(id=int(current_element)))
+
+    director = []
+    for current_element in data["director"]:
+        director.append(Director.objects.get(id=int(current_element)))
+
     rating = data['rating']
     description = data['description']
 
-    new_act = Act.register_new_act(name=name, type=act_type, length=length, genre=genre, cast=cast, director=director, rating=rating, description=description)
+    new_act = Act.register_new_act(name=name, act_type=act_type, length=length, genre=genre, cast=cast,
+                                   director=director, rating=rating, description=description)
 
     act_serializer = ActSerializer(new_act)
 
@@ -240,7 +242,7 @@ class EventView(APIView):
     date = data["date"]
     price = data["price"]
     act_id = int(data["act"])
-    act = Hall.objects.get(id=act_id)
+    act = Act.objects.get(id=act_id)
     # seat_id = []
     # seat = []
     # for current_element in data["seats"]:
@@ -249,7 +251,7 @@ class EventView(APIView):
 
     new_event = Event.objects.create(hall=hall, date=date, price=price, act=act)
 
-    event_serializer = ActSerializer(new_event)
+    event_serializer = EventSerializer(new_event)
 
     payload = {
       "event": event_serializer.data,
