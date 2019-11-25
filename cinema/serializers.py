@@ -24,7 +24,7 @@ class GenreSerializer(serializers.ModelSerializer):
 class ActTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = ActType
-        fieleds = '__all__'
+        fields = '__all__'
 
 class HallSerializer(serializers.ModelSerializer):
     class Meta:
