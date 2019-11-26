@@ -85,9 +85,10 @@ class Act(models.Model):
         self.director.add(director)
 
     @staticmethod
-    def register_new_act(name, act_type, length, genre, cast, director, rating, description):
+    def register_new_act(name, act_type, length, picture, genre, cast, director, rating, description):
 
-        new_act = Act.objects.create(name=name, type=act_type, length=length, rating=rating, description=description)
+        new_act = Act.objects.create(name=name, type=act_type, length=length, picture=picture, rating=rating,
+                                     description=description)
 
         for current_item in genre:
             new_act.add_to_genre(current_item)
@@ -108,7 +109,7 @@ class Seat(models.Model):
                              on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.hall.name + " r" + str(self.row) + ":s" + str(self.seat_No)
+        return self.hall.__str__() + " r" + str(self.row) + ":s" + str(self.seat_No)
 
 
 class Event(models.Model):
@@ -123,7 +124,7 @@ class Event(models.Model):
     seats = models.ManyToManyField(Seat, through='SeatInEvent')
 
     def __str__(self):
-        return self.act.name + " AT '" + self.hall.name + "' ON: " + str(self.date.date())
+        return self.act.__str__() + " AT '" + self.hall.__str__() + "' ON: " + str(self.date.date())
 
 
 class Reservation(models.Model):
@@ -142,11 +143,26 @@ class Reservation(models.Model):
     #     if ujco:
     #         return ujco
 
+    def add_to_seats(self, seat):
+
+        self.seats.add(seat)
+
+    @staticmethod
+    def register_new_reservation(user, event, paid, seats):
+
+        new_reservation = Reservation.objects.create(user=user, event=event, paid=paid)
+
+        for current_item in seats:
+            new_reservation.add_to_seats(current_item)
+        new_reservation.save()
+
+        return new_reservation
+
     def get_seats(self):
         return self.seats.all()
 
     def __str__(self):
-        return self.user.name + "'s reservation for '" + self.event.__str__()
+        return self.user.__str__() + "'s reservation for '" + self.event.__str__()
 
 
 class SeatInEvent(models.Model):

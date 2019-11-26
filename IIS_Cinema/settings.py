@@ -83,15 +83,29 @@ WSGI_APPLICATION = 'IIS_Cinema.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         # 'ENGINE': 'django.db.backends.sqlite3',
+#         # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'iis_cinema',
+#         'USER': 'postgres',
+#         'PASSWORD': 'trgovacky',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
+# }
+
+
 DATABASES = {
     'default': {
         # 'ENGINE': 'django.db.backends.sqlite3',
         # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'iis_cinema',
-        'USER': 'postgres',
-        'PASSWORD': 'trgovacky',
-        'HOST': 'localhost',
+        'NAME': 'IIS_cinema',
+        'USER': 'IIS_user',
+        'PASSWORD': 'ab535f6b99',
+        'HOST': 'iis-cinema.cbjmjswrcd4m.eu-central-1.rds.amazonaws.com',
         'PORT': '5432',
     }
 }
