@@ -142,6 +142,21 @@ class Reservation(models.Model):
     #     if ujco:
     #         return ujco
 
+    def add_to_seats(self, seat):
+
+        self.seats.add(seat)
+
+    @staticmethod
+    def register_new_reservation(user, event, paid, seats):
+
+        new_reservation = Reservation.objects.create(user=user, event=event, paid=paid)
+
+        for current_item in seats:
+            new_reservation.add_to_seats(current_item)
+        new_reservation.save()
+
+        return new_reservation
+
     def get_seats(self):
         return self.seats.all()
 
