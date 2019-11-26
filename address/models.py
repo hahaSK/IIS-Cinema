@@ -16,13 +16,3 @@ class Address(models.Model):
 
     def __str__(self):
         return self.street2
-
-    # def __eq__(self, other):
-    #     if not (isinstance(other, Address)):
-    #         return False
-    #     return (self.street2 == other.street2
-    #             and self.street1 == other.street1
-    #             and self.city == other.city
-    #             and self.houseNumber == other.houseNumber
-    #             and self.psc == other.psc
-    #             and self.country == other.country)

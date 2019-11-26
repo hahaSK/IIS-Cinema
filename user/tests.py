@@ -1,5 +1,6 @@
+from django.db import IntegrityError, transaction
 from django.test import TestCase
-from user.models import NotRegistered, Registered, Cashier, Redactor
+from user.models import User
 from address.models import Address
 
 
@@ -15,93 +16,134 @@ def get_test_address():
                                       psc="61200")
 
 
-class NotRegisteredTestCase(TestCase):
+class UserTestCase(TestCase):
     def setUp(self):
-        NotRegistered.objects.create_user(first_name='Peter', last_name='Scastny', email="scastny@manbearpig.com")
+        User.create(first_name='Anca', last_name='Zarku',
+                    email="fightingspirit@1420.bc",
+                    date_of_birth="1944-09-28",
+                    password="1234", username="Anicka", role=User.REDACTOR)
+        User.create(first_name='Peter', last_name='Saigu',
+                    email="saigu@gmail.com",
+                    date_of_birth="1944-09-28",
+                    password="1234", username="Saigu", role=User.REGISTERED)
 
     def test_user_creation(self):
-        user = NotRegistered.objects.get(first_name='Peter')
-        self.assertEqual(user.last_name, "Scastny")
-        self.assertEqual(user.email, "scastny@manbearpig.com")
-
-    def test_user_update(self):
-        user = NotRegistered.objects.get(first_name='Peter')
-        self.assertEqual(user.last_name, "Scastny")
-        self.assertEqual(user.email, "scastny@manbearpig.com")
-        # update
-        user.first_name = "Tom"
-        user.save()
-        # test updated
-        updated_user = NotRegistered.objects.get(first_name="Tom")
-        self.assertEqual(updated_user.first_name, "Tom")
-        self.assertEqual(user.last_name, "Scastny")
-        self.assertEqual(user.email, "scastny@manbearpig.com")
-
-    def test_create_with_same_email(self):
-        self.assertRaises(Exception, NotRegistered.objects.create_user, email="scastny@manbearpig.com")
-
-
-class RegisteredTestCase(TestCase):
-    def setUp(self):
-        Registered.objects.create_user_with_username(first_name='Anca', last_name='Zarku',
-                                                     email="fightingspirit@1420.bc",
-                                                     address=get_test_address(), date_of_birth="1944-09-28",
-                                                     password="1234", username="Anicka")
-        Registered.objects.create_user_with_username(first_name='Peter', last_name='Kral',
-                                                     email="kral@sveta.sk",
-                                                     address=get_test_address(), date_of_birth="1944-09-28",
-                                                     password="1234", username="King")
-
-    def test_user_creation(self):
-        user = Registered.objects.get(first_name='Anca')
-        self.assertEqual(user.last_name, 'Zarku')
+        user = User.objects.get(first_name="Anca")
+        self.assertEqual(user.last_name, "Zarku")
         self.assertEqual(user.email, "fightingspirit@1420.bc")
         self.assertEqual(user.date_of_birth.__format__('%Y-%m-%d'), "1944-09-28")
-        self.assertEqual(user.address, get_test_address())
         self.assertEqual(user.username, "Anicka")
+        self.assertEqual(user.role, User.REDACTOR)
 
-    def test_user_update(self):
-        user = Registered.objects.get(first_name='Anca')
-        self.assertEqual(user.last_name, 'Zarku')
-        self.assertEqual(user.username, "Anicka")
-        # updating last name
-        user.last_name = "Zpopradu"
-        user.save()
-        # testing
-        self.assertEqual(user.last_name, 'Zpopradu')
+        user = User.objects.get(email="saigu@gmail.com")
+        self.assertEqual(user.first_name, "Peter")
+        self.assertEqual(user.last_name, "Saigu")
+        self.assertEqual(user.email, "saigu@gmail.com")
+        self.assertEqual(user.date_of_birth.__format__('%Y-%m-%d'), "1944-09-28")
+        self.assertEqual(user.username, "Saigu")
+        self.assertEqual(user.role, User.REGISTERED)
+
+    def test_user_creation_exceptions(self):
+        # first name value error
+        self.assertRaises(ValueError, User.create, first_name=None, last_name='Zarku',
+                          email="fightingspirit@1420.bc",
+                          date_of_birth="1944-09-28",
+                          password="1234", username="Anicka", role=User.REDACTOR)
+        # last name value error
+        self.assertRaises(ValueError, User.create, first_name="Anca", last_name=None,
+                          email="fightingspirit@1420.bc",
+                          date_of_birth="1944-09-28",
+                          password="1234", username="Anicka", role=User.REDACTOR)
+        # date of birth value error
+        self.assertRaises(ValueError, User.create, first_name="Anca", last_name='Zarku',
+                          email="fightingspirit@1420.bc",
+                          date_of_birth=None,
+                          password="1234", username="Anicka", role=User.REDACTOR)
+        # email value error
+        self.assertRaises(ValueError, User.create, first_name="Anca", last_name='Zarku',
+                          email=None,
+                          date_of_birth="1944-09-28",
+                          password="1234", username="Anicka", role=User.REDACTOR)
+        # username value error
+        self.assertRaises(ValueError, User.create, first_name="Anca", last_name='Zarku',
+                          email="fightingspirit@1420.bc",
+                          date_of_birth="1944-09-28",
+                          password="1234", username=None, role=User.REDACTOR)
+        # email unique error
+        try:
+            with transaction.atomic():
+                User.create(first_name="Anca", last_name='Zarku',
+                            email="fightingspirit@1420.bc",
+                            date_of_birth="1944-09-28",
+                            password="1234", username="Anicka", role=User.REDACTOR)
+        except Exception as e:
+            if e.__str__().__contains__("already exists"):
+                self.assertEqual(e.__str__().__contains__("email"), True)
+            else:
+                # Correct exception not caught => fail
+                self.assertEqual(True, False)
+
+        # username unique error
+        try:
+            with transaction.atomic():
+                User.create(first_name="Anca", last_name='Zarku',
+                            email="kindlespirit@1420.bc",
+                            date_of_birth="1944-09-28",
+                            password="1234", username="Anicka", role=User.REDACTOR)
+        except Exception as e:
+            if e.__str__().__contains__("already exists"):
+                self.assertEqual(e.__str__().__contains__("username"), True)
+            else:
+                # Correct exception not caught => fail
+                self.assertEqual(True, False)
+
+    def test_user_modification_exceptions(self):
+        user = User.objects.get(email="fightingspirit@1420.bc")
+        self.assertEqual(user.last_name, "Zarku")
         self.assertEqual(user.email, "fightingspirit@1420.bc")
         self.assertEqual(user.date_of_birth.__format__('%Y-%m-%d'), "1944-09-28")
-        self.assertEqual(user.address, get_test_address())
         self.assertEqual(user.username, "Anicka")
-        # updating username
-        user.username = "Pomaranca"
-        user.save()
-        # testing
-        self.assertEqual(user.last_name, 'Zpopradu')
+        self.assertEqual(user.role, User.REDACTOR)
+
+        user.email = "saigu@gmail.com"
+        try:
+            with transaction.atomic():
+                user.save()
+        except Exception as e:
+            if e.__str__().__contains__("already exists"):
+                self.assertEqual(e.__str__().__contains__("email"), True)
+            else:
+                # Correct exception not caught => fail
+                self.assertEqual(True, False)
+
+        # return to previous value
+        user.email = "fightingspirit@1420.bc"
+        user.username = "Saigu"
+        try:
+            with transaction.atomic():
+                user.save()
+        except Exception as e:
+            if e.__str__().__contains__("already exists"):
+                self.assertEqual(e.__str__().__contains__("username"), True)
+            else:
+                # Correct exception not caught => fail
+                self.assertEqual(True, False)
+
+    def test_user_modification(self):
+        user = User.objects.get(email="fightingspirit@1420.bc")
+        self.assertEqual(user.last_name, "Zarku")
         self.assertEqual(user.email, "fightingspirit@1420.bc")
         self.assertEqual(user.date_of_birth.__format__('%Y-%m-%d'), "1944-09-28")
-        self.assertEqual(user.address, get_test_address())
-        self.assertEqual(user.username, "Pomaranca")
+        self.assertEqual(user.username, "Anicka")
+        self.assertEqual(user.role, User.REDACTOR)
 
-    def test_create_with_same_email(self):
-        self.assertRaises(Exception, Registered.objects.create_user_with_username, email="fightingspirit@1420.bc",
-                          address=get_test_address(), date_of_birth="1944-09-28", username="Strela")
+        user.role = User.ADMIN
+        user.last_name = "Okruhla"
+        user.save()
 
-    def test_create_with_same_username(self):
-        self.assertRaises(Exception, Registered.objects.create_user_with_username, email="pomaranca@1420.bc",
-                          address=get_test_address(), date_of_birth="1944-09-28", username="Pomaranca")
-
-    def test_update_username_exception(self):
-        peter = Registered.objects.get(first_name='Peter')
-        self.assertEqual(peter.last_name, 'Kral')
-        self.assertEqual(peter.email, "kral@sveta.sk")
-        self.assertEqual(peter.date_of_birth.__format__('%Y-%m-%d'), "1944-09-28")
-        self.assertEqual(peter.address, get_test_address())
-        self.assertEqual(peter.username, "King")
-
-        anca = Registered.objects.get(first_name="Anca")
-        self.assertEqual(anca.email, "fightingspirit@1420.bc")
-        self.assertEqual(anca.address, get_test_address())
-        # update
-        peter.username = anca.username
-        self.assertRaises(Exception, peter.save)
+        user = User.objects.get(email="fightingspirit@1420.bc")
+        self.assertEqual(user.last_name, "Okruhla")
+        self.assertEqual(user.email, "fightingspirit@1420.bc")
+        self.assertEqual(user.date_of_birth.__format__('%Y-%m-%d'), "1944-09-28")
+        self.assertEqual(user.username, "Anicka")
+        self.assertEqual(user.role, User.ADMIN)
