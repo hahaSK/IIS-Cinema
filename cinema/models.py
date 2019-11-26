@@ -108,7 +108,7 @@ class Seat(models.Model):
                              on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.hall.name + " r" + str(self.row) + ":s" + str(self.seat_No)
+        return self.hall.__str__() + " r" + str(self.row) + ":s" + str(self.seat_No)
 
 
 class Event(models.Model):
@@ -123,7 +123,7 @@ class Event(models.Model):
     seats = models.ManyToManyField(Seat, through='SeatInEvent')
 
     def __str__(self):
-        return self.act.name + " AT '" + self.hall.name + "' ON: " + str(self.date.date())
+        return self.act.__str__() + " AT '" + self.hall.__str__() + "' ON: " + str(self.date.date())
 
 
 class Reservation(models.Model):
@@ -161,7 +161,7 @@ class Reservation(models.Model):
         return self.seats.all()
 
     def __str__(self):
-        return self.user.name + "'s reservation for '" + self.event.__str__()
+        return self.user.__str__() + "'s reservation for '" + self.event.__str__()
 
 
 class SeatInEvent(models.Model):
