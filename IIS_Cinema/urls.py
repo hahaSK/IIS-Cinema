@@ -45,5 +45,6 @@ urlpatterns = [
     path('genres', cinemaviews.GenreView.as_view()),
     path('acts/<uuid:act_id>', cinemaviews.ActView.as_view()),
     path('halls', cinemaviews.HallView.as_view()),
-    path('act-types/', cinemaviews.ActTypeView.as_view()),
+    path('acttypes', cinemaviews.ActTypeView.as_view()),
+    path('reservations', cinemaviews.ReservationView.as_view()),
 ]
