@@ -85,9 +85,10 @@ class Act(models.Model):
         self.director.add(director)
 
     @staticmethod
-    def register_new_act(name, act_type, length, genre, cast, director, rating, description):
+    def register_new_act(name, act_type, length, picture, genre, cast, director, rating, description):
 
-        new_act = Act.objects.create(name=name, type=act_type, length=length, rating=rating, description=description)
+        new_act = Act.objects.create(name=name, type=act_type, length=length, picture=picture, rating=rating,
+                                     description=description)
 
         for current_item in genre:
             new_act.add_to_genre(current_item)

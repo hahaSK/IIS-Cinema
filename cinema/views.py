@@ -221,7 +221,7 @@ class ActView(APIView):
         type_id = int(data['type'])
         act_type = ActType.objects.get(id=type_id)
         length = data['length']
-        # picture = data['picture']
+        picture = data['picture']
 
         genre = []
         for current_element in data["genre"]:
@@ -238,7 +238,7 @@ class ActView(APIView):
         rating = data['rating']
         description = data['description']
 
-        new_act = Act.register_new_act(name=name, act_type=act_type, length=length, genre=genre, cast=cast,
+        new_act = Act.register_new_act(name=name, act_type=act_type, length=length, picture=picture, genre=genre, cast=cast,
                                        director=director, rating=rating, description=description)
 
         act_serializer = ActSerializer(new_act)
