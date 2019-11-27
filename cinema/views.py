@@ -7,7 +7,7 @@ from rest_framework_jwt.settings import api_settings
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.views.decorators.cache import never_cache
 
-from user.models import NotRegistered
+from user.models import User
 from .serializers import ActorSerializer, DirectorSerializer, GenreSerializer, HallSerializer, \
     ActSerializer, EventSerializer, ReservationSerializer, SeatSerializer, ActTypeSerializer
 from .models import Actor, Director, Genre, Hall, Act, Event, Reservation, Seat, SeatInEvent, ActType
@@ -360,7 +360,7 @@ class ReservationView(APIView):
         """
         data = request.data
         user_id = int(data['user'])
-        user = NotRegistered.objects.get(id=user_id)
+        user = User.objects.get(id=user_id)
         event_id = int(data['event'])
         event = Event.objects.get(id=event_id)
         paid = bool(data['paid'])

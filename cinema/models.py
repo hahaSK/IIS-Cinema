@@ -128,20 +128,20 @@ class Event(models.Model):
 
 
 class Reservation(models.Model):
-    # user = models.EmailField()
-    user = models.ForeignKey(NotRegistered,
-                             related_name="reservation_maker",
-                             on_delete=models.CASCADE)
+    user = models.EmailField(blank=False, default="email")
+    # user = models.ForeignKey(User,
+    #                          related_name="reservation_maker",
+    #                          on_delete=models.CASCADE)
     event = models.ForeignKey(Event,
                               related_name="booked_event",
                               on_delete=models.CASCADE)
     paid = models.BooleanField(blank=False, default=False)
     seats = models.ManyToManyField(Seat, related_name="reserved_seats")
 
-    # def get_user_from_email(self):
-    #     ujco = UserRole.objects.get(email=self.user)
-    #     if ujco:
-    #         return ujco
+    def get_user_from_email(self):
+        ujco = User.objects.get(email=self.user)
+        if ujco:
+            return ujco
 
     def add_to_seats(self, seat):
 
