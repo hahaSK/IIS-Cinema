@@ -674,7 +674,7 @@ class ReservationView(APIView):
 
         permission_classes = [permissions.IsAuthenticated]
         # reservation_id=1
-        if request.user.role != User.REDACTOR and request.user.role != User.ADMIN:
+        if request.user.role != User.REDACTOR and request.user.role != User.ADMIN and request.user.role != User.CASHIER:
             return Response(UNAUTHORIZED_USER, status=status.HTTP_403_FORBIDDEN)
 
         reservation = Reservation.objects.get(id=reservation_id)
@@ -689,6 +689,10 @@ class ReservationView(APIView):
             reservation.event = Event.objects.get(id=event_id)
             reservation.paid = bool(data['paid'])
 
+            for current_element in reservation.seats.all():
+                se = SeatInEvent.objects.get(event_id=event_id, seat_id=current_element)
+                se.is_available = True
+                se.save()
             reservation.seats.clear()
             for current_element in data["seats"]:
                 reservation.seats.add(current_element)
@@ -715,7 +719,7 @@ class ReservationView(APIView):
 
         permission_classes = [permissions.IsAuthenticated]
 
-        if request.user.role != User.REDACTOR and request.user.role != User.ADMIN:
+        if request.user.role != User.REDACTOR and request.user.role != User.ADMIN and request.user.role != User.CASHIER:
             return Response(UNAUTHORIZED_USER, status=status.HTTP_403_FORBIDDEN)
 
         reservation = Reservation.objects.get(id=reservation_id)
