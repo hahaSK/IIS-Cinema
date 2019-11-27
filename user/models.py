@@ -38,4 +38,4 @@ class User(AbstractUser):
                                         date_of_birth=date_of_birth, role=role)
 
     def __str__(self):
-        return super().get_full_name
+        return super().get_full_name()
