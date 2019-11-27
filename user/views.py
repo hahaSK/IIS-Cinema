@@ -72,6 +72,9 @@ class UserView(APIView):
 
     @never_cache
     def put(self, request, user_id):
+
+        permission_classes = [permissions.IsAuthenticated]
+
         user = User.objects.get(id=user_id)
 
         if not user:
