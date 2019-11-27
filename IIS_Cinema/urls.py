@@ -13,9 +13,12 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
+
 from address import views as addressviews
 from user import views as userviews
 from cinema import views as cinemaviews
@@ -48,3 +51,8 @@ urlpatterns = [
     path('acttypes', cinemaviews.ActTypeView.as_view()),
     path('reservations', cinemaviews.ReservationView.as_view()),
 ]
+
+
+if settings.DEBUG:
+        urlpatterns += static(settings.MEDIA_URL,
+                              document_root=settings.MEDIA_ROOT)
