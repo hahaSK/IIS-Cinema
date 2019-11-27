@@ -71,8 +71,8 @@ class PasswordEditView(APIView):
 class UserView(APIView):
 
     @never_cache
-    def put(self, request):
-        user = User.objects.get(email=request.data['email'])
+    def put(self, request, user_id):
+        user = User.objects.get(id=user_id)
 
         if not user:
             raise Exception("User doesn't exist")
@@ -105,6 +105,8 @@ class UserView(APIView):
 
     @never_cache
     def delete(self, request, user_id):
+
+        permission_classes = [permissions.IsAuthenticated]
 
         user = User.objects.get(id=user_id)
         user.delete()
