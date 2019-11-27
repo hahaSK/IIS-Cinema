@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from rest_framework import status, permissions
 from rest_framework.response import Response
@@ -44,21 +44,38 @@ class ActorView(APIView):
     def post(self, request):
         permission_classes = [permissions.IsAuthenticated]
 
-        if request.user.role != User.REDACTOR or request.user.role != User.ADMIN:
+        if request.user.role != User.REDACTOR and request.user.role != User.ADMIN:
             return Response(UNAUTHORIZED_USER, status=status.HTTP_403_FORBIDDEN)
 
         data = request.data
         name = data['name']
         year = int(data['year'])
-        # picture =
+        picture = data['picture']
 
-        new_actor = Actor.objects.create(name=name, year=year)
+        new_actor = Actor.objects.create(name=name, year=year, picture=picture)
 
         actor_serializer = ActorSerializer(new_actor)
 
         payload = {
-            "event": actor_serializer.data,
+            "actor": actor_serializer.data,
             "status": "success"
+        }
+
+        return Response(payload, status=status.HTTP_200_OK)
+
+    @never_cache
+    def delete(self, request, actor_id):
+
+        permission_classes = [permissions.IsAuthenticated]
+
+        if request.user.role != User.REDACTOR and request.user.role != User.ADMIN:
+            return Response(UNAUTHORIZED_USER, status=status.HTTP_403_FORBIDDEN)
+
+        actor = Hall.objects.get(id=actor_id)
+        actor.delete()
+
+        payload = {
+            "status": "success",
         }
 
         return Response(payload, status=status.HTTP_200_OK)
@@ -88,21 +105,38 @@ class DirectorView(APIView):
     def post(self, request):
         permission_classes = [permissions.IsAuthenticated]
 
-        if request.user.role != User.REDACTOR or request.user.role != User.ADMIN:
+        if request.user.role != User.REDACTOR and request.user.role != User.ADMIN:
             return Response(UNAUTHORIZED_USER, status=status.HTTP_403_FORBIDDEN)
 
         data = request.data
         name = data['name']
         year = int(data['year'])
-        # picture =
+        picture = data['picture']
 
-        new_director = Director.objects.create(name=name, year=year)
+        new_director = Director.objects.create(name=name, year=year, picture=picture)
 
         director_serializer = DirectorSerializer(new_director)
 
         payload = {
-            "event": director_serializer.data,
+            "director": director_serializer.data,
             "status": "success"
+        }
+
+        return Response(payload, status=status.HTTP_200_OK)
+
+    @never_cache
+    def delete(self, request, director_id):
+
+        permission_classes = [permissions.IsAuthenticated]
+
+        if request.user.role != User.REDACTOR and request.user.role != User.ADMIN:
+            return Response(UNAUTHORIZED_USER, status=status.HTTP_403_FORBIDDEN)
+
+        director = Hall.objects.get(id=director_id)
+        director.delete()
+
+        payload = {
+            "status": "success",
         }
 
         return Response(payload, status=status.HTTP_200_OK)
@@ -132,7 +166,7 @@ class GenreView(APIView):
     def post(self, request):
         permission_classes = [permissions.IsAuthenticated]
 
-        if request.user.role != User.REDACTOR or request.user.role != User.ADMIN:
+        if request.user.role != User.REDACTOR and request.user.role != User.ADMIN:
             return Response(UNAUTHORIZED_USER, status=status.HTTP_403_FORBIDDEN)
 
         data = request.data
@@ -143,8 +177,25 @@ class GenreView(APIView):
         genre_serializer = GenreSerializer(new_genre)
 
         payload = {
-            "event": genre_serializer.data,
+            "genre": genre_serializer.data,
             "status": "success"
+        }
+
+        return Response(payload, status=status.HTTP_200_OK)
+
+    @never_cache
+    def delete(self, request, genre_id):
+
+        permission_classes = [permissions.IsAuthenticated]
+
+        if request.user.role != User.REDACTOR and request.user.role != User.ADMIN:
+            return Response(UNAUTHORIZED_USER, status=status.HTTP_403_FORBIDDEN)
+
+        genre = Hall.objects.get(id=genre_id)
+        genre.delete()
+
+        payload = {
+            "status": "success",
         }
 
         return Response(payload, status=status.HTTP_200_OK)
@@ -175,7 +226,7 @@ class ActTypeView(APIView):
     def post(self, request):
         permission_classes = [permissions.IsAuthenticated]
 
-        if request.user.role != User.REDACTOR or request.user.role != User.ADMIN:
+        if request.user.role != User.REDACTOR and request.user.role != User.ADMIN:
             return Response(UNAUTHORIZED_USER, status=status.HTTP_403_FORBIDDEN)
 
         data = request.data
@@ -186,8 +237,25 @@ class ActTypeView(APIView):
         act_type_serializer = ActTypeSerializer(new_act_type)
 
         payload = {
-            "event": act_type_serializer.data,
+            "act_type": act_type_serializer.data,
             "status": "success"
+        }
+
+        return Response(payload, status=status.HTTP_200_OK)
+
+    @never_cache
+    def delete(self, request, act_type_id):
+
+        permission_classes = [permissions.IsAuthenticated]
+
+        if request.user.role != User.REDACTOR and request.user.role != User.ADMIN:
+            return Response(UNAUTHORIZED_USER, status=status.HTTP_403_FORBIDDEN)
+
+        act_type = Hall.objects.get(id=act_type_id)
+        act_type.delete()
+
+        payload = {
+            "status": "success",
         }
 
         return Response(payload, status=status.HTTP_200_OK)
@@ -217,7 +285,7 @@ class HallView(APIView):
     def post(self, request):
         permission_classes = [permissions.IsAuthenticated]
 
-        if request.user.role != User.REDACTOR or request.user.role != User.ADMIN:
+        if request.user.role != User.REDACTOR and request.user.role != User.ADMIN:
             return Response(UNAUTHORIZED_USER, status=status.HTTP_403_FORBIDDEN)
 
         data = request.data
@@ -232,12 +300,66 @@ class HallView(APIView):
         hall_serializer = HallSerializer(new_hall)
 
         payload = {
-            "event": hall_serializer.data,
+            "hall": hall_serializer.data,
             "status": "success"
         }
 
         return Response(payload, status=status.HTTP_200_OK)
 
+    @never_cache
+    def put(self, request, hall_id):
+
+        permission_classes = [permissions.IsAuthenticated]
+        # hall_id=1
+        if request.user.role != User.REDACTOR and request.user.role != User.ADMIN:
+            return Response(UNAUTHORIZED_USER, status=status.HTTP_403_FORBIDDEN)
+
+        hall = Hall.objects.get(id=hall_id)
+
+        if not hall:
+            raise Exception("Event doesn't exist")
+
+        try:
+            data = request.data
+            hall.name = data['name']
+            address_id = int(data['address'])
+            hall.address = Address.objects.get(id=address_id)
+            hall.rows = int(data['rows'])
+            hall.columns = int(data['columns'])
+
+            hall.save()
+        except ValueError:
+            return Response({
+                "error": "REQUIRED_FIELD_NOT_FILLED"
+            }, status=status.HTTP_412_PRECONDITION_FAILED)
+        except Exception as e:
+            return e
+
+        hall_serializer = HallSerializer(hall)
+
+        payload = {
+            "status": "success",
+            "hall": hall_serializer.data,
+        }
+
+        return Response(payload, status=status.HTTP_200_OK)
+
+    @never_cache
+    def delete(self, request, hall_id):
+
+        permission_classes = [permissions.IsAuthenticated]
+
+        if request.user.role != User.REDACTOR and request.user.role != User.ADMIN:
+            return Response(UNAUTHORIZED_USER, status=status.HTTP_403_FORBIDDEN)
+
+        hall = Hall.objects.get(id=hall_id)
+        hall.delete()
+
+        payload = {
+            "status": "success",
+        }
+
+        return Response(payload, status=status.HTTP_200_OK)
 
 class ActView(APIView):
     @never_cache
@@ -249,7 +371,7 @@ class ActView(APIView):
         """
         permission_classes = [permissions.IsAuthenticated]
 
-        if request.user.role != User.REDACTOR or request.user.role != User.ADMIN:
+        if request.user.role != User.REDACTOR and request.user.role != User.ADMIN:
             return Response(UNAUTHORIZED_USER, status=status.HTTP_403_FORBIDDEN)
 
         data = request.data
@@ -301,10 +423,65 @@ class ActView(APIView):
         return Response(payload, status=status.HTTP_200_OK)
 
     @never_cache
+    def put(self, request, act_id):
+
+        permission_classes = [permissions.IsAuthenticated]
+        # act_id=1
+        if request.user.role != User.REDACTOR and request.user.role != User.ADMIN:
+            return Response(UNAUTHORIZED_USER, status=status.HTTP_403_FORBIDDEN)
+
+        act = Event.objects.get(id=act_id)
+
+        if not act:
+            raise Exception("Act doesn't exist")
+
+        try:
+            data = request.data
+
+            data = request.data
+            act.name = data['name']
+            type_id = int(data['type'])
+            act.act_type = ActType.objects.get(id=type_id)
+            act.length = data['length']
+            act.picture = data['picture']
+
+            act.genre.clear()
+            for current_element in data["genre"]:
+                act.genre.add(current_element)
+
+            act.cast.clear()
+            for current_element in data["cast"]:
+                act.cast.add(current_element)
+
+            act.director.clear()
+            for current_element in data["director"]:
+                act.director.add(current_element)
+
+            act.rating = data['rating']
+            act.description = data['description']
+
+            act.save()
+        except ValueError:
+            return Response({
+                "error": "REQUIRED_FIELD_NOT_FILLED"
+            }, status=status.HTTP_412_PRECONDITION_FAILED)
+        except Exception as e:
+            return e
+
+        act_serializer = ActSerializer(act)
+
+        payload = {
+            "status": "success",
+            "act": act_serializer.data,
+        }
+
+        return Response(payload, status=status.HTTP_200_OK)
+
+    @never_cache
     def delete(self, request, act_id):
         permission_classes = [permissions.IsAuthenticated]
 
-        if request.user.role != User.REDACTOR or request.user.role != User.ADMIN:
+        if request.user.role != User.REDACTOR and request.user.role != User.ADMIN:
             return Response(UNAUTHORIZED_USER, status=status.HTTP_403_FORBIDDEN)
 
         act = Act.objects.get(id=act_id)
@@ -370,7 +547,7 @@ class EventView(APIView):
         """
         permission_classes = [permissions.IsAuthenticated]
 
-        if request.user.role != User.REDACTOR or request.user.role != User.ADMIN:
+        if request.user.role != User.REDACTOR and request.user.role != User.ADMIN:
             return Response(UNAUTHORIZED_USER, status=status.HTTP_403_FORBIDDEN)
 
         data = request.data
@@ -392,6 +569,62 @@ class EventView(APIView):
 
         return Response(payload, status=status.HTTP_200_OK)
 
+    @never_cache
+    def put(self, request, event_id):
+
+        permission_classes = [permissions.IsAuthenticated]
+        # event_id=1
+        if request.user.role != User.REDACTOR and request.user.role != User.ADMIN:
+            return Response(UNAUTHORIZED_USER, status=status.HTTP_403_FORBIDDEN)
+
+        event = Event.objects.get(id=event_id)
+
+        if not event:
+            raise Exception("Event doesn't exist")
+
+        try:
+            data = request.data
+            hall_id = int(data["hall"])
+            event.hall = Hall.objects.get(id=hall_id)
+            event.date = data["date"]
+            event.price = data["price"]
+            act_id = int(data["act"])
+            event.act = Act.objects.get(id=act_id)
+
+            event.save()
+        except ValueError:
+            return Response({
+                "error": "REQUIRED_FIELD_NOT_FILLED"
+            }, status=status.HTTP_412_PRECONDITION_FAILED)
+        except Exception as e:
+            return e
+
+        event_serializer = EventSerializer(event)
+
+        payload = {
+            "status": "success",
+            "event": event_serializer.data,
+        }
+
+        return Response(payload, status=status.HTTP_200_OK)
+
+    @never_cache
+    def delete(self, request, event_id):
+
+        permission_classes = [permissions.IsAuthenticated]
+
+        if request.user.role != User.REDACTOR and request.user.role != User.ADMIN:
+            return Response(UNAUTHORIZED_USER, status=status.HTTP_403_FORBIDDEN)
+
+        event = Event.objects.get(id=event_id)
+        event.delete()
+
+        payload = {
+            "status": "success",
+        }
+
+        return Response(payload, status=status.HTTP_200_OK)
+
 
 class ReservationView(APIView):
     # serializer_class = ReservationSerializer
@@ -405,22 +638,20 @@ class ReservationView(APIView):
         :return:
         """
         data = request.data
-        user_id = int(data['user'])
-        user = User.objects.get(id=user_id)
+        user = data['user']
         event_id = int(data['event'])
         event = Event.objects.get(id=event_id)
-        paid = bool(data['paid'])
 
         seats = []
         for current_element in data["seats"]:
             seats.append(Seat.objects.get(id=int(current_element)))
 
-        new_reservation = Reservation.register_new_reservation(user=user, event=event, paid=paid, seats=seats)
+        new_reservation = Reservation.register_new_reservation(user=user, event=event, seats=seats)
 
         reservation_serializer = ReservationSerializer(new_reservation)
 
         payload = {
-            "act": reservation_serializer.data,
+            "reservation": reservation_serializer.data,
             "status": "success"
         }
 
@@ -434,6 +665,64 @@ class ReservationView(APIView):
 
         payload = {
             "reservation": reservation_serializer.data,
+        }
+
+        return Response(payload, status=status.HTTP_200_OK)
+
+    @never_cache
+    def put(self, request, reservation_id):
+
+        permission_classes = [permissions.IsAuthenticated]
+        # reservation_id=1
+        if request.user.role != User.REDACTOR and request.user.role != User.ADMIN:
+            return Response(UNAUTHORIZED_USER, status=status.HTTP_403_FORBIDDEN)
+
+        reservation = Reservation.objects.get(id=reservation_id)
+
+        if not reservation:
+            raise Exception("Reservation doesn't exist")
+
+        try:
+            data = request.data
+            reservation.user = data['user']
+            event_id = int(data['event'])
+            reservation.event = Event.objects.get(id=event_id)
+            reservation.paid = bool(data['paid'])
+
+            reservation.seats.clear()
+            for current_element in data["seats"]:
+                reservation.seats.add(current_element)
+
+            reservation.save()
+        except ValueError:
+            return Response({
+                "error": "REQUIRED_FIELD_NOT_FILLED"
+            }, status=status.HTTP_412_PRECONDITION_FAILED)
+        except Exception as e:
+            return e
+
+        reservation_serializer = ReservationSerializer(reservation)
+
+        payload = {
+            "status": "success",
+            "reservation": reservation_serializer.data,
+        }
+
+        return Response(payload, status=status.HTTP_200_OK)
+
+    @never_cache
+    def delete(self, request, reservation_id):
+
+        permission_classes = [permissions.IsAuthenticated]
+
+        if request.user.role != User.REDACTOR and request.user.role != User.ADMIN:
+            return Response(UNAUTHORIZED_USER, status=status.HTTP_403_FORBIDDEN)
+
+        reservation = Reservation.objects.get(id=reservation_id)
+        reservation.delete()
+
+        payload = {
+            "status": "success",
         }
 
         return Response(payload, status=status.HTTP_200_OK)

@@ -148,9 +148,9 @@ class Reservation(models.Model):
         self.seats.add(seat)
 
     @staticmethod
-    def register_new_reservation(user, event, paid, seats):
+    def register_new_reservation(user, event, seats):
 
-        new_reservation = Reservation.objects.create(user=user, event=event, paid=paid)
+        new_reservation = Reservation.objects.create(user=user, event=event)
 
         for current_item in seats:
             new_reservation.add_to_seats(current_item)
