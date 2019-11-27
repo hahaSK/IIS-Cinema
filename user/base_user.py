@@ -7,8 +7,6 @@ from django.utils import timezone
 
 from django.contrib.auth.models import BaseUserManager
 
-from django.contrib.auth import get_user_model
-
 
 class UserManager(BaseUserManager):
     """
@@ -16,20 +14,7 @@ class UserManager(BaseUserManager):
     instead of usernames.
     """
 
-    def create_user(self, email, **extra_fields):
-        """
-        Creates and saves a User with the given email and without
-        username and password. (password is, just in case, randomly generated).
-        """
-        if not email:
-            raise ValueError('The Email must be set')
-        email = self.normalize_email(email)
-        user = self.model(email=email, **extra_fields)
-        user.set_password(super().make_random_password())
-        user.save()
-        return user
-
-    def create_user_with_username(self, username, email, password, **extra_fields):
+    def create_user(self, username, email, password, **extra_fields):
         """
         Create and save a User with the given email, username and password.
         The username and email are both unique, but need to explicitly check
@@ -58,7 +43,7 @@ class UserManager(BaseUserManager):
             raise ValueError(_('Superuser must have is_staff=True.'))
         if extra_fields.get('is_superuser') is not True:
             raise ValueError(_('Superuser must have is_superuser=True.'))
-        return self.create_user_with_username(username, email, password, **extra_fields)
+        return self.create_user(username, email, password, **extra_fields)
 
 
 class AbstractUser(AbstractBaseUser, PermissionsMixin):
@@ -84,13 +69,12 @@ class AbstractUser(AbstractBaseUser, PermissionsMixin):
     )
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
 
-    has_username = True  # Attribute to set if user should also have username
-
     username_validator = UnicodeUsernameValidator()
 
     username = models.CharField(
         _('username'),
         max_length=150,
+        unique=True,
         help_text=_('Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.'),
         validators=[username_validator],
         error_messages={
@@ -117,27 +101,3 @@ class AbstractUser(AbstractBaseUser, PermissionsMixin):
 
     def get_short_name(self):
         return self.email
-
-    def save(self, *args, **kwargs):
-        # If the save user without username, we don't have to check for duplicity
-        # and can just save.
-        if not self.has_username:
-            super().save()
-
-        user = get_user_model()._default_manager.filter(email=self.email)
-        if not user:
-            # We are adding new user so need to check for username duplicity.
-            if len(list(get_user_model()._default_manager.filter(username=self.username))) > 0:
-                raise Exception("Username already exists")
-            super().save()
-            return
-        elif user.first().username == self.username:    # If the user exists and is not changing username just save.
-            # (Is updating user for example is changing password or last login).
-            super().save()
-            return
-
-        # Now we know that the user exist and is changing username so we need to check for username duplicity.
-        if len(list(get_user_model()._default_manager.filter(username=self.username))) > 0:
-            raise Exception("Username already exists")
-
-        super().save()
