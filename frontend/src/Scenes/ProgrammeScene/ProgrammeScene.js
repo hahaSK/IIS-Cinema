@@ -12,14 +12,16 @@ import connect from "react-redux/es/connect/connect";
 import orm from "../../Models/ORM/index";
 import moment from "moment";
 import "moment/min/locales";
+import NewEvent from "../../Component/NewEvent/NewEvent";
 
 class Programme extends Component {
 
     state = {
-        event: null,
+        event: "",
         showEvent: false,
         showPerformanceForm: false,
-        performanceType: "",
+        newEvent: false,
+        performanceType: 0,
     };
 
     handleChange = (event) => {
@@ -32,10 +34,32 @@ class Programme extends Component {
         });
     };
 
-    onEventClick = (event) => {
+    /**
+     * Handle Delete Click
+     * @param event
+     */
+    handleDeleteClick = (deleteEvent) => {
+
+        /**
+         * Delete event
+         * @param response
+         */
+        const onSuccess = (response) => {
+            /**
+             * Dispatch All
+             */
+            MasterDispatcher.dispatch(response.data);
+            window.location = "/";
+        };
+
+        BackendRequest("delete", "event/" + deleteEvent.id, null, onSuccess);
+    };
+
+    onEventClick = (eventId) => {
         this.setState({
-            event: event
+            event: eventId
         });
+        console.log(this.state.event);
         this.toggleEvent();
     };
 
@@ -48,6 +72,12 @@ class Programme extends Component {
     togglePerformanceForm = () => {
         this.setState({
             showPerformanceForm: !this.state.showPerformanceForm
+        });
+    };
+
+    toggleNewEvent = () => {
+        this.setState({
+            newEvent: !this.state.newEvent
         });
     };
 
@@ -73,8 +103,6 @@ class Programme extends Component {
          */
         const onSuccess = (response) => {
 
-            console.log("Events");
-            console.log(response.data);
             MasterDispatcher.dispatch(response.data);
         };
 
@@ -109,7 +137,7 @@ class Programme extends Component {
         BackendRequest("get", "halls", null, onSuccess);
     };
 
-    componentDidMount() {
+    componentWillMount() {
         this.fetchActTypes();
         this.fetchEvents();
         this.fetchActs();
@@ -139,17 +167,20 @@ class Programme extends Component {
                             <h3 style={{margin: '0'}}>Typ představení:</h3>
                             <select name={"performanceType"} onChange={this.handleChange} value={this.state.performanceType}>
                                 <option disabled>Zvolte typ představení</option>
-                                <option key={0} defaultValue={"all"}>Všechny</option>
+                                <option key={0} value={0}>Všechny</option>
                                 {actTypes.toModelArray().map(actType => {
-                                    return <option key={actType.id} value={actType.name}>{actType.name}</option>;
+                                    return <option key={actType.id} value={actType.id}>{actType.name}</option>;
                                 })}
                             </select>
                         </div>
                         <div className={"create-new"}>
                             <button onClick={()=>this.togglePerformanceForm()}>Vytvořit představení</button>
-                            <button>Vytvořit událost</button>
+                            <button onClick={()=>this.toggleNewEvent()}>Vytvořit událost</button>
                         </div>
                     </div>
+
+                    {(this.state.newEvent) ? <NewEvent/> : null
+                    }
 
                     {(events.count() === 0) ? "Žádné nadcházející události" :
                         <Grid className={"result-table"}>
@@ -161,89 +192,31 @@ class Programme extends Component {
                                 <Col xs={1}>Cena</Col>
                                 <Col xs={4}/>
                             </Row>
-                        {events.toModelArray().map((event) => {
-                            let act = session.Act.withId(event._fields.act);
-                            let hall = session.Hall.withId(event._fields.hall);
-                            console.log("names");
-                            console.log(act);
-                            console.log(hall);
-                            if (moment(event.date)._d >= today) {
-                                return (
-                                    <Row>
-                                        <Col xs={3} onClick={() => this.onEventClick(event)}>{event._fields.act}</Col>
-                                        <Col xs={1}
-                                             onClick={() => this.onEventClick(event)}>{moment(event.date).format("D. MMMM")}</Col>
-                                        <Col xs={1}
-                                             onClick={() => this.onEventClick(event)}>{moment(event.date).format("HH:mm")}</Col>
-                                        <Col xs={2} onClick={() => this.onEventClick(event)}>{event._fields.hall}</Col>
-                                        <Col xs={1}
-                                             onClick={() => this.onEventClick(event)}>{parseInt(event.price)} Kč</Col>
-                                        <Col xs={4}>
-                                            <button onClick={() => {
-                                                alert("Vstupenky")
-                                            }}>Koupit vstupenky
-                                            </button>
-                                            <button onClick={() => {
-                                                alert("Editovat")
-                                            }}>Editovat
-                                            </button>
-                                            <button onClick={() => {
-                                                alert("Zrušit")
-                                            }}>Zrušit
-                                            </button>
-                                        </Col>
-                                    </Row>
-                                );
-                            }
-                        })}
+                            {events.toModelArray().map((event) => {
+                                if (moment(event.date)._d >= today) {
+                                    if (this.state.performanceType === 0) { //TODO: || this.state.performanceType === event.type
+                                        return (
+                                            <Row>
+                                                <Col xs={3} onClick={() => this.onEventClick(event.id)}>Název</Col>
+                                                <Col xs={1}
+                                                     onClick={() => this.onEventClick(event.id)}>{moment(event.date).format("D. MMMM")}</Col>
+                                                <Col xs={1}
+                                                     onClick={() => this.onEventClick(event.id)}>{moment(event.date).format("HH:mm")}</Col>
+                                                <Col xs={2} onClick={() => this.onEventClick(event)}>Sál</Col>
+                                                <Col xs={1}
+                                                     onClick={() => this.onEventClick(event.id)}>{parseInt(event.price)} Kč</Col>
+                                                <Col xs={4}>
+                                                    <button onClick={() => {alert("Vstupenky")}}>Koupit vstupenky</button>
+                                                    <button onClick={() => {alert("Editovat")}}>Editovat</button>
+                                                    <button onClick={() => {this.handleDeleteClick(event)}}>Zrušit</button>
+                                                </Col>
+                                            </Row>
+                                        );
+                                    }
+                                }
+                            })}
                         </Grid>
                     }
-
-                    {/*<Grid className={"result-table"}>*/}
-
-                    {/*{nextMonth.map(weekday => {*/}
-                        {/*dayEventList = [];*/}
-                        {/*i = 0;*/}
-                        {/*return (*/}
-                            {/*<div>*/}
-                                {/*{events.toModelArray().map(event => {*/}
-                                    {/*if (weekday.getDate() === event._fields.date.getDate() && weekday.getMonth() === event._fields.date.getMonth() && weekday.getFullYear() === event._fields.date.getFullYear()){*/}
-                                        {/*dayEventList.push(event);*/}
-                                        {/*return "";*/}
-                                    {/*}*/}
-                                {/*})}*/}
-                                {/*{dayEventList.map(dayEvent => {*/}
-                                    {/*if(dayEventList.length !== 0) {*/}
-                                        {/*i++;*/}
-                                        {/*return (*/}
-                                            {/*<div>*/}
-                                                {/*{(i === 1) ?*/}
-                                                    {/*<span>*/}
-                                                    {/*<h1>{this.DayAsString(weekday.getDay()) + ", " + weekday.getDate() + ". " + this.MonthAsString(weekday.getMonth())}</h1>*/}
-                                                    {/*<hr/>*/}
-                                                    {/*</span>*/}
-                                                    {/*: ""}*/}
-                                                {/*<Row>*/}
-                                                    {/*<Col xs={2} onClick={()=>this.onEventClick(dayEvent)}>{dayEvent.type}</Col>*/}
-                                                    {/*<Col xs={4} onClick={()=>this.onEventClick(dayEvent)}>{dayEvent.name}</Col>*/}
-                                                    {/*<Col xs={1} onClick={()=>this.onEventClick(dayEvent)}>{dayEvent.time}</Col>*/}
-                                                    {/*<Col xs={5}>*/}
-                                                        {/*<button onClick={()=> {alert("Vstupenky")}}>Koupit vstupenky</button>*/}
-                                                        {/*<button onClick={()=> {alert("Editovat")}}>Editovat</button>*/}
-                                                        {/*<button onClick={()=> {alert("Zrušit")}}>Zrušit</button>*/}
-                                                    {/*</Col>*/}
-                                                {/*</Row>*/}
-                                            {/*</div>*/}
-                                        {/*);*/}
-                                    {/*}*/}
-                                    {/*else {*/}
-                                        {/*return "";*/}
-                                    {/*}*/}
-                                {/*})}*/}
-                            {/*</div>*/}
-                        {/*);*/}
-                    {/*})}*/}
-                    {/*</Grid>*/}
 
                     {(this.state.showEvent) ?
                         <PerformanceView
@@ -255,8 +228,8 @@ class Programme extends Component {
 
                     {(this.state.showPerformanceForm) ?
                         <PerformanceForm
-                        event={this.state.event}
-                        closePopup={this.togglePerformanceForm.bind(this)}
+                            event={this.state.event}
+                            closePopup={this.togglePerformanceForm.bind(this)}
                         />
                         : null
                     }

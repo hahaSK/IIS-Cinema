@@ -1,5 +1,6 @@
 import {
     SET_APP_LOADED,
+    SET_CONFIRMATION,
     SET_APP_URL,
     RESET_STORE, SET_LOGGED_USER, SET_SEARCH,
 } from "./App.actions";
@@ -28,6 +29,10 @@ export function appReducer(state: Object = INITIAL_STATE, action: any) {
         case SET_APP_LOADED:
             return Object.assign({}, state, {
                 appLoaded: action.status
+            });
+        case SET_CONFIRMATION:
+            return Object.assign({}, state, {
+                confirmation: action.data
             });
         case SET_APP_URL:
             return Object.assign({}, state, {

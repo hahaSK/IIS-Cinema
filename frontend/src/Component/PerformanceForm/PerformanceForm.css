@@ -42,8 +42,10 @@ html, body, .app {
       width: 100%;
       font-size: 1rem; }
     .popup .popup_inner textarea {
-      height: 15rem;
+      height: 30rem;
       resize: none; }
+    .popup .popup_inner select {
+      width: 100%; }
     .popup .popup_inner .header-and-close {
       display: flex;
       justify-content: space-between;
@@ -78,10 +80,10 @@ html, body, .app {
       padding: 0.5rem !important; }
       .popup .popup_inner .files-dropzone:hover {
         cursor: pointer; }
+    .popup .popup_inner .css-2b097c-container {
+      width: 100%; }
     .popup .popup_inner .right-side {
       width: 75%; }
-      .popup .popup_inner .right-side .ytb-href input {
-        width: 50%; }
       .popup .popup_inner .right-side button {
         position: absolute;
         right: 1rem;

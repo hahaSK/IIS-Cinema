@@ -59,7 +59,7 @@ class Users extends Component {
             <div className="App">
                 <Navigation/>
                 <div className={"header"}>
-                    <h1>Program</h1>
+                    <h1>Uživatelé</h1>
                 </div>
                 <hr />
                 <div className={"body users"}>

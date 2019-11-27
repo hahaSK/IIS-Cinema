@@ -25,3 +25,7 @@ Act.propTypes = {
     name: PropTypes.string,
     description: PropTypes.string,
 };
+
+export const ADD_ACT = "ADD_ACT";
+export const REMOVE_ACT = "REMOVE_ACT";
+export const UPDATE_ACT = "UPDATE_ACT";
