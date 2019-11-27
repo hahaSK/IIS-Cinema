@@ -25,7 +25,7 @@ class UserTestCase(TestCase):
         User.create(first_name='Peter', last_name='Saigu',
                     email="saigu@gmail.com",
                     date_of_birth="1944-09-28",
-                    password="1234", username="Saigu", role=User.REGISTERED)
+                    password="1234", username="Saigu", role=User.VIEWER)
 
     def test_user_creation(self):
         user = User.objects.get(first_name="Anca")
@@ -41,7 +41,7 @@ class UserTestCase(TestCase):
         self.assertEqual(user.email, "saigu@gmail.com")
         self.assertEqual(user.date_of_birth.__format__('%Y-%m-%d'), "1944-09-28")
         self.assertEqual(user.username, "Saigu")
-        self.assertEqual(user.role, User.REGISTERED)
+        self.assertEqual(user.role, User.VIEWER)
 
     def test_user_creation_exceptions(self):
         # first name value error

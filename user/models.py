@@ -8,20 +8,20 @@ from .base_user import AbstractUser
 
 class User(AbstractUser):
     ADMIN = 1
-    REGISTERED = 2
+    VIEWER = 2
     CASHIER = 3
     REDACTOR = 4
 
     ROLE_CHOICES = (
         (ADMIN, 'Admin'),
-        (REGISTERED, 'Registered'),
+        (VIEWER, 'Registered'),
         (CASHIER, 'Cashier'),
         (REDACTOR, 'Redactor')
     )
 
     date_of_birth = models.DateField(blank=False, default=timezone.now())
 
-    role = models.SmallIntegerField(choices=ROLE_CHOICES, default=REGISTERED)
+    role = models.SmallIntegerField(choices=ROLE_CHOICES, default=VIEWER)
 
     @staticmethod
     def create(username, email, first_name, last_name, role, password, date_of_birth):
