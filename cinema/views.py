@@ -380,22 +380,23 @@ class ActView(APIView):
 
         data = request.data
         name = data['name']
-        type_id = int(data['type'])
+        type_id = data['type']
         act_type = ActType.objects.get(id=type_id)
         length = data['length']
         picture = data['picture']
 
         genre = []
-        for current_element in data["genre"]:
-            genre.append(Genre.objects.get(id=int(current_element)))
+        for current_element in data['genre']:
+            print(current_element)
+            genre.append(Genre.objects.get(id=current_element))
 
         cast = []
-        for current_element in data["cast"]:
-            cast.append(Actor.objects.get(id=int(current_element)))
+        for current_element in data['cast']:
+            cast.append(Actor.objects.get(id=current_element))
 
         director = []
-        for current_element in data["director"]:
-            director.append(Director.objects.get(id=int(current_element)))
+        for current_element in data['director']:
+            director.append(Director.objects.get(id=current_element))
 
         rating = data['rating']
         description = data['description']
