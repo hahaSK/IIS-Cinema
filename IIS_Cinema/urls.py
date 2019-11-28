@@ -41,6 +41,7 @@ app_name = 'api'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('event/<uuid:event_id>', cinemaviews.EventView.as_view()),
     path('events', cinemaviews.EventView.as_view()),
     path('acts', cinemaviews.ActView.as_view()),
     path('actors', cinemaviews.ActorView.as_view()),

@@ -1,10 +1,11 @@
 from django.db import models
-
+import uuid
 from address.models import Address
 from user.models import *
 
 
 class Actor(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=120, blank=False, default="John Doe")
     year = models.PositiveSmallIntegerField(blank=False, default=0)
     picture = models.ImageField(upload_to='images')
@@ -14,6 +15,7 @@ class Actor(models.Model):
 
 
 class Director(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=120, blank=False, default="John Doe")
     year = models.PositiveSmallIntegerField(blank=False, default=0)
     picture = models.ImageField(upload_to='images')
@@ -23,6 +25,7 @@ class Director(models.Model):
 
 
 class Genre(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=120, blank=False, default="Unknown Genre", unique=True)
 
     def __str__(self):
@@ -30,6 +33,7 @@ class Genre(models.Model):
 
 
 class ActType(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=120, blank=False, default="Unknown Type")
 
     def __str__(self):
@@ -37,6 +41,7 @@ class ActType(models.Model):
 
 
 class Hall(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=120, blank=False, default="Unknown Hall")
     address = models.ForeignKey(Address, on_delete=models.CASCADE)
     rows = models.PositiveSmallIntegerField(blank=False, default=0)
@@ -48,6 +53,7 @@ class Hall(models.Model):
 
 
 class Act(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=120, blank=False, default="Unknown Act")
     type = models.ForeignKey(ActType, on_delete=models.CASCADE)
     length = models.PositiveSmallIntegerField(blank=False, default=0)
@@ -102,6 +108,7 @@ class Act(models.Model):
 
 
 class Seat(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     row = models.PositiveSmallIntegerField(blank=False, default=0)
     seat_No = models.PositiveSmallIntegerField(blank=False, default=0)
     hall = models.ForeignKey(Hall,
@@ -113,6 +120,7 @@ class Seat(models.Model):
 
 
 class Event(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     hall = models.ForeignKey(Hall,
                              related_name="in_hall",
                              on_delete=models.CASCADE)
@@ -128,6 +136,7 @@ class Event(models.Model):
 
 
 class Reservation(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.EmailField(blank=False, default="email")
     # user = models.ForeignKey(User,
     #                          related_name="reservation_maker",
@@ -167,6 +176,7 @@ class Reservation(models.Model):
 
 
 class SeatInEvent(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     seat = models.ForeignKey(Seat,
                              related_name="selected_seat",
                              on_delete=models.CASCADE)
