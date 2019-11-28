@@ -80,15 +80,15 @@ class UserView(APIView):
         if not user:
             raise Exception("User doesn't exist")
 
-        try:
-            data = request.data
-            user.first_name = data['first_name']
-            user.last_name = data['last_name']
-            user.username = data['username']
-            user.email = data['email']
-            user.role = data['role']
-            user.date_of_birth = data['date_of_birth']
+        data = request.data
+        user.first_name = data['first_name']
+        user.last_name = data['last_name']
+        user.username = data['username']
+        user.email = data['email']
+        user.role = data['role']
+        user.date_of_birth = data['date_of_birth']
 
+        try:
             user.save()
         except ValueError:
             return Response({
