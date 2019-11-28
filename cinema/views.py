@@ -19,6 +19,10 @@ UNAUTHORIZED_USER = {
     "error": "Unauthorized user"
 }
 
+TAKEN_SEAT = {
+    "error": "Some of the selected seats is no available"
+}
+
 
 class ActorView(APIView):
     @never_cache
@@ -648,6 +652,10 @@ class ReservationView(APIView):
 
         new_reservation = Reservation.register_new_reservation(user=user, event=event, seats=seats)
 
+        for current_item in new_reservation.seats.all():
+            if not SeatInEvent.objects.get(event_id=new_reservation.event.id, seat_id=current_item).is_available:
+                return Response(TAKEN_SEAT, status=status.HTTP_403_FORBIDDEN)
+
         reservation_serializer = ReservationSerializer(new_reservation)
 
         payload = {
@@ -684,6 +692,16 @@ class ReservationView(APIView):
 
         try:
             data = request.data
+
+            original_seats = []
+            for seat in reservation.seats.all():
+                original_seats.append(seat.id)
+            diff_list = list(set(data['seats']) - set(original_seats))
+            for current_item in diff_list:
+                if not SeatInEvent.objects.get(event_id=reservation.event.id, seat_id=current_item).is_available:
+                    reservation.save()
+                    return Response(TAKEN_SEAT, status=status.HTTP_403_FORBIDDEN)
+
             reservation.user = data['user']
             event_id = int(data['event'])
             reservation.event = Event.objects.get(id=event_id)
@@ -693,6 +711,7 @@ class ReservationView(APIView):
                 se = SeatInEvent.objects.get(event_id=event_id, seat_id=current_element)
                 se.is_available = True
                 se.save()
+
             reservation.seats.clear()
             for current_element in data["seats"]:
                 reservation.seats.add(current_element)

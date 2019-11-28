@@ -154,6 +154,7 @@ class Reservation(models.Model):
 
         for current_item in seats:
             new_reservation.add_to_seats(current_item)
+
         new_reservation.save()
 
         return new_reservation
