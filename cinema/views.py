@@ -634,6 +634,12 @@ class ReservationView(APIView):
     # serializer_class = ReservationSerializer
     # queryset = Reservation.objects.all()
 
+    def get_permissions(self):
+        if self.request.method == 'GET' or self.request.method == 'POST':
+            return [permissions.AllowAny()]
+        else:
+            return [permissions.IsAuthenticated()]
+
     @never_cache
     def post(self, request):
         """
