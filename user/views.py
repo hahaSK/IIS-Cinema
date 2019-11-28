@@ -9,6 +9,10 @@ from .models import User
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
+UNAUTHORIZED_USER = {
+    "error": "Unauthorized user"
+}
+
 
 def user_exception_response(e: Exception):
     """
@@ -69,11 +73,25 @@ class PasswordEditView(APIView):
 
 
 class UserView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    @never_cache
+    def get(self, request):
+        if request.user.role != User.ADMIN:
+            return Response(UNAUTHORIZED_USER, status=status.HTTP_403_FORBIDDEN)
+
+        users = User.objects.all()
+
+        user_serializer = UserSerializer(users, many=True)
+
+        payload = {
+            "User": user_serializer.data,
+        }
+
+        return Response(payload, status=status.HTTP_200_OK)
 
     @never_cache
     def put(self, request, user_id):
-
-        permission_classes = [permissions.IsAuthenticated]
 
         user = User.objects.get(id=user_id)
 
@@ -108,8 +126,6 @@ class UserView(APIView):
 
     @never_cache
     def delete(self, request, user_id):
-
-        permission_classes = [permissions.IsAuthenticated]
 
         user = User.objects.get(id=user_id)
         user.delete()

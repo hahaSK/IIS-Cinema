@@ -18,6 +18,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
+from rest_framework_jwt.views import verify_jwt_token, obtain_jwt_token
 
 from address import views as addressviews
 from user import views as userviews
@@ -50,9 +51,17 @@ urlpatterns = [
     path('acts/<uuid:act_id>', cinemaviews.ActView.as_view()),
     path('halls', cinemaviews.HallView.as_view()),
 
-    path('users/', include('user.urls')),
+
     path('acttypes', cinemaviews.ActTypeView.as_view()),
     path('reservations', cinemaviews.ReservationView.as_view()),
+
+    # user views
+    path('current_user', userviews.current_user),
+    path('login', obtain_jwt_token),
+    path('api-token-verify', verify_jwt_token),
+    path('user/create', userviews.UserRegisterView.as_view()),
+    path('users', userviews.UserView.as_view()),
+    path('user/<uuid:user_id>', userviews.UserView.as_view())
 ]
 
 
