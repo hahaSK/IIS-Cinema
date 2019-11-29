@@ -42,18 +42,23 @@ app_name = 'api'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('event/<uuid:event_id>', cinemaviews.EventView.as_view()),
+
     path('events', cinemaviews.EventView.as_view()),
+    path('event/<uuid:event_id>', cinemaviews.EventView.as_view()),
     path('acts', cinemaviews.ActView.as_view()),
-    path('actors', cinemaviews.ActorView.as_view()),
-    path('directors', cinemaviews.DirectorView.as_view()),
-    path('genres', cinemaviews.GenreView.as_view()),
     path('acts/<uuid:act_id>', cinemaviews.ActView.as_view()),
+    path('actors', cinemaviews.ActorView.as_view()),
+    path('actors/<uuid:actor_id>', cinemaviews.ActorView.as_view()),
+    path('directors', cinemaviews.DirectorView.as_view()),
+    path('directors/<uuid:director_id>', cinemaviews.DirectorView.as_view()),
+    path('genres', cinemaviews.GenreView.as_view()),
+    path('genres/<uuid:genre_id>', cinemaviews.GenreView.as_view()),
     path('halls', cinemaviews.HallView.as_view()),
-
-
+    path('halls/<uuid:hall_id>', cinemaviews.HallView.as_view()),
     path('acttypes', cinemaviews.ActTypeView.as_view()),
+    path('acttypes/<uuid:type_id>', cinemaviews.ActTypeView.as_view()),
     path('reservations', cinemaviews.ReservationView.as_view()),
+    path('reservations/<uuid:reservation_id>', cinemaviews.ReservationView.as_view()),
 
     # user views
     path('current_user', userviews.current_user),

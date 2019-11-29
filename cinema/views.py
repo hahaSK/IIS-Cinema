@@ -294,7 +294,7 @@ class HallView(APIView):
 
         data = request.data
         name = data['name']
-        address_id = int(data['address'])
+        address_id = data['address']
         address = Address.objects.get(id=address_id)
         rows = int(data['rows'])
         columns = int(data['columns'])
@@ -326,7 +326,7 @@ class HallView(APIView):
         try:
             data = request.data
             hall.name = data['name']
-            address_id = int(data['address'])
+            address_id = data['address']
             hall.address = Address.objects.get(id=address_id)
             hall.rows = int(data['rows'])
             hall.columns = int(data['columns'])
@@ -445,7 +445,7 @@ class ActView(APIView):
 
             data = request.data
             act.name = data['name']
-            type_id = int(data['type'])
+            type_id = data['type']
             act.act_type = ActType.objects.get(id=type_id)
             act.length = data['length']
             act.picture = data['picture']
@@ -556,11 +556,11 @@ class EventView(APIView):
             return Response(UNAUTHORIZED_USER, status=status.HTTP_403_FORBIDDEN)
 
         data = request.data
-        hall_id = int(data["hall"])
+        hall_id = data["hall"]
         hall = Hall.objects.get(id=hall_id)
         date = data["date"]
         price = data["price"]
-        act_id = int(data["act"])
+        act_id = data["act"]
         act = Act.objects.get(id=act_id)
 
         new_event = Event.objects.create(hall=hall, date=date, price=price, act=act)
@@ -589,11 +589,11 @@ class EventView(APIView):
 
         try:
             data = request.data
-            hall_id = int(data["hall"])
+            hall_id = data["hall"]
             event.hall = Hall.objects.get(id=hall_id)
             event.date = data["date"]
             event.price = data["price"]
-            act_id = int(data["act"])
+            act_id = data["act"]
             event.act = Act.objects.get(id=act_id)
 
             event.save()
@@ -650,7 +650,7 @@ class ReservationView(APIView):
         """
         data = request.data
         user = data['user']
-        event_id = int(data['event'])
+        event_id = data['event']
         event = Event.objects.get(id=event_id)
 
         seats = []
@@ -710,7 +710,7 @@ class ReservationView(APIView):
                     return Response(TAKEN_SEAT, status=status.HTTP_403_FORBIDDEN)
 
             reservation.user = data['user']
-            event_id = int(data['event'])
+            event_id = data['event']
             reservation.event = Event.objects.get(id=event_id)
             reservation.paid = bool(data['paid'])
 
