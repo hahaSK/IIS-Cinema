@@ -7,8 +7,7 @@ from rest_framework.views import APIView
 
 from user.models import User
 from .serializers import AddressSerializer
-from .models import Address
-from django_countries import countries
+from .models import Address, EU_countries
 
 UNAUTHORIZED_USER = {
     "error": "Unauthorized user"
@@ -17,8 +16,7 @@ UNAUTHORIZED_USER = {
 
 @api_view(['GET'])
 def countries_view(request):
-
-    return Response(countries.countries, status=status.HTTP_200_OK)
+    return Response(EU_countries.countries, status=status.HTTP_200_OK)
 
 
 class AddressView(APIView):
