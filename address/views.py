@@ -36,7 +36,7 @@ class AddressView(APIView):
         address_serializer = AddressSerializer(addresses, many=True)
 
         payload = {
-            "event": address_serializer.data,
+            "address": address_serializer.data,
         }
 
         return Response(payload, status=status.HTTP_200_OK)
@@ -65,7 +65,7 @@ class AddressView(APIView):
         address_serializer = AddressSerializer(new_address)
 
         payload = {
-            "event": address_serializer.data,
+            "address": address_serializer.data,
             "status": "success"
         }
 

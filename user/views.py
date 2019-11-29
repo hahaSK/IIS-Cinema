@@ -85,7 +85,7 @@ class UserView(APIView):
         user_serializer = UserSerializer(users, many=True)
 
         payload = {
-            "User": user_serializer.data,
+            "user": user_serializer.data,
         }
 
         return Response(payload, status=status.HTTP_200_OK)
