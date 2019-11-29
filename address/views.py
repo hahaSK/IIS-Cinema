@@ -1,17 +1,24 @@
 from django.shortcuts import render
 from django.views.decorators.cache import never_cache
 from rest_framework import status, permissions
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from user.models import User
 from .serializers import AddressSerializer
 from .models import Address
-
+from django_countries import countries
 
 UNAUTHORIZED_USER = {
     "error": "Unauthorized user"
 }
+
+
+@api_view(['GET'])
+def countries_view(request):
+
+    return Response(countries.countries, status=status.HTTP_200_OK)
 
 
 class AddressView(APIView):
