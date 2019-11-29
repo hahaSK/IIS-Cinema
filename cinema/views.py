@@ -156,6 +156,12 @@ class DirectorView(APIView):
 
 class GenreView(APIView):
 
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [permissions.AllowAny()]
+        else:
+            return [permissions.IsAuthenticated()]
+
     @never_cache
     def get(self, request, genre_id=None):
         """
@@ -212,6 +218,12 @@ class GenreView(APIView):
 
 
 class ActTypeView(APIView):
+
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [permissions.AllowAny()]
+        else:
+            return [permissions.IsAuthenticated()]
 
     @never_cache
     def get(self, request, act_type_id=None):
@@ -322,7 +334,7 @@ class HallView(APIView):
         hall = Hall.objects.get(id=hall_id)
 
         if not hall:
-            raise Exception("Event doesn't exist")
+            raise Exception("Hall doesn't exist")
 
         try:
             data = request.data
