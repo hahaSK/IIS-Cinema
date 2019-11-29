@@ -25,6 +25,13 @@ TAKEN_SEAT = {
 
 
 class ActorView(APIView):
+
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [permissions.AllowAny()]
+        else:
+            return [permissions.IsAuthenticated()]
+
     @never_cache
     def get(self, request, actor_id=None):
         """
@@ -46,7 +53,6 @@ class ActorView(APIView):
 
     @never_cache
     def post(self, request):
-        permission_classes = [permissions.IsAuthenticated]
 
         if request.user.role != User.REDACTOR and request.user.role != User.ADMIN:
             return Response(UNAUTHORIZED_USER, status=status.HTTP_403_FORBIDDEN)
@@ -70,8 +76,6 @@ class ActorView(APIView):
     @never_cache
     def delete(self, request, actor_id):
 
-        permission_classes = [permissions.IsAuthenticated]
-
         if request.user.role != User.REDACTOR and request.user.role != User.ADMIN:
             return Response(UNAUTHORIZED_USER, status=status.HTTP_403_FORBIDDEN)
 
@@ -86,6 +90,13 @@ class ActorView(APIView):
 
 
 class DirectorView(APIView):
+
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [permissions.AllowAny()]
+        else:
+            return [permissions.IsAuthenticated()]
+
     @never_cache
     def get(self, request, director_id=None):
         """
@@ -107,7 +118,6 @@ class DirectorView(APIView):
 
     @never_cache
     def post(self, request):
-        permission_classes = [permissions.IsAuthenticated]
 
         if request.user.role != User.REDACTOR and request.user.role != User.ADMIN:
             return Response(UNAUTHORIZED_USER, status=status.HTTP_403_FORBIDDEN)
@@ -131,8 +141,6 @@ class DirectorView(APIView):
     @never_cache
     def delete(self, request, director_id):
 
-        permission_classes = [permissions.IsAuthenticated]
-
         if request.user.role != User.REDACTOR and request.user.role != User.ADMIN:
             return Response(UNAUTHORIZED_USER, status=status.HTTP_403_FORBIDDEN)
 
@@ -147,6 +155,7 @@ class DirectorView(APIView):
 
 
 class GenreView(APIView):
+
     @never_cache
     def get(self, request, genre_id=None):
         """
@@ -168,7 +177,6 @@ class GenreView(APIView):
 
     @never_cache
     def post(self, request):
-        permission_classes = [permissions.IsAuthenticated]
 
         if request.user.role != User.REDACTOR and request.user.role != User.ADMIN:
             return Response(UNAUTHORIZED_USER, status=status.HTTP_403_FORBIDDEN)
@@ -189,8 +197,6 @@ class GenreView(APIView):
 
     @never_cache
     def delete(self, request, genre_id):
-
-        permission_classes = [permissions.IsAuthenticated]
 
         if request.user.role != User.REDACTOR and request.user.role != User.ADMIN:
             return Response(UNAUTHORIZED_USER, status=status.HTTP_403_FORBIDDEN)
@@ -228,7 +234,6 @@ class ActTypeView(APIView):
 
     @never_cache
     def post(self, request):
-        permission_classes = [permissions.IsAuthenticated]
 
         if request.user.role != User.REDACTOR and request.user.role != User.ADMIN:
             return Response(UNAUTHORIZED_USER, status=status.HTTP_403_FORBIDDEN)
@@ -250,8 +255,6 @@ class ActTypeView(APIView):
     @never_cache
     def delete(self, request, act_type_id):
 
-        permission_classes = [permissions.IsAuthenticated]
-
         if request.user.role != User.REDACTOR and request.user.role != User.ADMIN:
             return Response(UNAUTHORIZED_USER, status=status.HTTP_403_FORBIDDEN)
 
@@ -266,6 +269,7 @@ class ActTypeView(APIView):
 
 
 class HallView(APIView):
+
     @never_cache
     def get(self, request, hall_id=None):
         """
@@ -287,7 +291,6 @@ class HallView(APIView):
 
     @never_cache
     def post(self, request):
-        permission_classes = [permissions.IsAuthenticated]
 
         if request.user.role != User.REDACTOR and request.user.role != User.ADMIN:
             return Response(UNAUTHORIZED_USER, status=status.HTTP_403_FORBIDDEN)
@@ -313,8 +316,6 @@ class HallView(APIView):
     @never_cache
     def put(self, request, hall_id):
 
-        permission_classes = [permissions.IsAuthenticated]
-        # hall_id=1
         if request.user.role != User.REDACTOR and request.user.role != User.ADMIN:
             return Response(UNAUTHORIZED_USER, status=status.HTTP_403_FORBIDDEN)
 
@@ -351,8 +352,6 @@ class HallView(APIView):
     @never_cache
     def delete(self, request, hall_id):
 
-        permission_classes = [permissions.IsAuthenticated]
-
         if request.user.role != User.REDACTOR and request.user.role != User.ADMIN:
             return Response(UNAUTHORIZED_USER, status=status.HTTP_403_FORBIDDEN)
 
@@ -365,7 +364,15 @@ class HallView(APIView):
 
         return Response(payload, status=status.HTTP_200_OK)
 
+
 class ActView(APIView):
+
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [permissions.AllowAny()]
+        else:
+            return [permissions.IsAuthenticated()]
+
     @never_cache
     def post(self, request):
         """
@@ -373,7 +380,6 @@ class ActView(APIView):
         :param request:
         :return:
         """
-        permission_classes = [permissions.IsAuthenticated]
 
         if request.user.role != User.REDACTOR and request.user.role != User.ADMIN:
             return Response(UNAUTHORIZED_USER, status=status.HTTP_403_FORBIDDEN)
@@ -430,8 +436,6 @@ class ActView(APIView):
     @never_cache
     def put(self, request, act_id):
 
-        permission_classes = [permissions.IsAuthenticated]
-        # act_id=1
         if request.user.role != User.REDACTOR and request.user.role != User.ADMIN:
             return Response(UNAUTHORIZED_USER, status=status.HTTP_403_FORBIDDEN)
 
@@ -441,8 +445,6 @@ class ActView(APIView):
             raise Exception("Act doesn't exist")
 
         try:
-            data = request.data
-
             data = request.data
             act.name = data['name']
             type_id = data['type']
@@ -484,7 +486,6 @@ class ActView(APIView):
 
     @never_cache
     def delete(self, request, act_id):
-        permission_classes = [permissions.IsAuthenticated]
 
         if request.user.role != User.REDACTOR and request.user.role != User.ADMIN:
             return Response(UNAUTHORIZED_USER, status=status.HTTP_403_FORBIDDEN)
@@ -510,6 +511,12 @@ class EventView(APIView):
     ERROR_PAYLOAD = {
         "error": "Event does not exists"
     }
+
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [permissions.AllowAny()]
+        else:
+            return [permissions.IsAuthenticated()]
 
     @staticmethod
     def get_event(event_id):
@@ -550,7 +557,6 @@ class EventView(APIView):
         :param request:
         :return:
         """
-        permission_classes = [permissions.IsAuthenticated]
 
         if request.user.role != User.REDACTOR and request.user.role != User.ADMIN:
             return Response(UNAUTHORIZED_USER, status=status.HTTP_403_FORBIDDEN)
@@ -577,8 +583,6 @@ class EventView(APIView):
     @never_cache
     def put(self, request, event_id):
 
-        permission_classes = [permissions.IsAuthenticated]
-        # event_id=1
         if request.user.role != User.REDACTOR and request.user.role != User.ADMIN:
             return Response(UNAUTHORIZED_USER, status=status.HTTP_403_FORBIDDEN)
 
@@ -616,8 +620,6 @@ class EventView(APIView):
     @never_cache
     def delete(self, request, event_id):
 
-        permission_classes = [permissions.IsAuthenticated]
-
         if request.user.role != User.REDACTOR and request.user.role != User.ADMIN:
             return Response(UNAUTHORIZED_USER, status=status.HTTP_403_FORBIDDEN)
 
@@ -632,8 +634,6 @@ class EventView(APIView):
 
 
 class ReservationView(APIView):
-    # serializer_class = ReservationSerializer
-    # queryset = Reservation.objects.all()
 
     def get_permissions(self):
         if self.request.method == 'GET' or self.request.method == 'POST':
@@ -674,6 +674,7 @@ class ReservationView(APIView):
 
     @never_cache
     def get(self, request, reservation_id=None):
+
         reservations = Reservation.objects.all()
 
         reservation_serializer = ReservationSerializer(reservations, many=True)
@@ -687,8 +688,6 @@ class ReservationView(APIView):
     @never_cache
     def put(self, request, reservation_id):
 
-        permission_classes = [permissions.IsAuthenticated]
-        # reservation_id=1
         if request.user.role != User.REDACTOR and request.user.role != User.ADMIN and request.user.role != User.CASHIER:
             return Response(UNAUTHORIZED_USER, status=status.HTTP_403_FORBIDDEN)
 
@@ -742,8 +741,6 @@ class ReservationView(APIView):
 
     @never_cache
     def delete(self, request, reservation_id):
-
-        permission_classes = [permissions.IsAuthenticated]
 
         if request.user.role != User.REDACTOR and request.user.role != User.ADMIN and request.user.role != User.CASHIER:
             return Response(UNAUTHORIZED_USER, status=status.HTTP_403_FORBIDDEN)
