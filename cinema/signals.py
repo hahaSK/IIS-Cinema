@@ -6,12 +6,15 @@ from cinema.models import Reservation, Event, Hall, Seat, SeatInEvent
 
 @receiver(post_save, sender=Hall)
 def generate_hall_seats(sender, instance, created, **kwargs):
-    if instance and created:
+    if instance:
         rows = instance.rows
         columns = instance.columns
         for row in range(rows):
             for column in range(columns):
-                Seat.objects.create(hall=instance, row=row+1, seat_No=column+1)
+                if not Seat.objects.filter(hall=instance, row=row + 1, seat_No=column + 1).exists():
+                    Seat.objects.create(hall=instance, row=row+1, seat_No=column+1)
+        Seat.objects.filter(hall=instance, row__gt=rows).delete()
+        Seat.objects.filter(hall=instance, seat_No__gt=columns).delete()
 
 
 @receiver(post_save, sender=Event)
