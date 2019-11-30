@@ -767,6 +767,27 @@ class ReservationView(APIView):
         return Response(payload, status=status.HTTP_200_OK)
 
 
+class SeatView(APIView):
+
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [permissions.AllowAny()]
+        else:
+            return [permissions.IsAuthenticated()]
+
+    @never_cache
+    def get(self, request, seat_id=None):
+
+        seat = Seat.objects.all()
+
+        seat_serializer = SeatSerializer(seat, many=True)
+
+        payload = {
+            "seats": seat_serializer.data,
+        }
+
+        return Response(payload, status=status.HTTP_200_OK)
+
 class SeatInEventView(APIView):
 
     def get_permissions(self):
@@ -783,12 +804,9 @@ class SeatInEventView(APIView):
         seat_in_event_serializer = SeatInEventSerializer(seat_in_event, many=True)
 
         payload = {
-            "seat_in_event": seat_in_event_serializer.data,
+            "seats_in_event": seat_in_event_serializer.data,
         }
 
         return Response(payload, status=status.HTTP_200_OK)
 
 
-class SeatView(APIView):
-    serializer_class = SeatSerializer
-    queryset = Seat.objects.all()
