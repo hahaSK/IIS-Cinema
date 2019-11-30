@@ -9,7 +9,7 @@ from django.views.decorators.cache import never_cache
 
 from user.models import User
 from .serializers import ActorSerializer, DirectorSerializer, GenreSerializer, HallSerializer, \
-    ActSerializer, EventSerializer, ReservationSerializer, SeatSerializer, ActTypeSerializer
+    ActSerializer, EventSerializer, ReservationSerializer, SeatSerializer, ActTypeSerializer, SeatInEventSerializer
 from .models import Actor, Director, Genre, Hall, Act, Event, Reservation, Seat, SeatInEvent, ActType
 from address.models import Address
 
@@ -762,6 +762,28 @@ class ReservationView(APIView):
 
         payload = {
             "status": "success",
+        }
+
+        return Response(payload, status=status.HTTP_200_OK)
+
+
+class SeatInEventView(APIView):
+
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [permissions.AllowAny()]
+        else:
+            return [permissions.IsAuthenticated()]
+
+    @never_cache
+    def get(self, request, sie_id=None):
+
+        seat_in_event = SeatInEvent.objects.all()
+
+        seat_in_event_serializer = SeatInEventSerializer(seat_in_event, many=True)
+
+        payload = {
+            "seat_in_event": seat_in_event_serializer.data,
         }
 
         return Response(payload, status=status.HTTP_200_OK)

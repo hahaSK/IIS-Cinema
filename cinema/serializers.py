@@ -54,3 +54,9 @@ class SeatSerializer(serializers.ModelSerializer):
     class Meta:
         model = Seat
         fields = '__all__'
+
+
+class SeatInEventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SeatInEvent
+        fields = '__all__'
