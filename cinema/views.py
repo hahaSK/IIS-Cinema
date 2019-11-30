@@ -451,7 +451,7 @@ class ActView(APIView):
         if request.user.role != User.REDACTOR and request.user.role != User.ADMIN:
             return Response(UNAUTHORIZED_USER, status=status.HTTP_403_FORBIDDEN)
 
-        act = Event.objects.get(id=act_id)
+        act = Act.objects.get(id=act_id)
 
         if not act:
             raise Exception("Act doesn't exist")
@@ -732,7 +732,7 @@ class ReservationView(APIView):
 
             reservation.seats.clear()
             for current_element in data["seats"]:
-                reservation.seats.add(current_element)
+                reservation.seats.add(id=int(current_element))
 
             reservation.save()
         except ValueError:

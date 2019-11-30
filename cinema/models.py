@@ -108,7 +108,7 @@ class Act(models.Model):
 
 
 class Seat(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    # id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     row = models.PositiveSmallIntegerField(blank=False, default=0)
     seat_No = models.PositiveSmallIntegerField(blank=False, default=0)
     hall = models.ForeignKey(Hall,
@@ -176,7 +176,7 @@ class Reservation(models.Model):
 
 
 class SeatInEvent(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    # id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     seat = models.ForeignKey(Seat,
                              related_name="selected_seat",
                              on_delete=models.CASCADE)
