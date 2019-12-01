@@ -45,7 +45,10 @@ class UserRegisterView(APIView):
 
     @never_cache
     def post(self, request):
-        user = request.data['user']
+        print("------------------------")
+        print(request.data)
+        print("------------------------")
+        user = request.data
         if not user:
             return Response({'response': 'error', 'message': 'No data found'})
 

@@ -338,11 +338,26 @@ class HallView(APIView):
 
         try:
             data = request.data
-            hall.name = data['name']
-            address_id = data['address']
-            hall.address = Address.objects.get(id=address_id)
-            hall.rows = int(data['rows'])
-            hall.columns = int(data['columns'])
+            try:
+                hall.name = data['name']
+            except Exception:
+                pass
+
+            try:
+                address_id = data['address']
+                hall.address = Address.objects.get(id=address_id)
+            except Exception:
+                pass
+
+            try:
+                hall.rows = int(data['rows'])
+            except Exception:
+                pass
+
+            try:
+                hall.columns = int(data['columns'])
+            except Exception:
+                pass
 
             hall.save()
         except ValueError:
