@@ -106,10 +106,13 @@ class UserView(APIView):
             return Response({"error": "Uživatel neexistuje."})
 
         data = request.data
-        user.first_name = data['first_name']
-        user.last_name = data['last_name']
-        user.username = data['username']
-        user.email = data['email']
+        try:
+            user.first_name = data['first_name']
+            user.last_name = data['last_name']
+            user.username = data['username']
+            user.email = data['email']
+        except Exception:
+            pass
         user.role = data['role']
 
         try:
