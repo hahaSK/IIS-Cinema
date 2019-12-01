@@ -1,21 +1,47 @@
 import React, { Component } from 'react';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import Navigation from "../../Component/Navigation/Navigation";
-import MasterGetter from "../../Models/Utils/MasterGetter";
-import PerformanceView from "../../Component/PerformanceView/PerformanceView";
-import PerformanceForm from "../../Component/PerformanceForm/PerformanceForm";
 import BackendRequest from "../../Models/REST/BackendRequest";
 import MasterDispatcher from "../../Models/Utils/MasterDispatcher";
 import { withRouter } from "react-router-dom";
 import connect from "react-redux/es/connect/connect";
 import orm from "../../Models/ORM/index";
-import moment from "moment";
 import "moment/min/locales";
+import './UsersScene.css';
+import {REMOVE_HALL} from "../../Models/Entities/Hall";
+import InstantAction from "../../Models/Utils/InstantAction";
+import {REMOVE_USER} from "../../Models/Entities/User";
+import UserItem from "./UserItem";
 
-class Users extends Component {
+class UsersScene extends Component {
 
     state = {
-        userRole: ""
+        role: 0
+    };
+
+    /**
+     * Handle Delete Click
+     * @param event
+     */
+    handleDeleteClick = (deleteUser) => {
+
+        /**
+         * Delete event
+         * @param response
+         */
+        const onSuccess = (response) => {
+
+            InstantAction.dispatch({
+                type: REMOVE_USER,
+                payload: deleteUser.id,
+            });
+
+            MasterDispatcher.dispatch(response.data);
+
+            InstantAction.setToast("Uživatel odstraněn");
+        };
+
+        BackendRequest("delete", "user/" + deleteUser.id, null, onSuccess);
     };
 
     handleChange = (event) => {
@@ -36,24 +62,28 @@ class Users extends Component {
          */
         const onSuccess = (response) => {
 
-            console.log("Users");
-            console.log(response.data);
             MasterDispatcher.dispatch(response.data);
         };
 
         BackendRequest("get", "users", null, onSuccess);
     };
 
-    componentDidMount() {
+    componentWillMount() {
         this.fetchUsers();
-    }
+    };
 
     render() {
 
         const {entities} = this.props;
         const session = orm.session(entities);
-        const users = session.User.all();
+        const users = session.User.all().orderBy("last_name");
 
+        // const userRoleTypes = [
+        //     {name: "Administrátor", id: 1},
+        //     {name: "Divák", id: 2},
+        //     {name: "Pokladní", id: 3},
+        //     {name: "Redaktor", id: 4},
+        // ];
 
         return (
             <div className="App">
@@ -63,18 +93,19 @@ class Users extends Component {
                 </div>
                 <hr />
                 <div className={"body users"}>
-                    {/*<div className={"top-line"}>*/}
-                        {/*<div className={"filter-users"}>*/}
-                            {/*<h3 style={{margin: '0'}}>Typ uživatele:</h3>*/}
-                            {/*<select name={"userRole"} onChange={this.handleChange} value={this.state.userRole}>*/}
-                                {/*<option disabled>Zvolte typ uživatele</option>*/}
-                                {/*<option key={0} defaultValue={"all"}>Všechny</option>*/}
-                                {/*{userRoles.toModelArray().map(userRole => {*/}
-                                    {/*return <option key={userRole.id} value={userRole.name}>{userRole.name}</option>;*/}
-                                {/*})}*/}
-                            {/*</select>*/}
-                        {/*</div>*/}
-                    {/*</div>*/}
+                    <div className={"top-line"}>
+                        <div className={"filter-users"}>
+                            <h3 style={{margin: '0'}}>Typ uživatele:</h3>
+                            <select name="role" onChange={this.handleChange} value={this.state.role}>
+                                <option disabled>Zvolte typ uživatele</option>
+                                <option key={0} defaultValue={0} value={0}>Všechny</option>
+                                <option key={1} value={1}>Admin</option>
+                                <option key={2} value={2}>Divák</option>
+                                <option key={3} value={3}>Pokladní</option>
+                                <option key={4} value={4}>Redaktor</option>
+                            </select>
+                        </div>
+                    </div>
 
                     {(users.count() === 0) ? "Žádní uživatelé" :
                         <Grid className={"result-table"}>
@@ -85,19 +116,14 @@ class Users extends Component {
                                 <Col xs={2}>Role</Col>
                                 <Col xs={4}/>
                             </Row>
-                        {users.toModelArray().map((user) => {
-                            return (
-                                <Row>
-                                    <Col xs={2}>{user.first_name}</Col>
-                                    <Col xs={2}>{user.surname}</Col>
-                                    <Col xs={2}>{user.mail}</Col>
-                                    <Col xs={2}>{user.role}</Col>
-                                    <Col xs={4}>
-                                        <button onClick={() => {alert("Vstupenky")}}>Odstranit</button>
-                                    </Col>
-                                </Row>
-                            );
-                        })}
+                            {users.toModelArray().map((user) => {
+                                console.log(this.state.role);
+                                if (parseInt(this.state.role) === 0 || parseInt(this.state.role) === parseInt(user.role)) {
+                                    return (
+                                        <UserItem user={user}/>
+                                    );
+                                }
+                            })}
                         </Grid>
                     }
                 </div>
@@ -139,4 +165,4 @@ const mapStateToProps = state => (
 /**
  * Exporting part of the React.Component file
  */
-export default withRouter(connect(mapStateToProps, mapDispatchToProps())(Users));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps())(UsersScene));

@@ -1,0 +1,49 @@
+.acts .container {
+  width: 100%; }
+.acts .top-line {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2.5rem; }
+  .acts .top-line .filter-events {
+    width: 40%;
+    display: flex;
+    justify-content: flex-start; }
+    .acts .top-line .filter-events select {
+      margin-left: 1rem; }
+  .acts .top-line .create-new {
+    width: 40%;
+    display: flex;
+    justify-content: flex-end; }
+    .acts .top-line .create-new button {
+      font-size: 1rem; }
+.acts .result-table {
+  width: 100%;
+  border-radius: .25rem; }
+  .acts .result-table .row {
+    display: flex;
+    align-items: center;
+    padding-top: .5rem;
+    padding-bottom: .5rem;
+    margin-top: .1rem;
+    margin-bottom: .1rem; }
+    .acts .result-table .row:hover {
+      cursor: pointer;
+      background-color: #373d48; }
+    .acts .result-table .row:first-of-type {
+      font-size: 1.5rem;
+      padding-top: .25rem;
+      padding-bottom: .25rem;
+      border-bottom: 2px solid #09d3ac; }
+      .acts .result-table .row:first-of-type:hover {
+        cursor: auto;
+        background-color: #282c34; }
+  .acts .result-table .col-xs-1, .acts .result-table .col-xs-2, .acts .result-table .col-xs-3, .acts .result-table .col-xs-4 {
+    display: flex;
+    justify-content: center;
+    align-items: center; }
+  .acts .result-table .buttons {
+    display: flex;
+    justify-content: flex-end; }
+
+/*# sourceMappingURL=ActsScene.css.map */

@@ -16,3 +16,7 @@ Director.fields = {
 Director.propTypes = {
     name: PropTypes.string,
 };
+
+export const ADD_DIRECTOR = "ADD_DIRECTOR";
+export const REMOVE_DIRECTOR = "REMOVE_DIRECTOR";
+export const UPDATE_DIRECTOR = "UPDATE_DIRECTOR";

@@ -1,5 +1,7 @@
 .new-event {
-  margin-bottom: 2rem; }
+  margin-bottom: 1rem; }
+  .new-event .row {
+    margin-bottom: 1rem; }
   .new-event h3 {
     margin: 0; }
   .new-event .react-datepicker-wrapper {

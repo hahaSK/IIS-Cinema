@@ -16,3 +16,7 @@ Actor.fields = {
 Actor.propTypes = {
     name: PropTypes.string,
 };
+
+export const ADD_ACTOR = "ADD_ACTOR";
+export const REMOVE_ACTOR = "REMOVE_ACTOR";
+export const UPDATE_ACTOR = "UPDATE_ACTOR";

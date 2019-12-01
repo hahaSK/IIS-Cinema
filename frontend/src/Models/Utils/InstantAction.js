@@ -1,9 +1,11 @@
 // @flow
 
 import MasterDispatcher from "./MasterDispatcher";
-import {RESET_STORE} from "../../App/App.actions";
+import {RESET_STORE, setAppLoaded, setLoggedUser} from "../../App/App.actions";
 import {withRouter} from "react-router";
 import {dispatcher} from "../../Config/store";
+import BackendRequest from "../REST/BackendRequest";
+import {toast} from "react-toastify";
 
 /**
  * Instant Action
@@ -20,33 +22,26 @@ class InstantAction {
          * @type {{trademark_type: *[]}}
          */
 
-        // /**
-        //  * After Success
-        //  * @param response
-        //  */
-        // const afterSuccess = (response) => {
-        //
-        //     const data = response.data;
-        //
-        //     InstantAction.dispatch(setLoggedUser(data.user.id));
-        //     InstantAction.dispatch(setAppLoaded(true));
-        //
-        //
-        //     parent.setState({
-        //         loadingData: false,
-        //     }, () => {
-        //
-        //     });
-        //
-        // };
-        //
-        //
-        // BackendRequest({
-        //     method: "get",
-        //     endpoint: "user",
-        //     afterSuccess: afterSuccess,
-        // });
+        /**
+         * After Success
+         * @param response
+         */
+        const onSuccess = (response) => {
 
+            const data = response.data;
+
+            console.log(data.id);
+            InstantAction.dispatch(setLoggedUser(data.id));
+            InstantAction.dispatch(setAppLoaded(true));
+            MasterDispatcher.dispatch({user: data});
+
+        };
+
+        const onError = (error) => {
+
+        };
+
+        BackendRequest("get", "current_user", null, onSuccess, onError, onError);
     }
 
     /**
@@ -74,12 +69,19 @@ class InstantAction {
     }
 
     /**
+     * Set Dialog toast
+     * @param message
+     */
+    static setToast(message) {
+        console.log("Sending Toast");
+        toast(message);
+    }
+
+    /**
      * Redirect
      * @param path
      */
     static redirect(path) {
-
-        console.log("Pushing: ", path);
 
         InstantAction.history.push(path);
 

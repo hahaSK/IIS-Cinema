@@ -11,7 +11,7 @@ import {
  */
 const INITIAL_STATE = {
     appLoaded: false,
-    loggedUser: null, // TODO: Remove -> set False
+    loggedUser: null,
     search: "",
     url: "",
 };

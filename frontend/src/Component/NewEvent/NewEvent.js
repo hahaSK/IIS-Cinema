@@ -5,7 +5,6 @@ import orm from "../../Models/ORM";
 import {withRouter} from "react-router-dom";
 import connect from "react-redux/es/connect/connect";
 import BackendRequest from "../../Models/REST/BackendRequest";
-import moment from "moment/moment";
 import MasterDispatcher from "../../Models/Utils/MasterDispatcher";
 import InstantAction from "../../Models/Utils/InstantAction";
 import {ADD_EVENT} from "../../Models/Entities/Event";
@@ -71,6 +70,8 @@ class NewEvent extends Component {
                     payload: response.data.event,
                 });
             }
+            this.props.handler();
+            InstantAction.setToast("Událost vytvořena");
         };
 
         /**
@@ -136,6 +137,7 @@ class NewEvent extends Component {
             <div className={"new-event"}>
                 <Grid>
                     <Row>
+                        <Col xs={4}/>
                         <Col xs={3}>
                             <h3>Představení:</h3>
                             <select name={"act"} onChange={this.handleChange} value={this.state.act}>
@@ -170,8 +172,11 @@ class NewEvent extends Component {
                             <h3>Cena:</h3>
                             <input type="text" name={"price"} id={"price"} value={this.state.price} onChange={this.handleChange}/>
                         </Col>
-                        <Col xs={4} style={{display: "flex", justifyContent: "flex-end"}}>
-                            <button onClick={this.handleSubmit}>Uložit</button>
+                    </Row>
+                    <Row>
+                        <Col xs={6}/>
+                        <Col xs={6} style={{display: "flex", justifyContent: "flex-end"}}>
+                            <button onClick={this.handleSubmit}>Vytvořit</button>
                         </Col>
                     </Row>
                 </Grid>

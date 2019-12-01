@@ -1,9 +1,8 @@
 import Axios from "axios";
 import qs from "qs";
-//import {getTokenFromStorage} from "./JWT";
 import {getCookie} from "../Utils/Cookies";
 import InstantActions from "../Utils/InstantAction";
-//import localStorageProxy from "./localStorage";
+import {getTokenFromStorage} from "../Utils/JWT";
 //import {setLoggingInProgress} from "../Aurora/Aurora.actions";
 
 /**
@@ -50,7 +49,6 @@ export default function BackendRequest(method: string, actionURL: string, data: 
 
         }
     }
-
 
     Axios.defaults.xsrfCookieName = "csrftoken"; // default
     Axios.defaults.xsrfHeaderName = "X-CSRFToken";
@@ -107,16 +105,15 @@ export default function BackendRequest(method: string, actionURL: string, data: 
                      * Remove JWT
                      */
 
-                    //InstantActions.closePopupModule();
-                    //localStorageProxy.removeItem("JWT");
+                    localStorage.removeItem("JWT");
                     /**
                      * Redirect to Landing Page / Login
                      */
                     console.log("401");
-                    InstantActions.redirect("/");
+                    //InstantActions.redirect("/login");
 
                     InstantActions.resetStore();
-                    // InstantActions.dispatch(setAppLoaded(true));
+                    //InstantActions.dispatch(setAppLoaded(true));
                     //InstantActions.dispatch(setLoggingInProgress(false));
 
                 }

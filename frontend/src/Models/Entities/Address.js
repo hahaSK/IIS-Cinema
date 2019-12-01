@@ -20,3 +20,7 @@ Address.propTypes = {
     street2: PropTypes.string,
     city: PropTypes.string,
 };
+
+export const ADD_ADDRESS = "ADD_ADDRESS";
+export const REMOVE_ADDRESS = "REMOVE_ADDRESS";
+export const UPDATE_ADDRESS = "UPDATE_ADDRESS";

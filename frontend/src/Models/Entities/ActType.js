@@ -17,3 +17,7 @@ ActType.fields = {
 ActType.propTypes = {
     name: PropTypes.string,
 };
+
+export const ADD_ACTTYPE = "ADD_ACTTYPE";
+export const REMOVE_ACTTYPE = "REMOVE_ACTTYPE";
+export const UPDATE_ACTTYPE = "UPDATE_ACTTYPE";

@@ -23,12 +23,21 @@
   .programme .result-table .row {
     display: flex;
     align-items: center;
-    padding-top: .5rem; }
+    padding-top: .5rem;
+    padding-bottom: .5rem;
+    margin-top: .1rem;
+    margin-bottom: .1rem; }
+    .programme .result-table .row:hover {
+      cursor: pointer;
+      background-color: #373d48; }
     .programme .result-table .row:first-of-type {
       font-size: 1.5rem;
       padding-top: .25rem;
       padding-bottom: .25rem;
       border-bottom: 2px solid #09d3ac; }
+      .programme .result-table .row:first-of-type:hover {
+        cursor: auto;
+        background-color: #282c34; }
   .programme .result-table .col-xs-1, .programme .result-table .col-xs-2, .programme .result-table .col-xs-3 {
     display: flex;
     justify-content: center;

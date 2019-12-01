@@ -3,16 +3,19 @@ import {connect} from "react-redux";
 import MasterGetter from "../../Models/Utils/MasterGetter";
 import './RegisterScene.css';
 import Navigation from "../../Component/Navigation/Navigation";
+import BackendRequest from "../../Models/REST/BackendRequest";
+import {ADD_HALL} from "../../Models/Entities/Hall";
+import InstantAction from "../../Models/Utils/InstantAction";
+import {ADD_USER} from "../../Models/Entities/User";
 
 class LoginScene extends Component {
 
     state = {
-        username: '',
-        first_name: '',
-        surname: '',
-        email: '',
-        password: '',
-        password_second: '',
+        username: "",
+        email: "",
+        password: "",
+        passwordSecond: "",
+        responseMessage: "",
     };
 
     handleChange = (event) => {
@@ -21,26 +24,58 @@ class LoginScene extends Component {
         });
     };
 
-    tryToLogIn = () => {
-        const {entities} = this.props;
-        const session = MasterGetter.getSession(entities);
-        const users = session.User.all();
-
-        users.toModelArray().map(user => {
-            if (user.username === this.state.username) {
-                if (user._fields.password === this.state.password) {
-                    this.setState({
-                        access: true,
-                    });
-                }
-            }
-        });
-
-        if (this.state.access === null) {
+    passwordCheck = () => {
+        if (this.state.password.localeCompare(this.state.passwordSecond) !== 0)
             this.setState({
-                access: false,
+               responseMessage: "Zadaná hesla se neshodují."
             });
+        else {
+            this.setState({
+                responseMessage: ""
+            });
+            this.handleSubmit();
         }
+    };
+
+    /**
+     * Handle Submit
+     * @param event
+     */
+    handleSubmit = () => {
+
+        /**
+         * Function on success adding
+         */
+        const onSuccess = (response) => {
+
+            if (response.data.user !== undefined) {
+                InstantAction.dispatch({
+                    type: ADD_USER,
+                    payload: response.data.user,
+                });
+            }
+            InstantAction.redirect("/login");
+        };
+
+        /**
+         * On Error
+         * @param response
+         */
+        const onError = (response) => {
+
+        };
+
+        /**
+         * Payload to send
+         * @type {{areaId: *}}
+         */
+        const data = {
+            username: this.state.username,
+            email: this.state.email,
+            password: this.state.password,
+        };
+
+        BackendRequest("post", "user/create", data, onSuccess, onError, onError );
     };
 
     render() {
@@ -53,13 +88,12 @@ class LoginScene extends Component {
                 <hr />
                 <div className={"body register"}>
                     <div className={"register-box"}>
+                        <p style={{color: "red"}}>{this.state.responseMessage}</p>
                         <input type="text" defaultValue={this.state.username} name="username" onChange={this.handleChange} placeholder={"Uživatelské jméno"} />
-                        <input type="text" defaultValue={this.state.first_name} name="first_name" onChange={this.handleChange} placeholder={"Křestní jméno"} />
-                        <input type="text" defaultValue={this.state.surname} name="surname" onChange={this.handleChange} placeholder={"Příjmení"} />
                         <input type="text" defaultValue={this.state.email} name="email" onChange={this.handleChange} placeholder={"E-mailová adresa"} />
                         <input type="password" defaultValue={this.state.password} name="password" onChange={this.handleChange} placeholder={"Heslo"} />
-                        <input type="password" defaultValue={this.state.password_second} name="password_second" onChange={this.handleChange} placeholder={"Heslo znovu"} />
-                        <button onClick={this.tryToLogIn}>Registrovat se</button>
+                        <input type="password" defaultValue={this.state.passwordSecond} name="passwordSecond" onChange={this.handleChange} placeholder={"Heslo znovu"} />
+                        <button onClick={this.passwordCheck}>Registrovat se</button>
                     </div>
                 </div>
             </div>

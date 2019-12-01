@@ -3,6 +3,9 @@ import {connect} from "react-redux";
 import InstantAction from "../Models/Utils/InstantAction";
 import './App.css';
 import {withRouter} from "react-router";
+import {ToastContainer} from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "./AppContainer.css";
 
 class AppContainer extends Component {
 
@@ -10,12 +13,30 @@ class AppContainer extends Component {
         super(props);
         InstantAction.initiateHistory(this.props.history);
         InstantAction.initiateDispatcher(this.props.dispatch);
+    }
+
+    loadCoreData = () => {
         InstantAction.fetchAppData(this);
+    };
+
+    componentWillMount() {
+        this.loadCoreData();
     }
 
     render() {
         return (
         <div className={"app-wrapper"}>
+            <ToastContainer
+                position="top-left"
+                autoClose={3500}
+                newestOnTop={true}
+                closeOnClick
+                pauseOnVisibilityChange
+                draggable
+                pauseOnHover
+                toastClassName="cinema-toast"
+            />
+
             {this.props.children}
         </div>
         );

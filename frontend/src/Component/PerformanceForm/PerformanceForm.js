@@ -8,10 +8,8 @@ import orm from "../../Models/ORM";
 import {withRouter} from "react-router-dom";
 import connect from "react-redux/es/connect/connect";
 import BackendRequest from "../../Models/REST/BackendRequest";
-import moment from "moment/moment";
-import MasterDispatcher from "../../Models/Utils/MasterDispatcher";
 import InstantAction from "../../Models/Utils/InstantAction";
-import {ADD_ACT} from "../../Models/Entities/Act";
+import {ADD_ACT, UPDATE_ACT} from "../../Models/Entities/Act";
 import Select from 'react-select';
 
 
@@ -24,17 +22,71 @@ class PerformanceForm extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            name: "",
-            type: "",
-            length: "",
-            picture: "",
-            genre: null,
-            cast: null,
-            director: null,
-            rating: "",
-            description: "",
-        };
+        if (props.act != null) {
+            const { entities } = this.props;
+            const session = orm.session(entities);
+
+            let genres = [];
+            let cast = [];
+            let director = [];
+
+            for (let i = 0; i < props.act._fields.genre.length; i++) {
+                let item = {
+                    value: props.act._fields.genre[i],
+                    label: session.Genre.withId(props.act._fields.genre[i]).name,
+                };
+                genres.push(item);
+            }
+
+            for (let i = 0; i < props.act._fields.cast.length; i++) {
+                let item = {
+                    value: props.act._fields.cast[i],
+                    label: session.Actor.withId(props.act._fields.cast[i]).name,
+                };
+                cast.push(item);
+            }
+
+            for (let i = 0; i < props.act._fields.director.length; i++) {
+                let item = {
+                    value: props.act._fields.director[i],
+                    label: session.Director.withId(props.act._fields.director[i]).name,
+                };
+                director.push(item);
+            }
+
+            this.state = {
+                id: props.act.id,
+                name: props.act.name,
+                type: props.act._fields.type,
+                length: props.act.length,
+                picture: props.act.picture,
+                genre: props.act._fields.genre,
+                cast: props.act._fields.cast,
+                director: props.act._fields.director,
+                genreHelp : genres,
+                castHelp : cast,
+                directorHelp : director,
+                rating: props.act.rating,
+                description: props.act.description,
+            };
+        }
+        else {
+            this.state = {
+                id: "",
+                name: "",
+                type: "",
+                length: "",
+                picture: "",
+                genre: [],
+                cast: [],
+                director: [],
+                genreHelp : null,
+                castHelp : null,
+                directorHelp : null,
+                rating: "",
+                description: "",
+            }
+        }
 
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -54,25 +106,40 @@ class PerformanceForm extends Component {
     };
 
 
-    handleGenreChange = genre => {
+    handleGenreChange = genreHelp => {
+
+        let array = this.state.genre;
+        array.push(genreHelp[genreHelp.length - 1].value);
+
         this.setState({
-            genre
+            genre: array,
+            genreHelp
         });
-        console.log(`Genre selected:`, genre);
     };
 
-    handleCastChange = cast => {
+    handleCastChange = castHelp => {
+
+        let array = this.state.cast;
+        array.push(castHelp[castHelp.length - 1].value);
+
         this.setState({
-            cast
+            cast: array,
+            castHelp
         });
-        console.log(`Cast selected:`, cast);
+
+        console.log("castHelp");
+        console.log(castHelp);
     };
 
-    handleDirectorChange = director => {
+    handleDirectorChange = directorHelp => {
+
+        let array = this.state.director;
+        array.push(directorHelp[directorHelp.length - 1].value);
+
         this.setState({
-            director
+            director: array,
+            directorHelp
         });
-        console.log(`Cast selected:`, director);
     };
 
     onFilesChange = (files) => {
@@ -96,7 +163,7 @@ class PerformanceForm extends Component {
         /**
          * Function on success adding
          */
-        const onSuccess = (response) => {
+        const onPostSuccess = (response) => {
 
             if (response.data.act !== undefined) {
                 InstantAction.dispatch({
@@ -104,7 +171,23 @@ class PerformanceForm extends Component {
                     payload: response.data.act,
                 });
             }
-            InstantAction.redirect("/programme");
+            this.props.handler();
+            InstantAction.setToast("Představení vytvořeno");
+        };
+
+        /**
+         * Function on success updating
+         */
+        const onPutSuccess = (response) => {
+
+            if (response.data.act !== undefined) {
+                InstantAction.dispatch({
+                    type: UPDATE_ACT,
+                    payload: response.data.act,
+                });
+            }
+            this.props.handler();
+            InstantAction.setToast("Představení upraveno");
         };
 
         /**
@@ -119,54 +202,26 @@ class PerformanceForm extends Component {
          * Payload to send
          * @type {{areaId: *}}
          */
+
+        // TODO: udělat pole až tady a ne po každém přidání/odepbrání option
+
         const data = {
-            ...this.state
+            name: this.state.name,
+            picture: this.state.picture,
+            type: this.state.type,
+            genre: this.state.genre,
+            cast: this.state.cast,
+            director: this.state.director,
+            rating: this.state.rating,
+            length: this.state.length,
+            description: this.state.description
         };
 
-        BackendRequest("post", "acts", data, onSuccess, onError, onError );
+        if (this.state.id !== "")
+            BackendRequest("put", "act/" + this.props.act.id, data, onPutSuccess, onError, onError );
+        else
+            BackendRequest("post", "acts", data, onPostSuccess, onError, onError );
     }
-
-    fetchGenres = () => {
-
-        /**
-         * On Success
-         * @param response
-         */
-        const onSuccess = (response) => {
-
-            MasterDispatcher.dispatch(response.data);
-        };
-
-        BackendRequest("get", "genres", null, onSuccess);
-    };
-
-    fetchActors = () => {
-
-        /**
-         * On Success
-         * @param response
-         */
-        const onSuccess = (response) => {
-
-            MasterDispatcher.dispatch(response.data);
-        };
-
-        BackendRequest("get", "actors", null, onSuccess);
-    };
-
-    fetchDirectors = () => {
-
-        /**
-         * On Success
-         * @param response
-         */
-        const onSuccess = (response) => {
-
-            MasterDispatcher.dispatch(response.data);
-        };
-
-        BackendRequest("get", "directors", null, onSuccess);
-    };
 
     arrayMaker = (array) => {
         let final_array = [];
@@ -178,12 +233,6 @@ class PerformanceForm extends Component {
             final_array.push(item);
         }
         return final_array;
-    };
-
-    componentDidMount = () => {
-        this.fetchGenres();
-        this.fetchActors();
-        this.fetchDirectors();
     };
 
     render() {
@@ -237,7 +286,7 @@ class PerformanceForm extends Component {
                                 <Row>
                                     <h3>Žánr:&nbsp;</h3>
                                     <Select
-                                        value={this.state.genre}
+                                        value={this.state.genreHelp}
                                         onChange={this.handleGenreChange}
                                         options={genres}
                                         isMulti={true}
@@ -246,7 +295,7 @@ class PerformanceForm extends Component {
                                 <Row>
                                     <h3>Obsazení:&nbsp;</h3>
                                     <Select
-                                        value={this.state.cast}
+                                        value={this.state.castHelp}
                                         onChange={this.handleCastChange}
                                         options={actors}
                                         isMulti={true}
@@ -255,7 +304,7 @@ class PerformanceForm extends Component {
                                 <Row>
                                     <h3>Režie:&nbsp;</h3>
                                     <Select
-                                        value={this.state.director}
+                                        value={this.state.directorHelp}
                                         onChange={this.handleDirectorChange}
                                         options={directors}
                                         isMulti={true}

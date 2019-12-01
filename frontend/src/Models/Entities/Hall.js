@@ -9,7 +9,7 @@ Hall.modelName = "Hall";
 Hall.fields = {
     id: attr(), // non-relational field for any value; optional but highly recommended
     name: attr(),
-    addres: fk("Address"),
+    address: fk("Address"),
     rows: attr(),
     columns: attr(),
 };
@@ -17,3 +17,7 @@ Hall.fields = {
 Hall.propTypes = {
     name: PropTypes.string,
 };
+
+export const ADD_HALL = "ADD_HALL";
+export const REMOVE_HALL = "REMOVE_HALL";
+export const UPDATE_HALL = "UPDATE_HALL";

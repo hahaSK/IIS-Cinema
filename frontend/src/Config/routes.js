@@ -4,6 +4,8 @@ import ProgrammeScene from "../Scenes/ProgrammeScene/ProgrammeScene";
 import LoginScene from "../Scenes/LoginScene/LoginScene";
 import RegisterScene from "../Scenes/RegisterScene/RegisterScene";
 import UsersScene from "../Scenes/UsersScene/UsersScene";
+import ActsScene from "../Scenes/ActsScene/ActsScene";
+import HallsScene from "../Scenes/HallsScene/HallsScene";
 
 /**
  * Export of routes
@@ -16,6 +18,8 @@ const routes = [
     <Route key={3} exact path="/login" component={LoginScene}/>,
     <Route key={4} exact path="/register" component={RegisterScene}/>,
     <Route key={5} exact path="/users" component={UsersScene}/>,
+    <Route key={6} exact path="/acts" component={ActsScene}/>,
+    <Route key={7} exact path="/halls" component={HallsScene}/>,
 
 ];
 

@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import {connect} from "react-redux";
 //import { Grid, Row, Col } from 'react-flexbox-grid';
-import MasterGetter from "../../Models/Utils/MasterGetter";
 import './LoginScene.css';
 import Navigation from "../../Component/Navigation/Navigation";
+import BackendRequest from "../../Models/REST/BackendRequest";
+import InstantAction from "../../Models/Utils/InstantAction";
+import {setAppLoaded, setLoggedUser} from "../../App/App.actions";
+import MasterDispatcher from "../../Models/Utils/MasterDispatcher";
 
 class LoginScene extends Component {
 
@@ -11,7 +14,7 @@ class LoginScene extends Component {
         username: '',
         password: '',
         login: false,
-        access: null
+        response_message: "",
     };
 
     handleChange = (event) => {
@@ -20,40 +23,44 @@ class LoginScene extends Component {
         });
     };
 
-    tryToLogIn = () => {
-        const {entities} = this.props;
-        const session = MasterGetter.getSession(entities);
-        const users = session.User.all();
+    handleLogin = () => {
 
-        users.toModelArray().map(user => {
-            if (user.username === this.state.username) {
-                if (user._fields.password === this.state.password) {
-                    this.setState({
-                        access: true,
-                    });
-                }
+        let onSuccess = (response) => {
+
+            if (response.data.token !== undefined) {
+                localStorage.setItem("JWT", response.data.token);
+                InstantAction.dispatch(setLoggedUser(response.data.user.id));
+                InstantAction.dispatch(setAppLoaded(true));
+                MasterDispatcher.dispatch({user: response.data.user});
+                InstantAction.redirect("/");
             }
-        });
+        };
 
-        if (this.state.access === null) {
+        let onActionError = (error) => {
+
+            // Just local state
             this.setState({
-                access: false,
+                response_message: error.status,
             });
-        }
+
+        };
+
+        let onServerError = (error) => {
+
+            this.setState({
+                response_message: "Zadejte správné údaje."
+            });
+        };
+
+        let data = {
+            username: this.state.username,
+            password: this.state.password,
+        };
+
+        BackendRequest("post", "login", data, onSuccess, onActionError, onServerError);
     };
 
     render() {
-
-        let response_message = null;
-
-        if (this.state.access !== null) {
-            if (this.state.access === true) {
-                response_message = <h3>Jste přihlášen/a!</h3>
-            }
-            else {
-                response_message = <h3>Chybně zadané údaje!</h3>
-            }
-        }
 
         return (
             <div className="App">
@@ -64,10 +71,10 @@ class LoginScene extends Component {
                 <hr />
                 <div className={"body login"}>
                     <div className={"login-box"}>
-                        {response_message}
+                        <p style={{color: "red"}}>{this.state.response_message}</p>
                         <input type="text" defaultValue={this.state.username} name="username" onChange={this.handleChange} placeholder={"Uživatelské jméno"} />
                         <input type="password" defaultValue={this.state.password} name="password" onChange={this.handleChange} placeholder={"Heslo"} />
-                        <button onClick={this.tryToLogIn}>Přihlásit se</button>
+                        <button onClick={this.handleLogin}>Přihlásit se</button>
                         <p>Nemáte-li účet, <a href={"/register"}>zaregistrujte se.</a></p>
                     </div>
                 </div>
@@ -78,6 +85,7 @@ class LoginScene extends Component {
 
 const mapStateToProps = state => (
     {
+        app: state.app,
         entities: state.entities,
     });
 

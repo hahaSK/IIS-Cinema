@@ -3,8 +3,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid';
 import './ProgrammeScene.css'
 import Navigation from "../../Component/Navigation/Navigation";
 import MasterGetter from "../../Models/Utils/MasterGetter";
-import PerformanceView from "../../Component/PerformanceView/PerformanceView";
-import PerformanceForm from "../../Component/PerformanceForm/PerformanceForm";
+import ActView from "../../Component/PerformanceView/PerformanceView";
 import BackendRequest from "../../Models/REST/BackendRequest";
 import MasterDispatcher from "../../Models/Utils/MasterDispatcher";
 import { withRouter } from "react-router-dom";
@@ -13,15 +12,20 @@ import orm from "../../Models/ORM/index";
 import moment from "moment";
 import "moment/min/locales";
 import NewEvent from "../../Component/NewEvent/NewEvent";
+import ReservationPopUp from "../../Component/ReservationPopUp/ReservationPopUp";
+import {ADD_HALL} from "../../Models/Entities/Hall";
+import InstantAction from "../../Models/Utils/InstantAction";
+import {REMOVE_EVENT} from "../../Models/Entities/Event";
 
 class Programme extends Component {
 
     state = {
         event: "",
-        showEvent: false,
+        showAct: false,
         showPerformanceForm: false,
         newEvent: false,
         performanceType: 0,
+        showReservationPopUp: false,
     };
 
     handleChange = (event) => {
@@ -45,11 +49,15 @@ class Programme extends Component {
          * @param response
          */
         const onSuccess = (response) => {
-            /**
-             * Dispatch All
-             */
+
+            InstantAction.dispatch({
+                type: REMOVE_EVENT,
+                payload: deleteEvent.id,
+            });
+
             MasterDispatcher.dispatch(response.data);
-            window.location = "/";
+
+            InstantAction.setToast("Událost zrušena");
         };
 
         BackendRequest("delete", "event/" + deleteEvent.id, null, onSuccess);
@@ -59,25 +67,25 @@ class Programme extends Component {
         this.setState({
             event: eventId
         });
-        console.log(this.state.event);
-        this.toggleEvent();
+        this.toggleAct();
     };
 
-    toggleEvent = () => {
+    toggleAct = () => {
         this.setState({
-            showEvent: !this.state.showEvent
-        });
-    };
-
-    togglePerformanceForm = () => {
-        this.setState({
-            showPerformanceForm: !this.state.showPerformanceForm
+            showAct: !this.state.showAct
         });
     };
 
     toggleNewEvent = () => {
         this.setState({
             newEvent: !this.state.newEvent
+        });
+    };
+
+    toggleReservationPopUp = (event) => {
+        this.setState({
+            showReservationPopUp: !this.state.showReservationPopUp,
+            event: event,
         });
     };
 
@@ -92,7 +100,7 @@ class Programme extends Component {
             MasterDispatcher.dispatch(response.data);
         };
 
-        BackendRequest("get", "act-types", null, onSuccess);
+        BackendRequest("get", "acttypes", null, onSuccess);
     };
 
     fetchEvents = () => {
@@ -102,7 +110,6 @@ class Programme extends Component {
          * @param response
          */
         const onSuccess = (response) => {
-
             MasterDispatcher.dispatch(response.data);
         };
 
@@ -152,6 +159,10 @@ class Programme extends Component {
         const events = session.Event.all().orderBy("date");
         const actTypes = session.ActType.all();
 
+
+        console.log("user");
+        console.log(MasterGetter.getCurrentUser());
+
         let today = new Date();
 
         return (
@@ -174,12 +185,11 @@ class Programme extends Component {
                             </select>
                         </div>
                         <div className={"create-new"}>
-                            <button onClick={()=>this.togglePerformanceForm()}>Vytvořit představení</button>
                             <button onClick={()=>this.toggleNewEvent()}>Vytvořit událost</button>
                         </div>
                     </div>
 
-                    {(this.state.newEvent) ? <NewEvent/> : null
+                    {(this.state.newEvent) ? <NewEvent handler={this.toggleNewEvent}/> : null
                     }
 
                     {(events.count() === 0) ? "Žádné nadcházející události" :
@@ -193,20 +203,25 @@ class Programme extends Component {
                                 <Col xs={4}/>
                             </Row>
                             {events.toModelArray().map((event) => {
+
+                                if(event.hall === null || event.act === null){
+                                    return null;
+                                }
+
                                 if (moment(event.date)._d >= today) {
-                                    if (this.state.performanceType === 0) { //TODO: || this.state.performanceType === event.type
+                                    if (parseInt(this.state.performanceType) === 0 || this.state.performanceType === event.act.type.id) {
                                         return (
                                             <Row>
-                                                <Col xs={3} onClick={() => this.onEventClick(event.id)}>Název</Col>
+                                                <Col xs={3} onClick={() => this.onEventClick(event.id)}>{event.act.name}</Col>
                                                 <Col xs={1}
                                                      onClick={() => this.onEventClick(event.id)}>{moment(event.date).format("D. MMMM")}</Col>
                                                 <Col xs={1}
                                                      onClick={() => this.onEventClick(event.id)}>{moment(event.date).format("HH:mm")}</Col>
-                                                <Col xs={2} onClick={() => this.onEventClick(event)}>Sál</Col>
+                                                <Col xs={2} onClick={() => this.onEventClick(event)}>{event.hall.name}</Col>
                                                 <Col xs={1}
                                                      onClick={() => this.onEventClick(event.id)}>{parseInt(event.price)} Kč</Col>
                                                 <Col xs={4}>
-                                                    <button onClick={() => {alert("Vstupenky")}}>Koupit vstupenky</button>
+                                                    <button onClick={()=>this.toggleReservationPopUp(event)}>Rezervovat vstupenky</button>
                                                     <button onClick={() => {alert("Editovat")}}>Editovat</button>
                                                     <button onClick={() => {this.handleDeleteClick(event)}}>Zrušit</button>
                                                 </Col>
@@ -218,18 +233,18 @@ class Programme extends Component {
                         </Grid>
                     }
 
-                    {(this.state.showEvent) ?
-                        <PerformanceView
+                    {(this.state.showAct) ?
+                        <ActView
                             event={this.state.event}
-                            closePopup={this.toggleEvent.bind(this)}
+                            closePopup={this.toggleAct.bind(this)}
                         />
                         : null
                     }
 
-                    {(this.state.showPerformanceForm) ?
-                        <PerformanceForm
+                    {(this.state.showReservationPopUp) ?
+                        <ReservationPopUp
                             event={this.state.event}
-                            closePopup={this.togglePerformanceForm.bind(this)}
+                            closePopup={this.toggleReservationPopUp.bind(this)}
                         />
                         : null
                     }

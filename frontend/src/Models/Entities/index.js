@@ -1,5 +1,6 @@
 export {default as Act} from "./Act";
-export {default as Actor} from "./Actor";export {default as ActType} from "./ActType";
+export {default as Actor} from "./Actor";
+export {default as ActType} from "./ActType";
 export {default as Address} from "./Address";
 export {default as Director} from "./Director";
 export {default as Event} from "./Event";
