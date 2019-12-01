@@ -63,8 +63,8 @@ urlpatterns = [
     path('reservation/<uuid:reservation_id>', cinemaviews.ReservationView.as_view()),
     path('seats', cinemaviews.SeatView.as_view()),
     path('seats/<uuid:seat_id>', cinemaviews.SeatView.as_view()),
-    path('seats_in_event', cinemaviews.SeatInEventView.as_view()),
-    path('seat_in_event/<uuid:sie_id>', cinemaviews.SeatInEventView.as_view()),
+    path('seats-in-event', cinemaviews.SeatInEventView.as_view()),
+    path('seats-in-event/<uuid:event_id>', cinemaviews.SeatInEventView.as_view()),
 
     # user views
     path('current_user', userviews.current_user),

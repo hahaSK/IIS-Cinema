@@ -797,14 +797,14 @@ class SeatInEventView(APIView):
             return [permissions.IsAuthenticated()]
 
     @never_cache
-    def get(self, request, sie_id=None):
+    def get(self, request, event_id=None):
 
-        seat_in_event = SeatInEvent.objects.all()
+        seats_in_event = SeatInEvent.objects.filter(event=event_id, is_available=False)
 
-        seat_in_event_serializer = SeatInEventSerializer(seat_in_event, many=True)
+        seats_in_event_serializer = SeatInEventSerializer(seats_in_event, many=True)
 
         payload = {
-            "seats_in_event": seat_in_event_serializer.data,
+            "event_seat": seats_in_event_serializer.data,
         }
 
         return Response(payload, status=status.HTTP_200_OK)
