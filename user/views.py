@@ -23,9 +23,9 @@ def user_exception_response(e: Exception):
     err_message = e.__str__()
     if e.__str__().__contains__("already exists"):
         if e.__str__().__contains__("email"):
-            err_message = "User with this email already exists."
+            err_message = "Uživatel s daným email již existuje."
         if e.__str__().__contains__('username'):
-            err_message = "User with this username already exists."
+            err_message = "Uživatel s daným užívatelským jménem již existuje."
 
     return Response({"error": err_message}, status.HTTP_409_CONFLICT)
 
@@ -48,12 +48,19 @@ class UserRegisterView(APIView):
         user = request.data['user']
         if not user:
             return Response({'response': 'error', 'message': 'No data found'})
+
+        if User.objects.filter(email=user['email']).count() != 0:
+            return Response({"response": "error", "message": "Uživatel s daným emailem již existuje."})
+
+        if User.objects.filter(username=user['username']).count() != 0:
+            return Response({"response": "error", "message": "Uživatel s daným užívatelským jménem již existuje."})
+
         serializer = UserSerializerWithToken(data=user)
         if serializer.is_valid():
             saved_user = serializer.save()
         else:
             return Response({"response": "error", "message": serializer.errors})
-        return Response({"response": "success", "message": "user created successfully"})
+        return Response({"response": "success", "user": serializer.data})
 
 
 class PasswordEditView(APIView):
@@ -69,7 +76,7 @@ class PasswordEditView(APIView):
             user.save()
             return Response({"status": "success"}, status=status.HTTP_200_OK)
         else:
-            return Response({"status": "Passwords do not match!"}, status=status.HTTP_412_PRECONDITION_FAILED)
+            return Response({"status": "Hesla se neshodují!"}, status=status.HTTP_412_PRECONDITION_FAILED)
 
 
 class UserView(APIView):
@@ -96,7 +103,7 @@ class UserView(APIView):
         user = User.objects.get(id=user_id)
 
         if not user:
-            raise Exception("User doesn't exist")
+            return Response({"error": "Uživatel neexistuje."})
 
         data = request.data
         user.first_name = data['first_name']
@@ -104,7 +111,6 @@ class UserView(APIView):
         user.username = data['username']
         user.email = data['email']
         user.role = data['role']
-        user.date_of_birth = data['date_of_birth']
 
         try:
             user.save()

@@ -1,7 +1,7 @@
+import uuid
 from django.db import models
 from address.models import Address
 from django.contrib.auth.models import AbstractUser
-from django.utils import timezone
 
 from .base_user import AbstractUser
 
@@ -19,8 +19,7 @@ class User(AbstractUser):
         (REDACTOR, 'Redactor')
     )
 
-    date_of_birth = models.DateField(blank=True, default=None)
-
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     role = models.SmallIntegerField(choices=ROLE_CHOICES, default=VIEWER)
 
     @staticmethod

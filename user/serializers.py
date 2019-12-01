@@ -6,7 +6,7 @@ from rest_framework_jwt.settings import api_settings
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = '__all__'
+        fields = ('id', 'first_name', 'last_name', 'email', 'username')
 
 
 class UserSerializerWithToken(serializers.ModelSerializer):
@@ -22,13 +22,6 @@ class UserSerializerWithToken(serializers.ModelSerializer):
         return token
 
     def create(self, validated_data):
-
-        if User.objects.filter(email=validated_data['email']).count() != 0:
-            raise Exception("User with this email already exists.")
-
-        if User.objects.filter(username=validated_data['username']).count() != 0:
-            raise Exception("User with this username already exists.")
-
         user = User.create(
             username=validated_data['username'],
             email=validated_data['email'],
@@ -39,4 +32,4 @@ class UserSerializerWithToken(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('token', 'username', 'email', 'role', 'date_of_birth', 'password', 'first_name', 'last_name')
+        fields = ('token', 'username', 'email', 'role', 'password')

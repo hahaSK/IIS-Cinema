@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from user.models import User
 
 base_list_display = ('id', 'first_name', 'last_name', 'email')
-extended_list = base_list_display + ('username', 'date_of_birth', 'role')
+extended_list = base_list_display + ('username', 'role')
 
 
 class CustomUserCreationForm(UserCreationForm):
