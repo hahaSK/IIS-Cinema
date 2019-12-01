@@ -22,10 +22,15 @@ class UserSerializerWithToken(serializers.ModelSerializer):
         return token
 
     def create(self, validated_data):
+        try:
+            role = validated_data['role']
+        except Exception:
+            role = User.VIEWER
+
         user = User.create(
             username=validated_data['username'],
             email=validated_data['email'],
-            role=validated_data['role'],
+            role=role,
             password=validated_data['password'],
         )
         return user
