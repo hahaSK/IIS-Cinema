@@ -19,23 +19,14 @@ class User(AbstractUser):
         (REDACTOR, 'Redactor')
     )
 
-    date_of_birth = models.DateField(blank=False, default=timezone.now())
+    date_of_birth = models.DateField(blank=True, default=None)
 
     role = models.SmallIntegerField(choices=ROLE_CHOICES, default=VIEWER)
 
     @staticmethod
-    def create(username, email, first_name, last_name, role, password, date_of_birth):
-        if not first_name:
-            raise ValueError("The first name must be set!")
-        if not last_name:
-            raise ValueError("The last name must be set!")
-
-        if not date_of_birth:
-            raise ValueError("The date of birth must be set!")
-
+    def create(username, email, role, password):
         return User.objects.create_user(username=username, email=email, password=password,
-                                        first_name=first_name, last_name=last_name,
-                                        date_of_birth=date_of_birth, role=role)
+                                        role=role)
 
     def __str__(self):
         return super().get_full_name()

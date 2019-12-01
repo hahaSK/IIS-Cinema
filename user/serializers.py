@@ -30,13 +30,10 @@ class UserSerializerWithToken(serializers.ModelSerializer):
             raise Exception("User with this username already exists.")
 
         user = User.create(
-            first_name=validated_data['first_name'],
-            last_name=validated_data['last_name'],
             username=validated_data['username'],
             email=validated_data['email'],
             role=validated_data['role'],
             password=validated_data['password'],
-            date_of_birth=validated_data['date_of_birth'],
         )
         return user
 
