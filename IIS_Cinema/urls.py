@@ -72,7 +72,8 @@ urlpatterns = [
     path('api-token-verify', verify_jwt_token),
     path('user/create', userviews.UserRegisterView.as_view()),
     path('users', userviews.UserView.as_view()),
-    path('user/<uuid:user_id>', userviews.UserView.as_view())
+    path('user/<uuid:user_id>', userviews.UserView.as_view()),
+    path('user/<uuid:user_id>/password', userviews.PasswordEditView.as_view())
 ]
 
 

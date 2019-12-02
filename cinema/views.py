@@ -12,6 +12,7 @@ from .serializers import ActorSerializer, DirectorSerializer, GenreSerializer, H
     ActSerializer, EventSerializer, ReservationSerializer, SeatSerializer, ActTypeSerializer, SeatInEventSerializer
 from .models import Actor, Director, Genre, Hall, Act, Event, Reservation, Seat, SeatInEvent, ActType
 from address.models import Address
+import json
 
 from user.models import User
 
@@ -419,16 +420,16 @@ class ActView(APIView):
         picture = data['picture']
 
         genre = []
-        for current_element in data['genre']:
+        for current_element in json.loads(data['genre']):
             print(current_element)
             genre.append(Genre.objects.get(id=current_element))
 
         cast = []
-        for current_element in data['cast']:
+        for current_element in json.loads(data['cast']):
             cast.append(Actor.objects.get(id=current_element))
 
         director = []
-        for current_element in data['director']:
+        for current_element in json.loads(data['director']):
             director.append(Director.objects.get(id=current_element))
 
         rating = data['rating']
@@ -676,12 +677,16 @@ class ReservationView(APIView):
         :return:
         """
         data = request.data
+
+        print(data)
+
         user = data['user']
         event_id = data['event']
         event = Event.objects.get(id=event_id)
 
         seats = []
-        for current_element in data["seats"]:
+        for current_element in json.loads(data['seats']):
+            print(current_element)
             seats.append(Seat.objects.get(id=int(current_element)))
 
         new_reservation = Reservation.register_new_reservation(user=user, event=event, seats=seats)

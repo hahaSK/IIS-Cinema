@@ -69,10 +69,10 @@ class UserRegisterView(APIView):
 class PasswordEditView(APIView):
 
     @never_cache
-    def put(self, request):
-        user = request.user
+    def put(self, request, user_id):
+        user = User.objects.get(id=user_id)
         password = request.data['password']
-        password_again = request.data['passwordAgain']
+        password_again = request.data['password_again']
 
         if password == password_again:
             user.set_password(password)
@@ -116,7 +116,11 @@ class UserView(APIView):
             user.email = data['email']
         except Exception:
             pass
-        user.role = data['role']
+
+        try:
+            user.role = data['role']
+        except Exception:
+            pass
 
         try:
             user.save()
