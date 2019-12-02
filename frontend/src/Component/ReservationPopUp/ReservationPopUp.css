@@ -49,13 +49,16 @@ html, body, .app {
       .popup .popup_inner .schema-and-stats .stats {
         width: 20%; }
       .popup .popup_inner .schema-and-stats .schema {
-        width: 70%;
-        margin-bottom: 2rem; }
+        width: 70%; }
         .popup .popup_inner .schema-and-stats .schema .screen {
           font-size: 1.5rem;
           display: flex;
           justify-content: center;
           align-items: center; }
+        .popup .popup_inner .schema-and-stats .schema .seats {
+          margin-bottom: 1.5rem; }
+        .popup .popup_inner .schema-and-stats .schema input {
+          width: 50%; }
       .popup .popup_inner .schema-and-stats .grid tr {
         display: flex;
         justify-content: center;

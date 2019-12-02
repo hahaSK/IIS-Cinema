@@ -11,7 +11,6 @@ import BackendRequest from "../../Models/REST/BackendRequest";
 import InstantAction from "../../Models/Utils/InstantAction";
 import {ADD_ACT, UPDATE_ACT} from "../../Models/Entities/Act";
 import Select from 'react-select';
-import qs from "qs";
 
 
 class PerformanceForm extends Component {
@@ -61,9 +60,9 @@ class PerformanceForm extends Component {
                 type: props.act._fields.type,
                 length: props.act.length,
                 picture: props.act.picture,
-                genre: props.act._fields.genre,
-                cast: props.act._fields.cast,
-                director: props.act._fields.director,
+                genre: [],
+                cast: [],
+                director: [],
                 genreHelp : genres,
                 castHelp : cast,
                 directorHelp : director,
@@ -75,7 +74,7 @@ class PerformanceForm extends Component {
             this.state = {
                 id: "",
                 name: "",
-                type: "",
+                type: 0,
                 length: "",
                 picture: "",
                 genre: [],
@@ -84,7 +83,7 @@ class PerformanceForm extends Component {
                 genreHelp : null,
                 castHelp : null,
                 directorHelp : null,
-                rating: "",
+                rating: 50,
                 description: "",
             }
         }
@@ -98,9 +97,6 @@ class PerformanceForm extends Component {
         const value = target.type === "checkbox" ? target.checked : target.value;
         const name = target.name;
 
-        console.log(name);
-        console.log(value);
-
         this.setState({
             [name]: value
         });
@@ -112,6 +108,8 @@ class PerformanceForm extends Component {
         this.setState({
             genreHelp
         });
+
+        console.log(genreHelp);
     };
 
     handleCastChange = castHelp => {
@@ -189,29 +187,18 @@ class PerformanceForm extends Component {
          * @type {{areaId: *}}
          */
 
-        let genre_array = this.state.genre;
+        let genre_array = [];
         for (let i = 0; i < this.state.genreHelp.length; i++)
             genre_array.push(this.state.genreHelp[i].value);
 
-        this.setState({
-            genre: genre_array,
-        });
-
-        let cast_array = this.state.cast;
+        let cast_array = [];
         for (let i = 0; i < this.state.castHelp.length; i++)
             cast_array.push(this.state.castHelp[i].value);
 
-        this.setState({
-            cast: cast_array,
-        });
-
-        let director_array = this.state.director;
+        let director_array = [];
         for (let i = 0; i < this.state.directorHelp.length; i++)
             director_array.push(this.state.directorHelp[i].value);
 
-        this.setState({
-            director: director_array,
-        });
 
         const data = {
             name: this.state.name,
@@ -285,7 +272,7 @@ class PerformanceForm extends Component {
                                 <Row>
                                     <h3>Typ:&nbsp;</h3>
                                     <select name={"type"} onChange={this.handleChange} value={this.state.type}>
-                                        <option disabled>Zvolte typ představení</option>
+                                        <option value={0} disabled>Zvolte typ představení</option>
                                         {actTypes.toModelArray().map(actType => {
                                             return <option key={actType.id} value={actType.id}>{actType.name}</option>;
                                         })}
@@ -324,7 +311,7 @@ class PerformanceForm extends Component {
                                 </Row>
                                 <Row>
                                     <h3>Hodnocení (v %):&nbsp;</h3>
-                                    <input type="text" name={"rating"} id={"rating"} value={this.state.rating} onChange={this.handleChange}/>
+                                    <input type="number" name={"rating"} id={"rating"} min={0} max={100} value={this.state.rating} onChange={this.handleChange}/>
                                 </Row>
                             </Grid>
                         </div>

@@ -20,17 +20,34 @@ class ReservationPopUp extends Component {
     constructor(props) {
         super(props);
 
+        this.fetchSeats();
+
         let seats = [];
 
-        for (let seat_num = 1; seat_num <= this.props.event.seats.length; seat_num++)
-            seats.push(seat_num);
+        for (let seat_num = 0; seat_num < this.props.event.seats.length; seat_num++) {
+            seats.push(this.props.event.seats[seat_num]);
+        }
 
-        this.state = {
-            seat: seats,
-            seatAvailable: this.props.event.seats,
-            seatReserved: [],
-            occupied: null,
-            event: this.props.event,
+        seats.sort();
+
+        if (MasterGetter.getCurrentUser() !== null) {
+            this.state = {
+                seat: seats,
+                seatReserved: [],
+                seatAvailable: seats,
+                occupied: null,
+                event: this.props.event,
+                email: MasterGetter.getCurrentUser().email
+            }
+        } else {
+            this.state = {
+                seat: seats,
+                seatReserved: [],
+                seatAvailable: seats,
+                occupied: null,
+                event: this.props.event,
+                email: ""
+            }
         }
     }
 
@@ -49,6 +66,20 @@ class ReservationPopUp extends Component {
             }
         }
     }
+
+    handleChange = (event) => {
+
+        const target = event.target;
+        const value = target.type === "checkbox" ? target.checked : target.value;
+        const name = target.name;
+
+        console.log(name);
+        console.log(value);
+
+        this.setState({
+            [name]: value
+        });
+    };
 
     /**
      * Handle Submit
@@ -87,15 +118,12 @@ class ReservationPopUp extends Component {
          */
         const data = {
             event: this.state.event.id,
-            user: MasterGetter.getCurrentUser().id,
+            user: this.state.email,
             seats: JSON.stringify(this.state.seatReserved),
         };
 
-        console.log("zasílaná data");
-        console.log(data);
-
         BackendRequest("post", "reservations", data, onSuccess, onError, onError );
-    }
+    };
 
     fetchSeats = () => {
 
@@ -111,25 +139,24 @@ class ReservationPopUp extends Component {
         BackendRequest("get", "seats-in-event/" + this.props.event.id, null, onSuccess);
     };
 
-    componentWillMount() {
-        this.fetchSeats();
-    }
-
     render() {
 
         const {entities} = this.props;
         const session = orm.session(entities);
-        const seat_events = session.EventSeat.all().toModelArray(); //obsazená
+        const seat_events = session.EventSeat.all().filter((event_seat) => event_seat.event === this.props.event.id).toModelArray();
         const event = this.props.event;
 
         if (seat_events.length === null || seat_events.length === undefined)
             return null;
 
-        let occupied = [];
+        let inputField = "";
+        if (MasterGetter.getCurrentUser() === null)
+            inputField = <div className={"email-field"}>
+                <h3>Zadejte e-mailovou adresu nebo se <a href={'/login'}>přihlašte.</a></h3>
+                <input type="text" name={"email"} id={"email"} value={this.state.email} onChange={this.handleChange}/>
+            </div>;
 
-        console.log("---");
-        for (let i = 0; i < event.seats.length; i++)
-            console.log(event.seats[i]);
+        let occupied = [];
 
         return (
             <div className='popup'>
@@ -141,7 +168,6 @@ class ReservationPopUp extends Component {
                     <div className={"schema-and-stats"}>
                         <div className={"stats"}>
                             <h3>Celková kapacita: <span>{this.props.event.hall.rows * this.props.event.hall.columns}</span></h3>
-                            <h3>Počet volných míst: <span>{this.props.event.seats.length - this.state.seatReserved.length - seat_events.length}</span></h3>
                             <h3>Počet zvolených míst: <span>{this.state.seatReserved.length} (max. 5)</span></h3>
                         </div>
                         <div className={"schema"}>
@@ -151,23 +177,25 @@ class ReservationPopUp extends Component {
                             <br/>
                             <div className={"seats"}>
                                 {seat_events.map(seat_event => {
-                                    occupied.push(seat_event._fields.seat);
+                                    if (seat_event.is_available === false)
+                                        occupied.push(seat_event._fields.seat);
                                 })}
                                 <DrawGrid
                                     rows = {this.props.event.hall.rows}
                                     columns = {this.props.event.hall.columns}
                                     seat = { this.state.seat }
-                                    available = { this.state.seatAvailable }
                                     reserved = { this.state.seatReserved }
                                     occupied = {occupied}
                                     onClickData = { this.onClickData.bind(this) }
                                 />
                             </div>
+                            {inputField}
+                            <div className={"continue-button"}>
+                                <button onClick={this.handleSubmit}>Rezervovat</button>
+                            </div>
                         </div>
                     </div>
-                    <div className={"continue-button"}>
-                        <button onClick={this.handleSubmit}>Pokračovat</button>
-                    </div>
+
                 </div>
             </div>
         );

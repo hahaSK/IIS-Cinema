@@ -113,7 +113,7 @@ export default function BackendRequest(method: string, actionURL: string, data: 
                     //InstantActions.redirect("/login");
 
                     InstantActions.resetStore();
-                    //InstantActions.dispatch(setAppLoaded(true));
+                    // InstantActions.dispatch(setAppLoaded(true));
                     //InstantActions.dispatch(setLoggingInProgress(false));
 
                 }
