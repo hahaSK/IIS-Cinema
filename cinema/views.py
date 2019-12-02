@@ -705,9 +705,16 @@ class ReservationView(APIView):
         return Response(payload, status=status.HTTP_200_OK)
 
     @never_cache
-    def get(self, request, reservation_id=None):
+    def get(self, request, user_id=None):
 
-        reservations = Reservation.objects.all()
+        if user_id==None:
+            if request.user.role != User.REDACTOR and request.user.role != User.ADMIN and request.user.role != User.CASHIER:
+                return Response(UNAUTHORIZED_USER, status=status.HTTP_403_FORBIDDEN)
+            reservations = Reservation.objects.all()
+        else:
+            reservations = Reservation.objects.filter(user=user_id)
+
+
 
         reservation_serializer = ReservationSerializer(reservations, many=True)
 
