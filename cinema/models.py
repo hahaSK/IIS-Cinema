@@ -8,7 +8,7 @@ class Actor(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=120, blank=False, default="John Doe")
     year = models.PositiveSmallIntegerField(blank=False, default=0)
-    picture = models.ImageField(upload_to='images')
+    picture = models.ImageField(blank=True, upload_to='images/')
 
     def __str__(self):
         return self.name
@@ -18,7 +18,7 @@ class Director(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=120, blank=False, default="John Doe")
     year = models.PositiveSmallIntegerField(blank=False, default=0)
-    picture = models.ImageField(upload_to='images')
+    picture = models.ImageField(blank=True, upload_to='images/')
 
     def __str__(self):
         return self.name
@@ -48,6 +48,11 @@ class Hall(models.Model):
     columns = models.PositiveSmallIntegerField(blank=False, default=0)
     # seat_matrix
 
+    def save(self, *args, **kwargs):
+        if self.rows * self.columns < 20:
+            raise ValueError('Value has to be between 0 and 100!')
+        super(Hall, self).save(*args, **kwargs)
+
     def __str__(self):
         return self.name
 
@@ -57,7 +62,7 @@ class Act(models.Model):
     name = models.CharField(max_length=120, blank=False, default="Unknown Act")
     type = models.ForeignKey(ActType, on_delete=models.CASCADE)
     length = models.PositiveSmallIntegerField(blank=False, default=0)
-    picture = models.ImageField(upload_to='images')
+    picture = models.ImageField(upload_to='images/')
     genre = models.ManyToManyField(Genre)
     cast = models.ManyToManyField(Actor)
     director = models.ManyToManyField(Director)
@@ -65,6 +70,11 @@ class Act(models.Model):
 
     rating = models.DecimalField(max_digits=4, decimal_places=2, blank=False, default=0)
     description = models.TextField()
+
+    def save(self, *args, **kwargs):
+        if 100 < self.rating < 0:
+            raise ValueError('Value has to be between 0 and 100!')
+        super(Act, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.name
