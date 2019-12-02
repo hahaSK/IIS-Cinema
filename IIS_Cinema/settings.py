@@ -25,7 +25,7 @@ MEDIA_URL = 'media/'
 SECRET_KEY = 't(0c&r8)^eb6^g^*b65sz4*(j*s8sncir%65j$q+@1)9xd#y^f'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
 
 ALLOWED_HOSTS = ['IIS-Cinema-dev.eu-central-1.elasticbeanstalk.com']
 
@@ -159,10 +159,10 @@ CORS_ORIGIN_WHITELIST = (
     'http://localhost:3001',
     'http://localhost:9000',
     'http://localhost:8000',
-    # 'http://iiscinema-env.z5bnrez92a.eu-central-1.elasticbeanstalk.com:3000',
-    # 'http://iiscinema-env.z5bnrez92a.eu-central-1.elasticbeanstalk.com:3001',
-    # 'http://iiscinema-env.z5bnrez92a.eu-central-1.elasticbeanstalk.com:9000',
-    # 'http://iiscinema-env.z5bnrez92a.eu-central-1.elasticbeanstalk.com:8000'
+    'http://iis-cinema-dev.eu-central-1.elasticbeanstalk.com:3000',
+    'http://iis-cinema-dev.eu-central-1.elasticbeanstalk.com:3001',
+    'http://iis-cinema-dev.eu-central-1.elasticbeanstalk.com:9000',
+    'http://iis-cinema-dev.eu-central-1.elasticbeanstalk.com:8000'
 )
 
 CORS_ALLOW_METHODS = (
