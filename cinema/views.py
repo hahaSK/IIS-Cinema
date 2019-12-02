@@ -685,7 +685,7 @@ class ReservationView(APIView):
         event = Event.objects.get(id=event_id)
 
         seats = []
-        for current_element in data['seats']:
+        for current_element in json.loads(str(data['seats'])):
             seats.append(Seat.objects.get(id=int(current_element)))
 
         for current_item in seats:
