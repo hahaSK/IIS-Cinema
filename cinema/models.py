@@ -68,7 +68,8 @@ class Act(models.Model):
     director = models.ManyToManyField(Director)
     # production (napr: USA 2019)
 
-    rating = models.DecimalField(max_digits=4, decimal_places=2, blank=False, default=0)
+    # rating = models.DecimalField(max_digits=4, decimal_places=2, blank=False, default=0)
+    rating = models.PositiveSmallIntegerField(blank=False, default=0)
     description = models.TextField()
 
     def save(self, *args, **kwargs):
