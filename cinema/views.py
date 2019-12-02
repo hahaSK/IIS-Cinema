@@ -808,6 +808,7 @@ class SeatView(APIView):
 
         return Response(payload, status=status.HTTP_200_OK)
 
+
 class SeatInEventView(APIView):
 
     def get_permissions(self):

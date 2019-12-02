@@ -25,6 +25,14 @@ def add_seat_to_event(sender, instance, created, **kwargs):
             SeatInEvent.objects.create(seat=seat, event=instance, is_available=True)
 
 
+@receiver(post_save, sender=Seat)
+def edit_seats_in_event(sender, instance, created, **kwargs):
+    if instance:
+        for event in Event.objects.filter(hall=instance.hall):
+            if not SeatInEvent.objects.filter(seat=instance, event=event).exists():
+                SeatInEvent.objects.create(seat=instance, event=event, is_available=True)
+
+
 @receiver(m2m_changed, sender=Reservation.seats.through)
 def reserve_seats(sender, action, instance, **kwargs):
     if action == "post_add":
