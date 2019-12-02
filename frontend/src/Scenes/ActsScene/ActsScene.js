@@ -25,7 +25,6 @@ class ActsScene extends Component {
 
         this.state = {
             act: "",
-            showEvent: false,
             showActForm: false,
             editActForm: false,
             newActor: false,
@@ -90,19 +89,6 @@ class ActsScene extends Component {
         };
 
         BackendRequest("delete", "act/" + deleteAct.id, null, onSuccess);
-    };
-
-    onActClick = (actId) => {
-        this.setState({
-            act: actId
-        });
-        this.toggleEvent();
-    };
-
-    toggleEvent = () => {
-        this.setState({
-            showEvent: !this.state.showEvent
-        });
     };
 
     toggleActForm = () => {
@@ -281,9 +267,9 @@ class ActsScene extends Component {
                                 if (parseInt(this.state.actType) === 0 || this.state.actType === act.type.id){
                                     return (
                                         <Row>
-                                            <Col xs={3} onClick={() => this.onActClick(act.id)}>{act.name}</Col>
-                                            <Col xs={1} onClick={() => this.onActClick(act.id)}>{act.type.name}</Col>
-                                            <Col xs={2} onClick={() => this.onActClick(act.id)}>{act.length} minut</Col>
+                                            <Col xs={3}>{act.name}</Col>
+                                            <Col xs={1}>{act.type.name}</Col>
+                                            <Col xs={2}>{act.length} minut</Col>
                                             <Col xs={6} className={"buttons"}>
                                                 <button onClick={() => {this.handleEditClick(act)}}>Editovat</button>
                                                 <button onClick={() => {this.handleDeleteClick(act)}}>Zrušit</button>
@@ -293,14 +279,6 @@ class ActsScene extends Component {
                                 }
                             })}
                         </Grid>
-                    }
-
-                    {(this.state.showEvent) ?
-                        <ActView
-                            event={this.state.event}
-                            closePopup={this.toggleEvent.bind(this)}
-                        />
-                        : null
                     }
 
                     {(this.state.showActForm) ?

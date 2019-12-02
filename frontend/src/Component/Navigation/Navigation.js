@@ -42,6 +42,9 @@ class Navigation extends Component {
                         <NavLink activeClassName="active" to="/users">UŽIVATELÉ</NavLink>
                     </li>
                     <li>
+                        <NavLink activeClassName="active" to="/reservations">REZERVACE</NavLink>
+                    </li>
+                    <li>
                         <NavLink activeClassName="active" to="/programme">PROGRAM</NavLink>
                     </li>
                     <li>
@@ -63,6 +66,9 @@ class Navigation extends Component {
                         <NavLink activeClassName="active" to="/acts">PŘEDSTAVENÍ</NavLink>
                     </li>
                     <li>
+                        <NavLink activeClassName="active" to="/reservations">REZERVACE</NavLink>
+                    </li>
+                    <li>
                         <NavLink activeClassName="active" to="/programme">PROGRAM</NavLink>
                     </li>
                     <li>
@@ -77,6 +83,9 @@ class Navigation extends Component {
         else if (user.role === 3) {
             routes =
                 <ul>
+                    <li>
+                        <NavLink activeClassName="active" to="/reservations">REZERVACE</NavLink>
+                    </li>
                     <li>
                         <NavLink activeClassName="active" to="/programme">PROGRAM</NavLink>
                     </li>

@@ -11,6 +11,7 @@ class DrawGrid extends Component {
 
         let width_compute = (100 / (this.props.columns)) - 0.7 ;
         let width = width_compute.toString() + "%";
+        let i = 1;
 
         return (
             <div className="container">

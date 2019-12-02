@@ -7,6 +7,9 @@ import BackendRequest from "../../Models/REST/BackendRequest";
 import InstantAction from "../../Models/Utils/InstantAction";
 import {ADD_USER, UPDATE_USER} from "../../Models/Entities/User";
 import {Col, Grid, Row} from "react-flexbox-grid";
+import MasterDispatcher from "../../Models/Utils/MasterDispatcher";
+import orm from "../../Models/ORM";
+import moment from "moment/moment";
 
 class MyProfileScene extends Component {
 
@@ -53,13 +56,14 @@ class MyProfileScene extends Component {
          */
         const onSuccess = (response) => {
 
+            console.log("WTF");
+            InstantAction.setToast("Heslo úspěšně změněno");
             if (response.data !== undefined) {
                 InstantAction.dispatch({
                     type: UPDATE_USER,
                     payload: response.data,
                 });
             }
-            InstantAction.setToast("Heslo úspěšně změněno");
         };
 
         /**
@@ -137,7 +141,59 @@ class MyProfileScene extends Component {
         BackendRequest("put", "user/" + MasterGetter.getCurrentUser().id, data, onSuccess, onError, onError );
     };
 
+    fetchActs = () => {
+
+        /**
+         * On Success
+         * @param response
+         */
+        const onSuccess = (response) => {
+            MasterDispatcher.dispatch(response.data);
+        };
+
+        BackendRequest("get", "acts", null, onSuccess);
+    };
+
+    fetchEvents = () => {
+
+        /**
+         * On Success
+         * @param response
+         */
+        const onSuccess = (response) => {
+            MasterDispatcher.dispatch(response.data);
+        };
+
+        BackendRequest("get", "events", null, onSuccess);
+    };
+
+    fetchReservations = () => {
+
+        /**
+         * On Success
+         * @param response
+         */
+        const onSuccess = (response) => {
+            MasterDispatcher.dispatch(response.data);
+        };
+
+        BackendRequest("get", "reservations", null, onSuccess);
+    };
+
+    componentWillMount(){
+        this.fetchReservations();
+        this.fetchActs();
+        this.fetchEvents();
+    }
+
     render() {
+
+        const {entities} = this.props;
+        const session = orm.session(entities);
+        const reservations = session.Reservation.all().filter((reservation) => reservation.user === MasterGetter.getCurrentUser().email);
+
+        console.log(reservations);
+
         return (
             <div className="App">
                 <Navigation/>
@@ -171,6 +227,38 @@ class MyProfileScene extends Component {
                         </Row>
                     </Grid>
                 </div>
+                <div className={"body"}>
+                    <h2>Moje rezervace</h2>
+                    {(reservations.count() === 0) ? "Dosud žádné rezervace" :
+                        <Grid className={"result-table"}>
+                            <Row>
+                                <Col xs={3}>Událost</Col>
+                                <Col xs={2}>Datum a čas</Col>
+                                <Col xs={2}>Počet sedadel</Col>
+                                <Col xs={1}>Zaplaceno</Col>
+                                <Col xs={4}/>
+                            </Row>
+                            {reservations.toModelArray().map((reservation) => {
+
+                                if(reservation.event === null || reservation.event.act === null){
+                                    return null;
+                                }
+
+                                return (
+                                    <Row>
+                                        <Col xs={3}>{reservation.event.act.name}</Col>
+                                        <Col xs={2}>{moment(reservation.event.date).format("D. MMMM")} {moment(reservation.event.date).format("HH:mm")}</Col>
+                                        <Col xs={2}>{reservation._fields.seats.length}</Col>
+                                        <Col xs={1}>
+                                            {(reservation.paid === true) ? "Ano" : "Ne"}
+                                        </Col>
+                                        <Col xs={4}/>
+                                    </Row>
+                                );
+                            })}
+                    </Grid>
+                }
+            </div>
             </div>
         );
     }

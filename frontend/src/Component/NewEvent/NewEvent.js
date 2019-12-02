@@ -21,10 +21,11 @@ class NewEvent extends Component {
         super(props);
 
         this.state = {
-            act: "",
+            act: 0,
             price: "",
             date: new Date(),
-            hall: "",
+            hall: 0,
+            message: ""
         };
 
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -141,7 +142,7 @@ class NewEvent extends Component {
                         <Col xs={3}>
                             <h3>Představení:</h3>
                             <select name={"act"} onChange={this.handleChange} value={this.state.act}>
-                                <option disabled>Vyberte představení</option>
+                                <option value={0} disabled>Zvolte představení</option>
                                 {acts.toModelArray().map(act => {
                                     return <option key={act.id} value={act.id}>{act.name}</option>;
                                 })}
@@ -162,7 +163,7 @@ class NewEvent extends Component {
                         <Col xs={2}>
                             <h3>Sál:</h3>
                             <select name={"hall"} onChange={this.handleChange} value={this.state.hall}>
-                                <option disabled>Vyberte sál</option>
+                                <option value={0} disabled>Zvolte sál</option>
                                 {halls.toModelArray().map(hall => {
                                     return <option key={hall.id} value={hall.id}>{hall.name}</option>;
                                 })}

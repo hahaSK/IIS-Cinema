@@ -7,28 +7,17 @@ import connect from "react-redux/es/connect/connect";
 import "moment/min/locales";
 import './HallsScene.css';
 import InstantAction from "../../Models/Utils/InstantAction";
-import {REMOVE_HALL, UPDATE_HALL} from "../../Models/Entities/Hall";
-import orm from "../../Models/ORM/index";
-import {UPDATE_USER} from "../../Models/Entities/User";
+import {REMOVE_HALL} from "../../Models/Entities/Hall";
 
 class HallItem extends Component {
-
-    constructor(props){
-        super(props);
-
-        this.state = {
-            name: this.props.hall.name,
-            address: this.props.hall.address.id,
-            rows: this.props.hall.rows,
-            columns: this.props.hall.columns,
-        }
-    }
 
     /**
      * Handle Delete Click
      * @param event
      */
-    handleDeleteClick = (deleteHall) => {
+    handleDeleteClick = () => {
+
+        const {hall} = this.props;
 
         /**
          * Delete event
@@ -38,7 +27,7 @@ class HallItem extends Component {
 
             InstantAction.dispatch({
                 type: REMOVE_HALL,
-                payload: deleteHall.id,
+                payload: hall.id,
             });
 
             MasterDispatcher.dispatch(response.data);
@@ -46,179 +35,21 @@ class HallItem extends Component {
             InstantAction.setToast("Sál odstraněn");
         };
 
-        BackendRequest("delete", "hall/" + deleteHall.id, null, onSuccess);
+        BackendRequest("delete", "hall/" + hall.id, null, onSuccess);
     };
-
-    handleInputChange = (event) => {
-
-        const target = event.target;
-        const value = target.type === "checkbox" ? target.checked : target.value;
-        const name = target.name;
-
-        this.setState({
-            [name]: value,
-        });
-
-        this.forceUpdate();
-    };
-
-    handleSelectChange = (event) => {
-
-        const { hall } = this.props;
-        const target = event.target;
-        const value = target.type === "checkbox" ? target.checked : target.value;
-        const name = target.name;
-
-        this.setState({
-            [name]: value,
-        });
-
-        if ( event !== null ) {
-            event.preventDefault();
-        }
-
-        /**
-         * On Error
-         * @param response
-         */
-        const onError = (response) => {
-
-            this.setState({
-                error: response.status
-            });
-
-        };
-
-        /**
-         * On Success
-         * @param response
-         */
-        const onSuccess = (response) => {
-
-            const data = response.data;
-
-            if (data.hall !== undefined) {
-                InstantAction.dispatch({
-                    type: UPDATE_HALL,
-                    payload: data.hall,
-                });
-            }
-
-            console.log(response.data);
-            MasterDispatcher.dispatch(response.data);
-            InstantAction.setToast("Sál upraven");
-        };
-
-        /**
-         * Payload
-         * @type {{role: string|string}}
-         */
-        const data = {
-            [name]: value
-        };
-
-        BackendRequest("put", "hall/" + hall.id, data, onSuccess, onError);
-    };
-
-    handleSubmit = (event) => {
-
-        const { hall } = this.props;
-
-        if ( event !== null ) {
-            event.preventDefault();
-        }
-
-        /**
-         * On Error
-         * @param response
-         */
-        const onError = (response) => {
-
-            this.setState({
-                error: response.status
-            });
-
-        };
-
-        /**
-         * On Success
-         * @param response
-         */
-        const onSuccess = (response) => {
-
-            const data = response.data;
-
-            if (data.hall !== undefined) {
-                InstantAction.dispatch({
-                    type: UPDATE_HALL,
-                    payload: data.hall,
-                });
-            }
-
-            console.log(response.data);
-            MasterDispatcher.dispatch(response.data);
-            InstantAction.setToast("Sál upraven");
-        };
-
-        /**
-         * Payload
-         * @type {{role: string|string}}
-         */
-        const data = {
-            ...this.state,
-        };
-
-        BackendRequest("put", "hall/" + hall.id, data, onSuccess, onError);
-    };
-
-    fetchAdresses = () => {
-
-        /**
-         * On Success
-         * @param response
-         */
-        const onSuccess = (response) => {
-
-            MasterDispatcher.dispatch(response.data);
-        };
-
-        BackendRequest("get", "addresses", null, onSuccess);
-    };
-
-    componentWillMount() {
-        this.fetchAdresses();
-    }
 
     render() {
 
-        const { entities, hall } = this.props;
-        const session = orm.session(entities);
-        const addresses = session.Address.all().toModelArray();
+        const { hall } = this.props;
 
         return (
             <Row>
-                <Col xs={2}>
-                    <input type="text" name={"name"} id={"name"} value={hall.name} onChange={this.handleInputChange} onBlur={this.handleSubmit}/>
-                </Col>
+                <Col xs={2}>{hall.name}</Col>
+                <Col xs={3}>{hall.address.street2}, {hall.address.city} {hall.address.psc} </Col>
+                <Col xs={2}>{hall.rows}</Col>
+                <Col xs={2}>{hall.columns}</Col>
                 <Col xs={3}>
-                    <select
-                        style={{width: "100%"}}
-                        value={this.state.address}
-                        onChange={this.handleSelectChange}
-                        name={"address"}>
-                        {addresses.map((address) => {
-                            return <option key={address.id} value={address.id}>{address.street2}, {address.city} {address.psc}</option>;
-                        })}
-                    </select>
-                </Col>
-                <Col xs={2}>
-                    <input type="text" name={"rows"} id={"rows"} value={this.state.rows} onChange={this.handleInputChange} onBlur={this.handleSubmit}/>
-                </Col>
-                <Col xs={2}>
-                    <input type="text" name={"columns"} id={"columns"} value={this.state.columns} onChange={this.handleInputChange} onBlur={this.handleSubmit}/>
-                </Col>
-                <Col xs={3}>
-                    <button onClick={() => {this.handleDeleteClick(hall)}}>Zrušit</button>
+                    <button onClick={() => {this.handleDeleteClick()}}>Zrušit</button>
                 </Col>
             </Row>
         );
