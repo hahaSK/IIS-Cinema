@@ -158,11 +158,6 @@ class Reservation(models.Model):
     paid = models.BooleanField(blank=False, default=False)
     seats = models.ManyToManyField(Seat, related_name="reserved_seats")
 
-    def get_user_from_email(self):
-        ujco = User.objects.get(email=self.user)
-        if ujco:
-            return ujco
-
     def add_to_seats(self, seat):
 
         self.seats.add(seat)
