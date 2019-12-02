@@ -422,28 +422,26 @@ class ActView(APIView):
         name = data['name']
         type_id = data['type']
         act_type = ActType.objects.get(id=type_id)
-        length = data['length']
+        length = int(data['length'])
         picture = data['picture']
 
         genre = []
-        for current_element in json.loads(data['genre']):
+        for current_element in json.loads(str(data['genre'])):
             print(current_element)
             genre.append(Genre.objects.get(id=current_element))
 
         cast = []
-        for current_element in json.loads(data['cast']):
+        for current_element in json.loads(str(data['cast'])):
             cast.append(Actor.objects.get(id=current_element))
 
         director = []
-        for current_element in json.loads(data['director']):
+        for current_element in json.loads(str(data['director'])):
             director.append(Director.objects.get(id=current_element))
 
-        rating = data['rating']
+        rating = int(data['rating'])
         description = data['description']
 
-        new_act = Act.register_new_act(name=name, act_type=act_type, length=length, picture=picture, genre=genre,
-                                       cast=cast,
-                                       director=director, rating=rating, description=description)
+        new_act = Act.register_new_act(name=name, act_type=act_type, length=length, picture=picture, genre=genre, cast=cast, director=director, rating=rating, description=description)
 
         act_serializer = ActSerializer(new_act)
 
@@ -487,15 +485,15 @@ class ActView(APIView):
             act.picture = data['picture']
 
             act.genre.clear()
-            for current_element in json.loads(data["genre"]):
+            for current_element in json.loads(str(data["genre"])):
                 act.genre.add(current_element)
 
             act.cast.clear()
-            for current_element in json.loads(data["cast"]):
+            for current_element in json.loads(str(data["cast"])):
                 act.cast.add(current_element)
 
             act.director.clear()
-            for current_element in json.loads(data["director"]):
+            for current_element in json.loads(str(data["director"])):
                 act.director.add(current_element)
 
             act.rating = data['rating']
@@ -684,8 +682,6 @@ class ReservationView(APIView):
         """
         data = request.data
 
-        print(data)
-
         user = data['user']
         event_id = data['event']
         event = Event.objects.get(id=event_id)
@@ -711,16 +707,9 @@ class ReservationView(APIView):
         return Response(payload, status=status.HTTP_200_OK)
 
     @never_cache
-    def get(self, request, user_id=None):
+    def get(self, request, reservation_id=None):
 
-        if user_id==None:
-            if request.user.role != User.REDACTOR and request.user.role != User.ADMIN and request.user.role != User.CASHIER:
-                return Response(UNAUTHORIZED_USER, status=status.HTTP_403_FORBIDDEN)
-            reservations = Reservation.objects.all()
-        else:
-            reservations = Reservation.objects.filter(user=user_id)
-
-
+        reservations = Reservation.objects.all()
 
         reservation_serializer = ReservationSerializer(reservations, many=True)
 
@@ -743,11 +732,15 @@ class ReservationView(APIView):
 
         try:
             data = request.data
-
             original_seats = []
             for seat in reservation.seats.all():
                 original_seats.append(seat.id)
-            diff_list = list(set(data['seats']) - set(original_seats))
+
+            seats=[]
+            for seat in (data['seats'][1:-1]).split(","):
+                seats.append(int(seat))
+
+            diff_list = list(set(seats) - set(original_seats))
             for current_item in diff_list:
                 if not SeatInEvent.objects.get(event_id=reservation.event.id, seat_id=current_item).is_available:
                     reservation.save()
@@ -764,8 +757,8 @@ class ReservationView(APIView):
                 se.save()
 
             reservation.seats.clear()
-            for current_element in data["seats"]:
-                reservation.seats.add(id=int(current_element))
+            for current_element in seats:
+                reservation.seats.add(Seat.objects.get(id=int(current_element)))
 
             reservation.save()
         except ValueError:
