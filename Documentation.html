@@ -25,79 +25,79 @@
 </head>
 <body>
 
-    <!-- Zkontrolujte prosím nastavení kódování v hlavièce dokumentu
-         podle pouitého editoru -->
+    <!-- Zkontrolujte prosÃ­m nastavenÃ­ kÃ³dovÃ¡nÃ­ v hlaviÄce dokumentu
+         podle pouÅ¾itÃ©ho editoru -->
 
-    <h1>Kino: rezervace vstupenek na kulturní události</h1> <!-- Nahradte názvem svého zadání -->
+    <h1>Kino: rezervace vstupenek na kulturnÃ­ udÃ¡losti</h1> <!-- Nahradte nÃ¡zvem svÃ©ho zadÃ¡nÃ­ -->
 
     <dl>
-        <dt>Autoøi</dt>
+        <dt>AutoÅ™i</dt>
         <dd>
-            Ondrej Dacer <!-- Nahraïte skuteènım jménem a e-mailem autora a popisem èinnosti -->
+            Ondrej Dacer <!-- NahraÄte skuteÄnÃ½m jmÃ©nem a e-mailem autora a popisem Äinnosti -->
             <a href="mailto:xdacer00@stud.fit.vutbr.cz">xdace00@stud.fit.vutbr.cz</a> -
-            popis èinnosti v tımu
+            popis Äinnosti v tÃ½mu
         </dd>
         <dd>
-            Lubomír ©vehla <!-- Nahraïte skuteènım jménem a e-mailem autora a popisem èinnosti -->
+            LubomÃ­r Â©vehla <!-- NahraÄte skuteÄnÃ½m jmÃ©nem a e-mailem autora a popisem Äinnosti -->
             <a href="mailto:xsvehl09@stud.fit.vutbr.cz">xsvehl09@stud.fit.vutbr.cz</a> -
-            popis èinnosti v tımu
+            popis Äinnosti v tÃ½mu
         </dd>
         <dd>
-            Juraj Lahvièka <!-- Nahraïte skuteènım jménem a e-mailem autora a popisem èinnosti -->
+            Juraj LahviÄka <!-- NahraÄte skuteÄnÃ½m jmÃ©nem a e-mailem autora a popisem Äinnosti -->
             <a href="mailto:xlahvi00@stud.fit.vutbr.cz">xlahvi00@stud.fit.vutbr.cz</a> -
-            popis èinnosti v tımu
+            popis Äinnosti v tÃ½mu
         </dd>
         <dt>URL aplikace</dt>
-        <dd><a href="http://www.stud.fit.vutbr.cz/~xautor01/IIS">http://www.stud.fit.vutbr.cz/~xautor01/IIS</a></dd>
-        <dd>(pokud má aplikace více vstupních stránek, napi¹te obdobnì dal¹í URL)</dd>
+        <dd><a href="http://iis-cinema-dev.eu-central-1.elasticbeanstalk.com/">http://iis-cinema-dev.eu-central-1.elasticbeanstalk.com/</a></dd>
+        <dd></dd>
     </dl>
 
-    <h2>U¾ivatelé systému pro testování</h2>
-    <p>Uveïte prosím existující zástupce <strong>v¹ech rolí u¾ivatelù</strong>.</p>
+    <h2>UÄ¾ivatelÃ© systÃ©mu pro testovÃ¡nÃ­</h2>
+    <p>UveÄte prosÃ­m existujÃ­cÃ­ zÃ¡stupce <strong>vÄ…ech rolÃ­ uÄ¾ivatelÅ¯</strong>.</p>
     <table>
         <tr><th>Login</th><th>Heslo</th><th>email</th><th>Role</th></tr>
-        <tr><td>admin</td><td>admin</td><td>admin@admin.cz</td><td>Administrátor</td></tr>
-        <tr><td>pokladni</td><td>pokladni</td><td>pokladni@cashier.cz</td><td>Pokladní</td></tr>
+        <tr><td>admin</td><td>admin</td><td>admin@admin.cz</td><td>AdministrÃ¡tor</td></tr>
+        <tr><td>pokladni</td><td>pokladni</td><td>pokladni@cashier.cz</td><td>PokladnÃ­</td></tr>
         <tr><td>redaktor</td><td>redaktor</td><td>redaktor@redaktor.cz</td><td>Redaktor</td></tr>
         <tr><td>divak</td><td>divak</td><td>divak@divak.cz</td><td>Divak</td></tr>
     </table>
 
-    <p>(Diagram pøípadù u¾ití není nutné vkládat, pokud IS implementuje role a pøípady u¾ití definované zadáním.)</p>
-    <p>Jako u¾ivatelské jméno je akceptován i email.</p>
+    <p>(Diagram pÅ™Ã­padÅ¯ uÄ¾itÃ­ nenÃ­ nutnÃ© vklÃ¡dat, pokud IS implementuje role a pÅ™Ã­pady uÄ¾itÃ­ definovanÃ© zadÃ¡nÃ­m.)</p>
+    <p>Jako uÄ¾ivatelskÃ© jmÃ©no je akceptovÃ¡n i email.</p>
 
     <h2>Implementace</h2>
-    <p>Struèná dokumentace k implementaci, která popisuje, které èásti projektu (napø. PHP skripty) implementují jednotlivé pøípady pou¾ití.</p>
+    <p>StruÄnÃ¡ dokumentace k implementaci, kterÃ¡ popisuje, kterÃ© ÄÃ¡sti projektu (napÅ™. PHP skripty) implementujÃ­ jednotlivÃ© pÅ™Ã­pady pouÄ¾itÃ­.</p>
     <p>
-        Entity, které jsou uvedeny v ERD diagramu se nacházejí v jednotlivıch models.py. Adresa a u¾ivatel mají samostatnou aplikaci/slo¾ku. Ostatné entity
-        jsou v slo¾ce/aplikaci cinema.
-        Byla také vytvoøena vlastná autentifikace, která umo¾òuje uivatelùm pøihlásit se s jejich emailem nebo u¾ivatelskım jménem. Ta se nachází v user/authentications.py
+        Entity, kterÃ© jsou uvedeny v ERD diagramu se nachÃ¡zejÃ­ v jednotlivÃ½ch models.py. Adresa a uÄ¾ivatel majÃ­ samostatnou aplikaci/sloÄ¾ku. OstatnÃ© entity
+        jsou v sloÄ¾ce/aplikaci cinema.
+        Byla takÃ© vytvoÅ™ena vlastnÃ¡ autentifikace, kterÃ¡ umoÄ¾Åˆuje uÅ¾ivatelÅ¯m pÅ™ihlÃ¡sit se s jejich emailem nebo uÄ¾ivatelskÃ½m jmÃ©nem. Ta se nachÃ¡zÃ­ v user/authentications.py
     </p>
 
-    <h3>Databáze</h3>
+    <h3>DatabÃ¡ze</h3>
 
     <embed src="IIS.pdf" type="application/pdf" width="100%" height="600px" />
 
     <h2>Instalace</h2>
 
-    Struènì popi¹te:
+    StruÄnÄ› popiÄ…te:
     <ul>
         <li>postup instalace na server,</li>
-        <li>Potøebné balíèky: npm verze 6.9.0, node verze 10.16.0 a python3.6. Pro ostatné balíèky viï requirements.txt</li>
-        <li>Pro po¾adavky vid. requirements.txt. Pøípadne staèí zadat <code>pip install -r requirements.txt</code></li>
+        <li>PotÅ™ebnÃ© balÃ­Äky: npm verze 6.9.0, node verze 10.16.0 a python3.6. Pro ostatnÃ© balÃ­Äky viÄ requirements.txt</li>
+        <li>Pro poÄ¾adavky vid. requirements.txt. PÅ™Ã­padne staÄÃ­ zadat <code>pip install -r requirements.txt</code></li>
         <li>
-            Pou¾ití:
+            PouÄ¾itÃ­:
             <ul>
-                <li>Jako první je potøebné si stáhnout/naklonovat repozitáø.</li>
-                <li>Je vhodné si nainstalovat a vytvoøit virtual environment pomocí pøíkazu <code>sudo python -m pip install virtualenv</code> a <code>virtualenv -p python3.6 venv</code></li>
-                <li>Pak se pøepnout do virtual environment-u pomocí <code>. venv/bin/activate</code> pou¾it vı¹e uvededej pøíkaz pro instalaci potøebnıch balíèkù.</li>
-                <li>V settings.py je mo¾ní zvolit lokálnou databázy pracující na postgre enginu.</li>
-                <li>Migrace sa vytváøejé pomocí <code>manage.py makemigrations</code> a pak <code>manage.py migrate</code></li>
-                <li>Frontendové závislosti se nainstalují pomocí <code>npm install</code> a pak je mo¾ní spustit aplikaci pomocí <code>npm start</code></li>
+                <li>Jako prvnÃ­ je potÅ™ebnÃ© si stÃ¡hnout/naklonovat repozitÃ¡Å™.</li>
+                <li>Je vhodnÃ© si nainstalovat a vytvoÅ™it virtual environment pomocÃ­ pÅ™Ã­kazu <code>sudo python -m pip install virtualenv</code> a <code>virtualenv -p python3.6 venv</code></li>
+                <li>Pak se pÅ™epnout do virtual environment-u pomocÃ­ <code>. venv/bin/activate</code> pouÄ¾it vÃ½Ä…e uvededej pÅ™Ã­kaz pro instalaci potÅ™ebnÃ½ch balÃ­ÄkÅ¯.</li>
+                <li>V settings.py je moÄ¾nÃ­ zvolit lokÃ¡lnou databÃ¡zy pracujÃ­cÃ­ na postgre enginu.</li>
+                <li>Migrace sa vytvÃ¡Å™ejÃ© pomocÃ­ <code>manage.py makemigrations</code> a pak <code>manage.py migrate</code></li>
+                <li>FrontendovÃ© zÃ¡vislosti se nainstalujÃ­ pomocÃ­ <code>npm install</code> a pak je moÄ¾nÃ­ spustit aplikaci pomocÃ­ <code>npm start</code></li>
             </ul>
         </li>
     </ul>
 
-    <h2>Známé problémy</h2>
+    <h2>ZnÃ¡mÃ© problÃ©my</h2>
 
 </body>
 </html>
