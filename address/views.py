@@ -62,10 +62,10 @@ class AddressView(APIView):
         houseNumber = data["houseNumber"]
         city = data["city"]
         psc = data["psc"]
-        country = data["country"]
+        # country = data["country"]
 
         new_address = Address.objects.create(street1=street1, street2=street2, houseNumber=houseNumber, city=city,
-                                             psc=psc, country=country)
+                                             psc=psc) # , country=country)
 
         address_serializer = AddressSerializer(new_address)
 
@@ -97,7 +97,7 @@ class AddressView(APIView):
             address.houseNumber = data["houseNumber"]
             address.city = data["city"]
             address.psc = data["psc"]
-            address.country = data["country"]
+            # address.country = data["country"]
 
             address.save()
         except ValueError:
