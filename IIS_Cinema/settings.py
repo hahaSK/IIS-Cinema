@@ -15,7 +15,7 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-MEDIA_ROOT =  os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = 'media/'
 
 # Quick-start development settings - unsuitable for production
@@ -25,9 +25,9 @@ MEDIA_URL = 'media/'
 SECRET_KEY = 't(0c&r8)^eb6^g^*b65sz4*(j*s8sncir%65j$q+@1)9xd#y^f'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
+DEBUG = True
 
-ALLOWED_HOSTS = ['IIS-Cinema-dev.eu-central-1.elasticbeanstalk.com']
+ALLOWED_HOSTS = ['IIS-Cinema-dev.eu-central-1.elasticbeanstalk.com', 'localhost']
 
 # Custom Users
 AUTH_USER_MODEL = 'user.User'
@@ -148,14 +148,21 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-PROJECT_ROOT = os.path.abspath(os.path.dirname(__name__))
-STATIC_ROOT = os.path.join(PROJECT_ROOT,'static/')
+# PROJECT_ROOT = os.path.abspath(os.path.dirname(__name__))
+# STATIC_ROOT = os.path.join(PROJECT_ROOT,'static/')
 STATIC_URL = '/static/'
-STATICFILES_FINDERS = (
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
-)
+# STATICFILES_FINDERS = (
+#     'django.contrib.staticfiles.finders.FileSystemFinder',
+#     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+# #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+# )
+
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+    '/var/www/static/',
+]
+
 
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 20
 
@@ -167,10 +174,10 @@ CORS_ORIGIN_WHITELIST = (
     'http://localhost:3001',
     'http://localhost:9000',
     'http://localhost:8000',
-    'http://iis-cinema-dev.eu-central-1.elasticbeanstalk.com:3000',
-    'http://iis-cinema-dev.eu-central-1.elasticbeanstalk.com:3001',
-    'http://iis-cinema-dev.eu-central-1.elasticbeanstalk.com:9000',
-    'http://iis-cinema-dev.eu-central-1.elasticbeanstalk.com:8000'
+    # 'http://iis-cinema-dev.eu-central-1.elasticbeanstalk.com:3000',
+    # 'http://iis-cinema-dev.eu-central-1.elasticbeanstalk.com:3001',
+    # 'http://iis-cinema-dev.eu-central-1.elasticbeanstalk.com:9000',
+    # 'http://iis-cinema-dev.eu-central-1.elasticbeanstalk.com:8000'
 )
 
 CORS_ALLOW_METHODS = (
