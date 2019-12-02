@@ -13,7 +13,6 @@ import moment from "moment";
 import "moment/min/locales";
 import NewEvent from "../../Component/NewEvent/NewEvent";
 import ReservationPopUp from "../../Component/ReservationPopUp/ReservationPopUp";
-import {ADD_HALL} from "../../Models/Entities/Hall";
 import InstantAction from "../../Models/Utils/InstantAction";
 import {REMOVE_EVENT} from "../../Models/Entities/Event";
 
@@ -222,7 +221,6 @@ class Programme extends Component {
                                                      onClick={() => this.onEventClick(event.id)}>{parseInt(event.price)} Kč</Col>
                                                 <Col xs={4}>
                                                     <button onClick={()=>this.toggleReservationPopUp(event)}>Rezervovat vstupenky</button>
-                                                    <button onClick={() => {alert("Editovat")}}>Editovat</button>
                                                     <button onClick={() => {this.handleDeleteClick(event)}}>Zrušit</button>
                                                 </Col>
                                             </Row>
@@ -245,6 +243,7 @@ class Programme extends Component {
                         <ReservationPopUp
                             event={this.state.event}
                             closePopup={this.toggleReservationPopUp.bind(this)}
+                            //handler={this.toggleReservationPopUp(this)}
                         />
                         : null
                     }

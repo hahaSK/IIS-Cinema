@@ -9,6 +9,10 @@ import DrawGrid from "./DrawGrid";
 import BackendRequest from "../../Models/REST/BackendRequest";
 import MasterDispatcher from "../../Models/Utils/MasterDispatcher";
 import orm from "../../Models/ORM";
+import {ADD_HALL} from "../../Models/Entities/Hall";
+import InstantAction from "../../Models/Utils/InstantAction";
+import MasterGetter from "../../Models/Utils/MasterGetter";
+import {ADD_RESERVATION} from "../../Models/Entities/Reservation";
 
 
 class ReservationPopUp extends Component {
@@ -26,6 +30,7 @@ class ReservationPopUp extends Component {
             seatAvailable: this.props.event.seats,
             seatReserved: [],
             occupied: null,
+            event: this.props.event,
         }
     }
 
@@ -43,6 +48,53 @@ class ReservationPopUp extends Component {
                 })
             }
         }
+    }
+
+    /**
+     * Handle Submit
+     * @param event
+     */
+    handleSubmit = (e) => {
+
+        e.preventDefault();
+
+        /**
+         * Function on success adding
+         */
+        const onSuccess = (response) => {
+
+            if (response.data.reservation !== undefined) {
+                InstantAction.dispatch({
+                    type: ADD_RESERVATION,
+                    payload: response.data.reservation,
+                });
+            }
+            //this.props.handler();
+            InstantAction.setToast("Rezervace vytvořena");
+        };
+
+        /**
+         * On Error
+         * @param response
+         */
+        const onError = (response) => {
+
+        };
+
+        /**
+         * Payload to send
+         * @type {{areaId: *}}
+         */
+        const data = {
+            event: this.state.event.id,
+            user: MasterGetter.getCurrentUser().id,
+            seats: JSON.stringify(this.state.seatReserved),
+        };
+
+        console.log("zasílaná data");
+        console.log(data);
+
+        BackendRequest("post", "reservations", data, onSuccess, onError, onError );
     }
 
     fetchSeats = () => {
@@ -67,13 +119,17 @@ class ReservationPopUp extends Component {
 
         const {entities} = this.props;
         const session = orm.session(entities);
-        const seat_events = session.EventSeat.all().toModelArray();
+        const seat_events = session.EventSeat.all().toModelArray(); //obsazená
         const event = this.props.event;
 
         if (seat_events.length === null || seat_events.length === undefined)
             return null;
 
         let occupied = [];
+
+        console.log("---");
+        for (let i = 0; i < event.seats.length; i++)
+            console.log(event.seats[i]);
 
         return (
             <div className='popup'>
@@ -110,7 +166,7 @@ class ReservationPopUp extends Component {
                         </div>
                     </div>
                     <div className={"continue-button"}>
-                        <button>Pokračovat</button>
+                        <button onClick={this.handleSubmit}>Pokračovat</button>
                     </div>
                 </div>
             </div>

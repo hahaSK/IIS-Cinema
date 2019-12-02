@@ -8,7 +8,7 @@ import {ADD_HALL} from "../../Models/Entities/Hall";
 import InstantAction from "../../Models/Utils/InstantAction";
 import {ADD_USER} from "../../Models/Entities/User";
 
-class LoginScene extends Component {
+class RegisterScene extends Component {
 
     state = {
         username: "",
@@ -106,4 +106,4 @@ const mapStateToProps = state => (
         entities: state.entities,
     });
 
-export default connect(mapStateToProps)(LoginScene);
+export default connect(mapStateToProps)(RegisterScene);

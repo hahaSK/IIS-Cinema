@@ -11,6 +11,7 @@ import BackendRequest from "../../Models/REST/BackendRequest";
 import InstantAction from "../../Models/Utils/InstantAction";
 import {ADD_ACT, UPDATE_ACT} from "../../Models/Entities/Act";
 import Select from 'react-select';
+import qs from "qs";
 
 
 class PerformanceForm extends Component {
@@ -108,36 +109,21 @@ class PerformanceForm extends Component {
 
     handleGenreChange = genreHelp => {
 
-        let array = this.state.genre;
-        array.push(genreHelp[genreHelp.length - 1].value);
-
         this.setState({
-            genre: array,
             genreHelp
         });
     };
 
     handleCastChange = castHelp => {
 
-        let array = this.state.cast;
-        array.push(castHelp[castHelp.length - 1].value);
-
         this.setState({
-            cast: array,
             castHelp
         });
-
-        console.log("castHelp");
-        console.log(castHelp);
     };
 
     handleDirectorChange = directorHelp => {
 
-        let array = this.state.director;
-        array.push(directorHelp[directorHelp.length - 1].value);
-
         this.setState({
-            director: array,
             directorHelp
         });
     };
@@ -203,15 +189,37 @@ class PerformanceForm extends Component {
          * @type {{areaId: *}}
          */
 
-        // TODO: udělat pole až tady a ne po každém přidání/odepbrání option
+        let genre_array = this.state.genre;
+        for (let i = 0; i < this.state.genreHelp.length; i++)
+            genre_array.push(this.state.genreHelp[i].value);
+
+        this.setState({
+            genre: genre_array,
+        });
+
+        let cast_array = this.state.cast;
+        for (let i = 0; i < this.state.castHelp.length; i++)
+            cast_array.push(this.state.castHelp[i].value);
+
+        this.setState({
+            cast: cast_array,
+        });
+
+        let director_array = this.state.director;
+        for (let i = 0; i < this.state.directorHelp.length; i++)
+            director_array.push(this.state.directorHelp[i].value);
+
+        this.setState({
+            director: director_array,
+        });
 
         const data = {
             name: this.state.name,
             picture: this.state.picture,
             type: this.state.type,
-            genre: this.state.genre,
-            cast: this.state.cast,
-            director: this.state.director,
+            genre: JSON.stringify(genre_array),
+            cast: JSON.stringify(cast_array),
+            director: JSON.stringify(director_array),
             rating: this.state.rating,
             length: this.state.length,
             description: this.state.description
@@ -315,7 +323,7 @@ class PerformanceForm extends Component {
                                     <input type="text" name={"length"} id={"length"} value={this.state.length} onChange={this.handleChange}/>
                                 </Row>
                                 <Row>
-                                    <h3>Hodnocení (1-10):&nbsp;</h3>
+                                    <h3>Hodnocení (v %):&nbsp;</h3>
                                     <input type="text" name={"rating"} id={"rating"} value={this.state.rating} onChange={this.handleChange}/>
                                 </Row>
                             </Grid>

@@ -11,6 +11,11 @@ class AppContainer extends Component {
 
     constructor(props) {
         super(props);
+
+        this.state = {
+            expectingResponse: true,
+        };
+
         InstantAction.initiateHistory(this.props.history);
         InstantAction.initiateDispatcher(this.props.dispatch);
     }
@@ -24,21 +29,26 @@ class AppContainer extends Component {
     }
 
     render() {
-        return (
-        <div className={"app-wrapper"}>
-            <ToastContainer
-                position="top-left"
-                autoClose={3500}
-                newestOnTop={true}
-                closeOnClick
-                pauseOnVisibilityChange
-                draggable
-                pauseOnHover
-                toastClassName="cinema-toast"
-            />
 
-            {this.props.children}
-        </div>
+        if(this.state.expectingResponse)
+            return null;
+
+        return (
+            <div className={"app-wrapper"}>
+
+                <ToastContainer
+                    position="top-left"
+                    autoClose={3500}
+                    newestOnTop={true}
+                    closeOnClick
+                    pauseOnVisibilityChange
+                    draggable
+                    pauseOnHover
+                    toastClassName="cinema-toast"
+                />
+
+                {this.props.children}
+            </div>
         );
     }
 }

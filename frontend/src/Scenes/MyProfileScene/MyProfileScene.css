@@ -1,13 +1,15 @@
-.register {
+.my-profile {
   display: flex;
   justify-content: center; }
-  .register-box {
+  .my-profile .container {
     margin-top: 1rem;
-    width: 25%;
+    width: 100%;
     text-align: center; }
-    .register-box input {
-      width: 80%;
-      height: 1.5rem;
+    .my-profile .container .form {
+      margin-bottom: 1.5rem; }
+    .my-profile .container input {
+      width: 50%;
+      height: 2rem;
       margin-bottom: 0.5rem;
       background-color: #09d3ac;
       color: #282c34;
@@ -16,7 +18,7 @@
       padding-left: 0.5rem;
       border: 1px solid #09d3ac;
       border-radius: 0.1rem; }
-    .register-box button {
+    .my-profile .container button {
       min-width: 7rem;
       background-color: #09d3ac;
       color: #282c34;
@@ -28,24 +30,24 @@
       -webkit-transition-duration: 0.4s;
       /* Safari */
       transition-duration: 0.4s; }
-      .register-box button:hover {
+      .my-profile .container button:hover {
         cursor: pointer;
         background-color: #282c34;
         border: 1px solid #09d3ac;
         color: #09d3ac; }
-    .register-box ::placeholder {
+    .my-profile .container ::placeholder {
       /* Chrome, Firefox, Opera, Safari 10.1+ */
       color: #646e82;
       opacity: 1;
       /* Firefox */ }
-    .register-box :-ms-input-placeholder {
+    .my-profile .container :-ms-input-placeholder {
       /* Internet Explorer 10-11 */
       color: #646e82; }
-    .register-box ::-ms-input-placeholder {
+    .my-profile .container ::-ms-input-placeholder {
       /* Microsoft Edge */
       color: #646e82; }
-    .register-box p a {
+    .my-profile .container p a {
       text-decoration: underline;
       color: #09d3ac; }
 
-/*# sourceMappingURL=RegisterScene.css.map */
+/*# sourceMappingURL=MyProfileScene.css.map */

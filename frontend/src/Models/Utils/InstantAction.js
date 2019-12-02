@@ -30,15 +30,19 @@ class InstantAction {
 
             const data = response.data;
 
-            console.log(data.id);
             InstantAction.dispatch(setLoggedUser(data.id));
             InstantAction.dispatch(setAppLoaded(true));
             MasterDispatcher.dispatch({user: data});
 
+            parent.setState({
+                expectingResponse: false,
+            });
         };
 
         const onError = (error) => {
-
+            parent.setState({
+                expectingResponse: false,
+            });
         };
 
         BackendRequest("get", "current_user", null, onSuccess, onError, onError);

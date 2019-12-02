@@ -1,13 +1,16 @@
-.register {
+.my-profile {
   display: flex;
   justify-content: center;
-  &-box {
+  .container {
     margin-top: 1rem;
-    width: 25%;
+    width: 100%;
     text-align: center;
+    .form {
+     margin-bottom: 1.5rem;
+    }
     input {
-      width: 80%;
-      height: 1.5rem;
+      width: 50%;
+      height: 2rem;
       margin-bottom: 0.5rem;
       background-color: #09d3ac;
       color: #282c34;

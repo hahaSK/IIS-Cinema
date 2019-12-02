@@ -61,7 +61,7 @@ export default function BackendRequest(method: string, actionURL: string, data: 
         headers: {
             "Access-Control-Allow-Origin": "*",
             "X-Requested-With": "XMLHttpRequest",
-            //"Authorization": "JWT " + getTokenFromStorage(),
+            "Authorization": "JWT " + getTokenFromStorage(),
             "X-CSRFToken": csrftoken,
             ...contentType
         },

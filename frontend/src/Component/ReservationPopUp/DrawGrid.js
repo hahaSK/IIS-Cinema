@@ -17,7 +17,7 @@ class DrawGrid extends Component {
                 <table className="grid">
                     <tbody>
                     <tr>
-                        {this.props.seat.map (row => {
+                        {this.props.seat.map (row => { //všechna sedadla pro danou událost 1 - n
 
                             if (this.props.reserved.indexOf(row) > -1) {
                                 return (

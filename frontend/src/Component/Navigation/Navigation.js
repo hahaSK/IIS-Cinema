@@ -45,6 +45,9 @@ class Navigation extends Component {
                         <NavLink activeClassName="active" to="/programme">PROGRAM</NavLink>
                     </li>
                     <li>
+                        <NavLink activeClassName="active" to="/my_profile">MŮJ PROFIL</NavLink>
+                    </li>
+                    <li>
                         <NavLink activeClassName="active" onClick={this.logOut} to="/login">ODHLÁSIT SE</NavLink>
                     </li>
                 </ul>
@@ -63,6 +66,9 @@ class Navigation extends Component {
                         <NavLink activeClassName="active" to="/programme">PROGRAM</NavLink>
                     </li>
                     <li>
+                        <NavLink activeClassName="active" to="/my_profile">MŮJ PROFIL</NavLink>
+                    </li>
+                    <li>
                         <NavLink activeClassName="active" onClick={this.logOut} to="/login">ODHLÁSIT SE</NavLink>
                     </li>
                 </ul>
@@ -71,10 +77,11 @@ class Navigation extends Component {
         else if (user.role === 3) {
             routes =
                 <ul>
-                    {/* + REZERVACE */}
-                    {/* + MŮJ PROFIL */}
                     <li>
                         <NavLink activeClassName="active" to="/programme">PROGRAM</NavLink>
+                    </li>
+                    <li>
+                        <NavLink activeClassName="active" to="/my_profile">MŮJ PROFIL</NavLink>
                     </li>
                     <li>
                         <NavLink activeClassName="active" onClick={this.logOut} to="/login">ODHLÁSIT SE</NavLink>
@@ -85,9 +92,11 @@ class Navigation extends Component {
         else if (user.role === 2) {
             routes =
                 <ul>
-                    {/* + MŮJ PROFIL */}
                     <li>
                         <NavLink activeClassName="active" to="/programme">PROGRAM</NavLink>
+                    </li>
+                    <li>
+                        <NavLink activeClassName="active" to="/my_profile">MŮJ PROFIL</NavLink>
                     </li>
                     <li>
                         <NavLink activeClassName="active" onClick={this.logOut} to="/login">ODHLÁSIT SE</NavLink>
