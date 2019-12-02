@@ -283,6 +283,12 @@ class ActTypeView(APIView):
 
 class HallView(APIView):
 
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [permissions.AllowAny()]
+        else:
+            return [permissions.IsAuthenticated()]
+
     @never_cache
     def get(self, request, hall_id=None):
         """
@@ -827,7 +833,7 @@ class SeatInEventView(APIView):
     @never_cache
     def get(self, request, event_id=None):
 
-        seats_in_event = SeatInEvent.objects.filter(event=event_id, is_available=False)
+        seats_in_event = SeatInEvent.objects.filter(event=event_id)
 
         seats_in_event_serializer = SeatInEventSerializer(seats_in_event, many=True)
 
