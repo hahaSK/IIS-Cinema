@@ -1,9 +1,10 @@
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
           "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
 <html>
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=iso-8859-2" />
+    <meta http-equiv="content-type" content="text/html; charset=ISO-8859-2" />
     <title>Projekt IIS</title>
     <style type="text/css">
         table {
@@ -37,7 +38,7 @@
             popis činnosti v týmu
         </dd>
         <dd>
-            Lubomír vehla <!-- Nahraďte skutečným jménem a e-mailem autora a popisem činnosti -->
+            Lubomír Švehla <!-- Nahraďte skutečným jménem a e-mailem autora a popisem činnosti -->
             <a href="mailto:xsvehl09@stud.fit.vutbr.cz">xsvehl09@stud.fit.vutbr.cz</a> -
             popis činnosti v týmu
         </dd>
@@ -48,11 +49,11 @@
         </dd>
         <dt>URL aplikace</dt>
         <dd><a href="http://www.stud.fit.vutbr.cz/~xautor01/IIS">http://www.stud.fit.vutbr.cz/~xautor01/IIS</a></dd>
-        <dd>(pokud má aplikace více vstupních stránek, napite obdobně dalí URL)</dd>
+        <dd>(pokud má aplikace více vstupních stránek, napište obdobně další URL)</dd>
     </dl>
 
-    <h2>Uivatelé systému pro testování</h2>
-    <p>Uveďte prosím existující zástupce <strong>vech rolí uivatelů</strong>.</p>
+    <h2>Uživatelé systému pro testování</h2>
+    <p>Uveďte prosím existující zástupce <strong>všech rolí uživatelů</strong>.</p>
     <table>
         <tr><th>Login</th><th>Heslo</th><th>email</th><th>Role</th></tr>
         <tr><td>admin</td><td>admin</td><td>admin@admin.cz</td><td>Administrátor</td></tr>
@@ -61,15 +62,15 @@
         <tr><td>divak</td><td>divak</td><td>divak@divak.cz</td><td>Divak</td></tr>
     </table>
 
-    <p>(Diagram případů uití není nutné vkládat, pokud IS implementuje role a případy uití definované zadáním.)</p>
-    <p>Jako uivatelské jméno je akceptován i email.</p>
+    <p>(Diagram případů užití není nutné vkládat, pokud IS implementuje role a případy užití definované zadáním.)</p>
+    <p>Jako uživatelské jméno je akceptován i email.</p>
 
     <h2>Implementace</h2>
-    <p>Stručná dokumentace k implementaci, která popisuje, které části projektu (např. PHP skripty) implementují jednotlivé případy pouití.</p>
+    <p>Stručná dokumentace k implementaci, která popisuje, které části projektu (např. PHP skripty) implementují jednotlivé případy použití.</p>
     <p>
-        Entity, které jsou uvedeny v ERD diagramu se nacházejí v jednotlivých models.py. Adresa a uivatel mají samostatnou aplikaci/sloku. Ostatné entity
-        jsou v sloce/aplikaci cinema.
-        Byla také vytvořena vlastná autentifikace, ktorá umoňuje uivatelům přihlásit se s jejich emailem nebo uivatelským jménem. Ta se nachádzí v user/authentications.py
+        Entity, které jsou uvedeny v ERD diagramu se nacházejí v jednotlivých models.py. Adresa a uživatel mají samostatnou aplikaci/složku. Ostatné entity
+        jsou v složce/aplikaci cinema.
+        Byla také vytvořena vlastná autentifikace, která umožňuje uivatelům přihlásit se s jejich emailem nebo uživatelským jménem. Ta se nachází v user/authentications.py
     </p>
 
     <h3>Databáze</h3>
@@ -78,11 +79,18 @@
 
     <h2>Instalace</h2>
 
-    Stručně popite:
+    Stručně popište:
     <ul>
         <li>postup instalace na server,</li>
-        <li>softwarové poadavky (verze PHP apod.),</li>
-        <li>jak rozbalit, konfigurovat, inicializovat databázi, ...</li>
+        <li>Pro požadavky vid. requirements.txt. Případne stačí zadat pip install requirements.txt.</li>
+        <li>Použití:
+            <ul>
+                <li>Jako první je potřebné si stáhnout/naklonovat repozitář.</li>
+                <li>Pak použit výše uvededej příkaz pro instalaci potřebných balíčků.</li>
+                <li>V settings.py je možní zvolit lokálnou databázy pracující na postgre enginu.</li>
+                <li>Migrace sa vytvářejé pomocí manage.py makemigrations a pak manage.py migrate</li>
+            </ul>
+        </li>
     </ul>
 
     <h2>Známé problémy</h2>
