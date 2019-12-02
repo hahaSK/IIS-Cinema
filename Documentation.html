@@ -82,13 +82,17 @@
     Struènì popi¹te:
     <ul>
         <li>postup instalace na server,</li>
-        <li>Pro po¾adavky vid. requirements.txt. Pøípadne staèí zadat pip install requirements.txt.</li>
-        <li>Pou¾ití:
+        <li>Potøebné balíèky: npm verze 6.9.0, node verze 10.16.0 a python3.6. Pro ostatné balíèky viï requirements.txt</li>
+        <li>Pro po¾adavky vid. requirements.txt. Pøípadne staèí zadat <code>pip install -r requirements.txt</code></li>
+        <li>
+            Pou¾ití:
             <ul>
                 <li>Jako první je potøebné si stáhnout/naklonovat repozitáø.</li>
-                <li>Pak pou¾it vý¹e uvededej pøíkaz pro instalaci potøebných balíèkù.</li>
+                <li>Je vhodné si nainstalovat a vytvoøit virtual environment pomocí pøíkazu <code>sudo python -m pip install virtualenv</code> a <code>virtualenv -p python3.6 venv</code></li>
+                <li>Pak se pøepnout do virtual environment-u pomocí <code>. venv/bin/activate</code> pou¾it vý¹e uvededej pøíkaz pro instalaci potøebných balíèkù.</li>
                 <li>V settings.py je mo¾ní zvolit lokálnou databázy pracující na postgre enginu.</li>
-                <li>Migrace sa vytváøejé pomocí manage.py makemigrations a pak manage.py migrate</li>
+                <li>Migrace sa vytváøejé pomocí <code>manage.py makemigrations</code> a pak <code>manage.py migrate</code></li>
+                <li>Frontendové závislosti se nainstalují pomocí <code>npm install</code> a pak je mo¾ní spustit aplikaci pomocí <code>npm start</code></li>
             </ul>
         </li>
     </ul>
