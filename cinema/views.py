@@ -685,15 +685,15 @@ class ReservationView(APIView):
         event = Event.objects.get(id=event_id)
 
         seats = []
-        for current_element in json.loads(data['seats']):
-            print(current_element)
+        for current_element in data['seats']:
             seats.append(Seat.objects.get(id=int(current_element)))
 
-        new_reservation = Reservation.register_new_reservation(user=user, event=event, seats=seats)
-
-        for current_item in new_reservation.seats.all():
-            if not SeatInEvent.objects.get(event_id=new_reservation.event.id, seat_id=current_item).is_available:
+        for current_item in seats:
+            if not SeatInEvent.objects.get(event_id=event, seat_id=current_item).is_available:
+                print(current_item)
                 return Response(TAKEN_SEAT, status=status.HTTP_403_FORBIDDEN)
+
+        new_reservation = Reservation.register_new_reservation(user=user, event=event, seats=seats)
 
         reservation_serializer = ReservationSerializer(new_reservation)
 
