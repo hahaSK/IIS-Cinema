@@ -1,35 +1,22 @@
 import React, { Component } from 'react';
 import { Grid, Row, Col } from 'react-flexbox-grid';
-import './HallsScene.css'
+import './ReservationScene.css'
 import Navigation from "../../Component/Navigation/Navigation";
 import BackendRequest from "../../Models/REST/BackendRequest";
 import MasterDispatcher from "../../Models/Utils/MasterDispatcher";
 import { withRouter } from "react-router-dom";
 import connect from "react-redux/es/connect/connect";
 import orm from "../../Models/ORM/index";
-import "moment/min/locales";
-import NewHall from "../../Component/NewHall/NewHall";
-import NewAddress from "../../Component/NewAddress/NewAddress";
-import InstantAction from "../../Models/Utils/InstantAction";
-import {REMOVE_HALL} from "../../Models/Entities/Hall";
-import HallItem from "./HallItem";
+import ReservationItem from "./ReservationItem";
 import MasterGetter from "../../Models/Utils/MasterGetter";
+import InstantAction from "../../Models/Utils/InstantAction";
 
-class HallsScene extends Component {
+class ReservationScene extends Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
 
-        this.state = {
-            newAddress: false,
-            newHall: false,
-        };
-
         if (MasterGetter.getCurrentUser() === null)
-            InstantAction.redirect("/");
-        else if (MasterGetter.getCurrentUser().role === 2)
-            InstantAction.redirect("/");
-        else if (MasterGetter.getCurrentUser().role === 3)
             InstantAction.redirect("/");
     }
 
@@ -43,21 +30,7 @@ class HallsScene extends Component {
         });
     };
 
-    toggleNewHall = () => {
-        this.setState({
-            newHall: !this.state.newHall,
-            newAddress: false,
-        });
-    };
-
-    toggleNewAddress = () => {
-        this.setState({
-            newAddress: !this.state.newAddress,
-            newHall: false,
-        });
-    };
-
-    fetchAdresses = () => {
+    fetchReservations = () => {
 
         /**
          * On Success
@@ -68,74 +41,76 @@ class HallsScene extends Component {
             MasterDispatcher.dispatch(response.data);
         };
 
-        BackendRequest("get", "addresses", null, onSuccess);
+        BackendRequest("get", "reservations", null, onSuccess);
     };
 
-    fetchHalls = () => {
+    fetchActs = () => {
 
         /**
          * On Success
          * @param response
          */
         const onSuccess = (response) => {
-
             MasterDispatcher.dispatch(response.data);
         };
 
-        BackendRequest("get", "halls", null, onSuccess);
+        BackendRequest("get", "acts", null, onSuccess);
     };
 
+    fetchEvents = () => {
+
+        /**
+         * On Success
+         * @param response
+         */
+        const onSuccess = (response) => {
+            MasterDispatcher.dispatch(response.data);
+        };
+
+        BackendRequest("get", "events", null, onSuccess);
+    };
 
     componentWillMount() {
-        this.fetchHalls();
-        this.fetchAdresses();
+        this.fetchActs();
+        this.fetchEvents();
+        this.fetchReservations();
     }
 
     render() {
 
         const {entities} = this.props;
         const session = orm.session(entities);
-        const halls = session.Hall.all().orderBy("name");
-        const addresses = session.Address.all().toModelArray();
+        const reservations = session.Reservation.all();
 
         return (
             <div className="App">
                 <Navigation/>
                 <div className={"header"}>
-                    <h1>Sály</h1>
+                    <h1>Rezervace</h1>
                 </div>
                 <hr />
-                <div className={"body halls"}>
-                    <div className={"top-line"}>
-                        <div></div>
-                        <div className={"create-new"}>
-                            <button onClick={()=>this.toggleNewHall()}>Přidat sál</button>
-                            <button onClick={()=>this.toggleNewAddress()}>Přidat adresu</button>
-                        </div>
-                    </div>
+                <div className={"body reservations"}>
 
-                    {(this.state.newHall) ? <NewHall handler={this.toggleNewHall}/> : null}
-                    {(this.state.newAddress) ? <NewAddress handler={this.toggleNewAddress}/> : null}
-
-                    {(halls.count() === 0) ? "Žádné sály" :
+                    {(reservations.count() === 0) ? "Žádné rezervace" :
                         <Grid className={"result-table"}>
                             <Row>
-                                <Col xs={2}>Název</Col>
-                                <Col xs={3}>Adresa</Col>
-                                <Col xs={2}>Počet řad</Col>
-                                <Col xs={2}>Počet sloupců</Col>
-                                <Col xs={3}/>
+                                <Col xs={2}>E-mail</Col>
+                                <Col xs={3}>Událost</Col>
+                                <Col xs={2}>Datum a čas</Col>
+                                <Col xs={2}>Počet sedadel</Col>
+                                <Col xs={1}>Zaplaceno</Col>
+                                <Col xs={2}/>
                             </Row>
-                            {halls.toModelArray().map((hall) => {
+                            {reservations.toModelArray().map((reservation) => {
 
-                                if(hall.address === null){
+                                console.log(reservation);
+
+                                if(reservation.event === null || reservation.event.act === null){
                                     return null;
                                 }
 
-                                console.log(hall.address);
-
                                 return (
-                                    <HallItem hall={hall} addresses={addresses}/>
+                                    <ReservationItem reservation={reservation}/>
                                 );
                             })}
                         </Grid>
@@ -179,4 +154,4 @@ const mapStateToProps = state => (
 /**
  * Exporting part of the React.Component file
  */
-export default withRouter(connect(mapStateToProps, mapDispatchToProps())(HallsScene));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps())(ReservationScene));

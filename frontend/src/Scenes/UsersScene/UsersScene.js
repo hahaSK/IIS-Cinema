@@ -12,12 +12,26 @@ import {REMOVE_HALL} from "../../Models/Entities/Hall";
 import InstantAction from "../../Models/Utils/InstantAction";
 import {REMOVE_USER} from "../../Models/Entities/User";
 import UserItem from "./UserItem";
+import MasterGetter from "../../Models/Utils/MasterGetter";
 
 class UsersScene extends Component {
 
-    state = {
-        role: 0
-    };
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            role: 0
+        };
+
+        if (MasterGetter.getCurrentUser() === null)
+            InstantAction.redirect("/");
+        else if (MasterGetter.getCurrentUser().role === 2)
+            InstantAction.redirect("/");
+        else if (MasterGetter.getCurrentUser().role === 3)
+            InstantAction.redirect("/");
+        else if (MasterGetter.getCurrentUser().role === 4)
+            InstantAction.redirect("/");
+    }
 
     /**
      * Handle Delete Click

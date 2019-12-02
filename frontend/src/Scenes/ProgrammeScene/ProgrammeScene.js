@@ -158,10 +158,6 @@ class Programme extends Component {
         const events = session.Event.all().orderBy("date");
         const actTypes = session.ActType.all();
 
-
-        console.log("user");
-        console.log(MasterGetter.getCurrentUser());
-
         let today = new Date();
 
         return (
@@ -183,9 +179,13 @@ class Programme extends Component {
                                 })}
                             </select>
                         </div>
-                        <div className={"create-new"}>
-                            <button onClick={()=>this.toggleNewEvent()}>Vytvořit událost</button>
-                        </div>
+                        {(MasterGetter.getCurrentUser() !== null) ?
+                            (MasterGetter.getCurrentUser().role === 1 || MasterGetter.getCurrentUser().role === 4) ?
+                            <div className={"create-new"}>
+                                <button onClick={()=>this.toggleNewEvent()}>Vytvořit událost</button>
+                            </div>
+                                : ""
+                        : ""}
                     </div>
 
                     {(this.state.newEvent) ? <NewEvent handler={this.toggleNewEvent}/> : null
@@ -211,17 +211,21 @@ class Programme extends Component {
                                     if (parseInt(this.state.performanceType) === 0 || this.state.performanceType === event.act.type.id) {
                                         return (
                                             <Row>
-                                                <Col xs={3} onClick={() => this.onEventClick(event.id)}>{event.act.name}</Col>
+                                                <Col xs={3} onClick={() => this.onEventClick(event)}>{event.act.name}</Col>
                                                 <Col xs={1}
-                                                     onClick={() => this.onEventClick(event.id)}>{moment(event.date).format("D. MMMM")}</Col>
+                                                     onClick={() => this.onEventClick(event)}>{moment(event.date).format("D. MMMM")}</Col>
                                                 <Col xs={1}
-                                                     onClick={() => this.onEventClick(event.id)}>{moment(event.date).format("HH:mm")}</Col>
+                                                     onClick={() => this.onEventClick(event)}>{moment(event.date).format("HH:mm")}</Col>
                                                 <Col xs={2} onClick={() => this.onEventClick(event)}>{event.hall.name}</Col>
                                                 <Col xs={1}
-                                                     onClick={() => this.onEventClick(event.id)}>{parseInt(event.price)} Kč</Col>
+                                                     onClick={() => this.onEventClick(event)}>{parseInt(event.price)} Kč</Col>
                                                 <Col xs={4}>
                                                     <button onClick={()=>this.toggleReservationPopUp(event)}>Rezervovat vstupenky</button>
-                                                    <button onClick={() => {this.handleDeleteClick(event)}}>Zrušit</button>
+                                                    {(MasterGetter.getCurrentUser() !== null) ?
+                                                        (MasterGetter.getCurrentUser().role === 1 || MasterGetter.getCurrentUser().role === 4) ?
+                                                            <button onClick={() => {this.handleDeleteClick(event)}}>Zrušit</button>
+                                                            : ""
+                                                        : ""}
                                                 </Col>
                                             </Row>
                                         );
@@ -233,7 +237,7 @@ class Programme extends Component {
 
                     {(this.state.showAct) ?
                         <ActView
-                            event={this.state.event}
+                            event={this.state.event.id}
                             closePopup={this.toggleAct.bind(this)}
                         />
                         : null

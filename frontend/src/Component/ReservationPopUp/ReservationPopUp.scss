@@ -62,12 +62,17 @@ html, body, .app {
 
       .schema {
         width: 70%;
-        margin-bottom: 2rem;
         .screen {
           font-size: 1.5rem;
           display: flex;
           justify-content: center;
           align-items: center;
+        }
+        .seats {
+          margin-bottom: 1.5rem;
+        }
+        input {
+          width: 50%;
         }
       }
 
