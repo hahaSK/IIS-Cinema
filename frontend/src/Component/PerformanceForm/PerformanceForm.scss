@@ -47,8 +47,11 @@ html, body, .app {
       font-size: 1rem;
     }
     textarea {
-      height: 15rem;
+      height: 30rem;
       resize: none;
+    }
+    select {
+      width: 100%;
     }
 
     .header-and-close {
@@ -98,13 +101,12 @@ html, body, .app {
         cursor: pointer;
       }
     }
+    .css-2b097c-container {
+      width: 100%;
+    }
     .right-side {
       width: 75%;
-      .ytb-href {
-        input {
-          width: 50%;
-        }
-      }
+
       button {
         position: absolute;
         right: 1rem;

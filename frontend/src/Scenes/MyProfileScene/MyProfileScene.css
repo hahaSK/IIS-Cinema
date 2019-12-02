@@ -1,0 +1,53 @@
+.my-profile {
+  display: flex;
+  justify-content: center; }
+  .my-profile .container {
+    margin-top: 1rem;
+    width: 100%;
+    text-align: center; }
+    .my-profile .container .form {
+      margin-bottom: 1.5rem; }
+    .my-profile .container input {
+      width: 50%;
+      height: 2rem;
+      margin-bottom: 0.5rem;
+      background-color: #09d3ac;
+      color: #282c34;
+      font-size: 1.2rem;
+      font-family: 'Cairo';
+      padding-left: 0.5rem;
+      border: 1px solid #09d3ac;
+      border-radius: 0.1rem; }
+    .my-profile .container button {
+      min-width: 7rem;
+      background-color: #09d3ac;
+      color: #282c34;
+      border: 1px solid #09d3ac;
+      padding: 0.5rem 0.75rem;
+      text-decoration: none;
+      margin-left: 1rem;
+      border-radius: .25rem;
+      -webkit-transition-duration: 0.4s;
+      /* Safari */
+      transition-duration: 0.4s; }
+      .my-profile .container button:hover {
+        cursor: pointer;
+        background-color: #282c34;
+        border: 1px solid #09d3ac;
+        color: #09d3ac; }
+    .my-profile .container ::placeholder {
+      /* Chrome, Firefox, Opera, Safari 10.1+ */
+      color: #646e82;
+      opacity: 1;
+      /* Firefox */ }
+    .my-profile .container :-ms-input-placeholder {
+      /* Internet Explorer 10-11 */
+      color: #646e82; }
+    .my-profile .container ::-ms-input-placeholder {
+      /* Microsoft Edge */
+      color: #646e82; }
+    .my-profile .container p a {
+      text-decoration: underline;
+      color: #09d3ac; }
+
+/*# sourceMappingURL=MyProfileScene.css.map */

@@ -17,18 +17,22 @@
       border: 1px solid #09d3ac;
       border-radius: 0.1rem; }
     .register-box button {
-      width: 45%;
+      min-width: 7rem;
       background-color: #09d3ac;
       color: #282c34;
-      font-family: 'Cairo';
-      font-size: 1.25rem;
       border: 1px solid #09d3ac;
-      border-radius: 0.1rem;
-      margin-top: 1rem; }
+      padding: 0.5rem 0.75rem;
+      text-decoration: none;
+      margin-left: 1rem;
+      border-radius: .25rem;
+      -webkit-transition-duration: 0.4s;
+      /* Safari */
+      transition-duration: 0.4s; }
       .register-box button:hover {
-        background-color: gray;
-        border: 1px solid gray;
-        cursor: pointer; }
+        cursor: pointer;
+        background-color: #282c34;
+        border: 1px solid #09d3ac;
+        color: #09d3ac; }
     .register-box ::placeholder {
       /* Chrome, Firefox, Opera, Safari 10.1+ */
       color: #646e82;

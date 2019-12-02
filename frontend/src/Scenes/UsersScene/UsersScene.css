@@ -1,0 +1,49 @@
+.users .container {
+  width: 100%; }
+.users .top-line {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2.5rem; }
+  .users .top-line .filter-events {
+    width: 40%;
+    display: flex;
+    justify-content: flex-start; }
+    .users .top-line .filter-events select {
+      margin-left: 1rem; }
+  .users .top-line .create-new {
+    width: 40%;
+    display: flex;
+    justify-content: flex-end; }
+    .users .top-line .create-new button {
+      font-size: 1rem; }
+.users .result-table {
+  width: 100%;
+  border-radius: .25rem; }
+  .users .result-table .row {
+    display: flex;
+    align-items: center;
+    padding-top: .5rem;
+    padding-bottom: .5rem;
+    margin-top: .1rem;
+    margin-bottom: .1rem; }
+    .users .result-table .row:hover {
+      cursor: pointer;
+      background-color: #373d48; }
+    .users .result-table .row:first-of-type {
+      font-size: 1.5rem;
+      padding-top: .25rem;
+      padding-bottom: .25rem;
+      border-bottom: 2px solid #09d3ac; }
+      .users .result-table .row:first-of-type:hover {
+        cursor: auto;
+        background-color: #282c34; }
+  .users .result-table .col-xs-1, .users .result-table .col-xs-2, .users .result-table .col-xs-3 {
+    display: flex;
+    justify-content: center;
+    align-items: center; }
+  .users .result-table .col-xs-4 {
+    display: flex;
+    justify-content: flex-end; }
+
+/*# sourceMappingURL=UsersScene.csss.map */

@@ -4,6 +4,7 @@ export const SET_LOGGED_USER = "@@cinema/SET_LOGGED_USER";
 export const RESET_STORE = "@@cinema/RESET_STORE";
 export const SET_SEARCH = "@@cinema/SET_SEARCH";
 export const SET_APP_LOADING = "@@cinema/SET_APP_LOADING";
+export const SET_CONFIRMATION = "@@cinema/SET_CONFIRMATION";
 
 /**
  * Set App Loaded
@@ -25,6 +26,17 @@ export function appLoading(status: boolean) {
     return {type: SET_APP_LOADING, status};
 }
 
+/**
+ * Set Temporary data
+ * @param data
+ * @return {{type: string, data: any}}
+ */
+export function setConfirmation(data: any){
+    return {
+        type: SET_CONFIRMATION,
+        data
+    };
+}
 
 /**
  * Set App Url

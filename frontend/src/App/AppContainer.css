@@ -1,0 +1,22 @@
+.Toastify__toast-body {
+  margin-left: 1rem;
+  font-family: "Cairo"; }
+.Toastify__toast-container--top-left {
+  top: 6rem !important; }
+.Toastify__progress-bar--default {
+  background: #09d3ac !important; }
+.Toastify__close-button {
+  align-items: center; }
+.Toastify__toast.cinema-toast {
+  background: #282c34;
+  border-top: 1px solid #282c34;
+  color: #09d3ac;
+  padding-right: 2rem;
+  font-family: "Cairo"; }
+  .Toastify__toast.cinema-toast .Toastify__close-button {
+    color: #09d3ac;
+    align-items: center;
+    width: 1rem !important;
+    min-width: 1rem !important; }
+
+/*# sourceMappingURL=AppContainer.css.map */

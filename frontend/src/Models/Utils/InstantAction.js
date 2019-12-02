@@ -1,10 +1,11 @@
 // @flow
 
 import MasterDispatcher from "./MasterDispatcher";
-import {RESET_STORE} from "../../App/App.actions";
+import {RESET_STORE, setAppLoaded, setLoggedUser} from "../../App/App.actions";
 import {withRouter} from "react-router";
-import {Event} from "../Models";
-import {User} from "../Models";
+import {dispatcher} from "../../Config/store";
+import BackendRequest from "../REST/BackendRequest";
+import {toast} from "react-toastify";
 
 /**
  * Instant Action
@@ -20,41 +21,31 @@ class InstantAction {
          * Initiate fixtures
          * @type {{trademark_type: *[]}}
          */
-        let fixtures = {
-            event: Event.fixtures,
-            user: User.fixtures,
+
+        /**
+         * After Success
+         * @param response
+         */
+        const onSuccess = (response) => {
+
+            const data = response.data;
+
+            InstantAction.dispatch(setLoggedUser(data.id));
+            InstantAction.dispatch(setAppLoaded(true));
+            MasterDispatcher.dispatch({user: data});
+
+            parent.setState({
+                expectingResponse: false,
+            });
         };
 
-        MasterDispatcher.dispatch(fixtures);
+        const onError = (error) => {
+            parent.setState({
+                expectingResponse: false,
+            });
+        };
 
-
-        // /**
-        //  * After Success
-        //  * @param response
-        //  */
-        // const afterSuccess = (response) => {
-        //
-        //     const data = response.data;
-        //
-        //     InstantAction.dispatch(setLoggedUser(data.user.id));
-        //     InstantAction.dispatch(setAppLoaded(true));
-        //
-        //
-        //     parent.setState({
-        //         loadingData: false,
-        //     }, () => {
-        //
-        //     });
-        //
-        // };
-        //
-        //
-        // BackendRequest({
-        //     method: "get",
-        //     endpoint: "user",
-        //     afterSuccess: afterSuccess,
-        // });
-
+        BackendRequest("get", "current_user", null, onSuccess, onError, onError);
     }
 
     /**
@@ -62,7 +53,7 @@ class InstantAction {
      * @param data
      */
     static dispatch(data) {
-        InstantAction.dispatcher(data);
+        dispatcher(data);
     }
 
     /**
@@ -82,12 +73,19 @@ class InstantAction {
     }
 
     /**
+     * Set Dialog toast
+     * @param message
+     */
+    static setToast(message) {
+        console.log("Sending Toast");
+        toast(message);
+    }
+
+    /**
      * Redirect
      * @param path
      */
     static redirect(path) {
-
-        console.log("Pushing: ", path);
 
         InstantAction.history.push(path);
 

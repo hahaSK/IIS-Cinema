@@ -1,14 +1,109 @@
 import React, { Component } from 'react';
-import { NavLink, Link } from 'react-router-dom'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome } from '@fortawesome/free-solid-svg-icons'
+import { NavLink } from 'react-router-dom'
 import './Navigation.css'
-import {withRouter} from "react-router";
 import {connect} from "react-redux";
+import InstantAction from "../../Models/Utils/InstantAction";
+import MasterGetter from "../../Models/Utils/MasterGetter";
 
 class Navigation extends Component {
 
+    logOut = () => {
+        localStorage.clear();
+        InstantAction.resetStore();
+    };
+
     render() {
+
+        let routes;
+        let user = MasterGetter.getCurrentUser();
+
+        if (user === null) {
+            routes =
+                <ul>
+                    <li>
+                        <NavLink activeClassName="active" to="/programme">PROGRAM</NavLink>
+                    </li>
+                    <li>
+                        <NavLink activeClassName="active" to="/login">PŘIHLÁSIT SE</NavLink>
+                    </li>
+                </ul>
+        }
+        // ADMIN
+        else if (user.role === 1) {
+            routes =
+                <ul>
+                    <li>
+                        <NavLink activeClassName="active" to="/halls">SÁLY</NavLink>
+                    </li>
+                    <li>
+                        <NavLink activeClassName="active" to="/acts">PŘEDSTAVENÍ</NavLink>
+                    </li>
+                    <li>
+                        <NavLink activeClassName="active" to="/users">UŽIVATELÉ</NavLink>
+                    </li>
+                    <li>
+                        <NavLink activeClassName="active" to="/programme">PROGRAM</NavLink>
+                    </li>
+                    <li>
+                        <NavLink activeClassName="active" to="/my_profile">MŮJ PROFIL</NavLink>
+                    </li>
+                    <li>
+                        <NavLink activeClassName="active" onClick={this.logOut} to="/login">ODHLÁSIT SE</NavLink>
+                    </li>
+                </ul>
+        }
+        // REDAKTOR
+        else if (user.role === 4) {
+            routes =
+                <ul>
+                    <li>
+                        <NavLink activeClassName="active" to="/halls">SÁLY</NavLink>
+                    </li>
+                    <li>
+                        <NavLink activeClassName="active" to="/acts">PŘEDSTAVENÍ</NavLink>
+                    </li>
+                    <li>
+                        <NavLink activeClassName="active" to="/programme">PROGRAM</NavLink>
+                    </li>
+                    <li>
+                        <NavLink activeClassName="active" to="/my_profile">MŮJ PROFIL</NavLink>
+                    </li>
+                    <li>
+                        <NavLink activeClassName="active" onClick={this.logOut} to="/login">ODHLÁSIT SE</NavLink>
+                    </li>
+                </ul>
+        }
+        // POKLADNÍK
+        else if (user.role === 3) {
+            routes =
+                <ul>
+                    <li>
+                        <NavLink activeClassName="active" to="/programme">PROGRAM</NavLink>
+                    </li>
+                    <li>
+                        <NavLink activeClassName="active" to="/my_profile">MŮJ PROFIL</NavLink>
+                    </li>
+                    <li>
+                        <NavLink activeClassName="active" onClick={this.logOut} to="/login">ODHLÁSIT SE</NavLink>
+                    </li>
+                </ul>
+        }
+        // POKLADNÍK
+        else if (user.role === 2) {
+            routes =
+                <ul>
+                    <li>
+                        <NavLink activeClassName="active" to="/programme">PROGRAM</NavLink>
+                    </li>
+                    <li>
+                        <NavLink activeClassName="active" to="/my_profile">MŮJ PROFIL</NavLink>
+                    </li>
+                    <li>
+                        <NavLink activeClassName="active" onClick={this.logOut} to="/login">ODHLÁSIT SE</NavLink>
+                    </li>
+                </ul>
+        }
+
         return (
             <div className={"navigation"}>
                 <div className={"menu"}>
@@ -24,14 +119,7 @@ class Navigation extends Component {
                     </ul>
                 </div>
                  <div className={"menu"}>
-                    <ul>
-                        <li>
-                            <NavLink activeClassName="active" to="/programme">PROGRAM</NavLink>
-                        </li>
-                        <li>
-                            <NavLink activeClassName="active" to="/login">PŘIHLÁSIT SE</NavLink>
-                        </li>
-                    </ul>
+                     {routes}
                 </div>
             </div>
         );
