@@ -487,15 +487,15 @@ class ActView(APIView):
             act.picture = data['picture']
 
             act.genre.clear()
-            for current_element in data["genre"]:
+            for current_element in json.loads(data["genre"]):
                 act.genre.add(current_element)
 
             act.cast.clear()
-            for current_element in data["cast"]:
+            for current_element in json.loads(data["cast"]):
                 act.cast.add(current_element)
 
             act.director.clear()
-            for current_element in data["director"]:
+            for current_element in json.loads(data["director"]):
                 act.director.add(current_element)
 
             act.rating = data['rating']
