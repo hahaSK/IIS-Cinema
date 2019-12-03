@@ -1,3 +1,5 @@
+import os
+
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from rest_framework import status, permissions
@@ -57,8 +59,25 @@ class ActorView(APIView):
 
         if request.user.role != User.REDACTOR and request.user.role != User.ADMIN:
             return Response(UNAUTHORIZED_USER, status=status.HTTP_403_FORBIDDEN)
+        #
+        # def file_upload(request):
+        #     save_path = os.path.join(settings.MEDIA_ROOT, 'uploads', request.FILES['file'])
+        #     path = default_storage.save(save_path, request.FILES['file'])
+        #     return default_storage.path(path)
+
+        file = request.FILES['file']
+
 
         data = request.data
+
+        filename = "media/" + file.name
+
+        # try:
+        #     os.mkdir(folder):
+        with open(filename, 'wb+') as destination:
+            for chunk in file.chunks():
+                destination.write(chunk)
+
         name = data['name']
         year = int(data['year'])
         try:
