@@ -182,8 +182,6 @@ class OpenGenreView(APIView):
     authentication_classes = ()
     permission_classes = [AllowAny]
 
-    authentication_classes = ()
-
     @never_cache
     def get(self, request, genre_id=None):
         """
@@ -246,8 +244,6 @@ class OpenActTypeView(APIView):
 
     authentication_classes = ()
     permission_classes = [AllowAny]
-
-    authentication_classes = ()
 
     @never_cache
     def get(self, request, act_type_id=None):
@@ -575,8 +571,6 @@ class OpenEventView(APIView):
     authentication_classes = ()
     permission_classes = [AllowAny]
 
-    authentication_classes = ()
-
     @staticmethod
     def get_event(event_id):
         """
@@ -713,8 +707,6 @@ class OpenReservationView(APIView):
 
         return Response(payload, status=status.HTTP_200_OK)
 
-    authentication_classes = ()
-
     @never_cache
     def post(self, request):
         """
@@ -830,8 +822,6 @@ class SeatView(APIView):
     authentication_classes = ()
     permission_classes = [AllowAny]
 
-    authentication_classes = ()
-
     @never_cache
     def get(self, request, seat_id=None):
 
@@ -850,8 +840,6 @@ class SeatInEventView(APIView):
 
     authentication_classes = ()
     permission_classes = [AllowAny]
-
-    authentication_classes = ()
 
     @never_cache
     def get(self, request, event_id=None):
