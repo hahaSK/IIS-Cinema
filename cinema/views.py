@@ -27,13 +27,10 @@ TAKEN_SEAT = {
 }
 
 
-class ActorView(APIView):
+class OpenActorView(APIView):
 
-    def get_permissions(self):
-        if self.request.method == 'GET':
-            return [permissions.AllowAny()]
-        else:
-            return [permissions.IsAuthenticated()]
+    authentication_classes = ()
+    permission_classes = [AllowAny]
 
     @never_cache
     def get(self, request, actor_id=None):
@@ -54,6 +51,9 @@ class ActorView(APIView):
 
         return Response(payload, status=status.HTTP_200_OK)
 
+
+class ActorView(APIView):
+
     @never_cache
     def post(self, request):
 
@@ -66,7 +66,6 @@ class ActorView(APIView):
         #     return default_storage.path(path)
 
         file = request.FILES['file']
-
 
         data = request.data
 
@@ -111,13 +110,10 @@ class ActorView(APIView):
         return Response(payload, status=status.HTTP_200_OK)
 
 
-class DirectorView(APIView):
+class OpenDirectorView(APIView):
 
-    def get_permissions(self):
-        if self.request.method == 'GET':
-            return [permissions.AllowAny()]
-        else:
-            return [permissions.IsAuthenticated()]
+    authentication_classes = ()
+    permission_classes = [AllowAny]
 
     @never_cache
     def get(self, request, director_id=None):
@@ -137,6 +133,9 @@ class DirectorView(APIView):
         }
 
         return Response(payload, status=status.HTTP_200_OK)
+
+
+class DirectorView(APIView):
 
     @never_cache
     def post(self, request):
@@ -177,14 +176,10 @@ class DirectorView(APIView):
 
         return Response(payload, status=status.HTTP_200_OK)
 
+class OpenGenreView(APIView):
 
-class GenreView(APIView):
-
-    def get_permissions(self):
-        if self.request.method == 'GET':
-            return [permissions.AllowAny()]
-        else:
-            return [permissions.IsAuthenticated()]
+    authentication_classes = ()
+    permission_classes = [AllowAny]
 
     @never_cache
     def get(self, request, genre_id=None):
@@ -204,6 +199,9 @@ class GenreView(APIView):
         }
 
         return Response(payload, status=status.HTTP_200_OK)
+
+
+class GenreView(APIView):
 
     @never_cache
     def post(self, request):
@@ -241,13 +239,10 @@ class GenreView(APIView):
         return Response(payload, status=status.HTTP_200_OK)
 
 
-class ActTypeView(APIView):
+class OpenActTypeView(APIView):
 
-    def get_permissions(self):
-        if self.request.method == 'GET':
-            return [permissions.AllowAny()]
-        else:
-            return [permissions.IsAuthenticated()]
+    authentication_classes = ()
+    permission_classes = [AllowAny]
 
     @never_cache
     def get(self, request, act_type_id=None):
@@ -267,6 +262,9 @@ class ActTypeView(APIView):
         }
 
         return Response(payload, status=status.HTTP_200_OK)
+
+
+class ActTypeView(APIView):
 
     @never_cache
     def post(self, request):
@@ -304,13 +302,10 @@ class ActTypeView(APIView):
         return Response(payload, status=status.HTTP_200_OK)
 
 
-class HallView(APIView):
+class OpenHallView(APIView):
 
-    def get_permissions(self):
-        if self.request.method == 'GET':
-            return [permissions.AllowAny()]
-        else:
-            return [permissions.IsAuthenticated()]
+    authentication_classes = ()
+    permission_classes = [AllowAny]
 
     @never_cache
     def get(self, request, hall_id=None):
@@ -330,6 +325,9 @@ class HallView(APIView):
         }
 
         return Response(payload, status=status.HTTP_200_OK)
+
+
+class HallView(APIView):
 
     @never_cache
     def post(self, request):
@@ -422,13 +420,26 @@ class HallView(APIView):
         return Response(payload, status=status.HTTP_200_OK)
 
 
-class ActView(APIView):
+class OpenActView(APIView):
 
-    def get_permissions(self):
-        if self.request.method == 'GET':
-            return [permissions.AllowAny()]
-        else:
-            return [permissions.IsAuthenticated()]
+    authentication_classes = ()
+    permission_classes = [AllowAny]
+
+    @never_cache
+    def get(self, request, act_id=None):
+
+        acts = Act.objects.all()
+
+        act_serializer = ActSerializer(acts, many=True)
+
+        payload = {
+            "act": act_serializer.data,
+        }
+
+        return Response(payload, status=status.HTTP_200_OK)
+
+
+class ActView(APIView):
 
     @never_cache
     def post(self, request):
@@ -476,19 +487,6 @@ class ActView(APIView):
         payload = {
             "act": act_serializer.data,
             "status": "success"
-        }
-
-        return Response(payload, status=status.HTTP_200_OK)
-
-    @never_cache
-    def get(self, request, act_id=None):
-
-        acts = Act.objects.all()
-
-        act_serializer = ActSerializer(acts, many=True)
-
-        payload = {
-            "act": act_serializer.data,
         }
 
         return Response(payload, status=status.HTTP_200_OK)
@@ -563,23 +561,10 @@ class ActView(APIView):
         return Response(payload, status=status.HTTP_200_OK)
 
 
-class EventView(APIView):
-    """
-    Real working example
-    """
-    payload = {
-        "subject": "event"
-    }
+class OpenEventView(APIView):
 
-    ERROR_PAYLOAD = {
-        "error": "Event does not exists"
-    }
-
-    def get_permissions(self):
-        if self.request.method == 'GET':
-            return [permissions.AllowAny()]
-        else:
-            return [permissions.IsAuthenticated()]
+    authentication_classes = ()
+    permission_classes = [AllowAny]
 
     @staticmethod
     def get_event(event_id):
@@ -612,6 +597,9 @@ class EventView(APIView):
         }
 
         return Response(payload, status=status.HTTP_200_OK)
+
+
+class EventView(APIView):
 
     @never_cache
     def post(self, request):
@@ -696,13 +684,23 @@ class EventView(APIView):
         return Response(payload, status=status.HTTP_200_OK)
 
 
-class ReservationView(APIView):
+class OpenReservationView(APIView):
 
-    def get_permissions(self):
-        if self.request.method == 'GET' or self.request.method == 'POST':
-            return [permissions.AllowAny()]
-        else:
-            return [permissions.IsAuthenticated()]
+    authentication_classes = ()
+    permission_classes = [AllowAny]
+
+    @never_cache
+    def get(self, request, reservation_id=None):
+
+        reservations = Reservation.objects.all()
+
+        reservation_serializer = ReservationSerializer(reservations, many=True)
+
+        payload = {
+            "reservation": reservation_serializer.data,
+        }
+
+        return Response(payload, status=status.HTTP_200_OK)
 
     @never_cache
     def post(self, request):
@@ -736,6 +734,9 @@ class ReservationView(APIView):
         }
 
         return Response(payload, status=status.HTTP_200_OK)
+
+
+class ReservationView(APIView):
 
     @never_cache
     def get(self, request, reservation_id=None):
@@ -826,11 +827,8 @@ class ReservationView(APIView):
 
 class SeatView(APIView):
 
-    def get_permissions(self):
-        if self.request.method == 'GET':
-            return [permissions.AllowAny()]
-        else:
-            return [permissions.IsAuthenticated()]
+    authentication_classes = ()
+    permission_classes = [AllowAny]
 
     @never_cache
     def get(self, request, seat_id=None):
@@ -848,11 +846,8 @@ class SeatView(APIView):
 
 class SeatInEventView(APIView):
 
-    def get_permissions(self):
-        if self.request.method == 'GET':
-            return [permissions.AllowAny()]
-        else:
-            return [permissions.IsAuthenticated()]
+    authentication_classes = ()
+    permission_classes = [AllowAny]
 
     @never_cache
     def get(self, request, event_id=None):
