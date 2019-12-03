@@ -12,7 +12,8 @@ from django.views.decorators.cache import never_cache
 
 from user.models import User
 from .serializers import ActorSerializer, DirectorSerializer, GenreSerializer, HallSerializer, \
-    ActSerializer, EventSerializer, ReservationSerializer, SeatSerializer, ActTypeSerializer, SeatInEventSerializer
+    ActSerializer, EventSerializer, ReservationSerializer, SeatSerializer, ActTypeSerializer, SeatInEventSerializer, \
+    FileSerializer
 from .models import Actor, Director, Genre, Hall, Act, Event, Reservation, Seat, SeatInEvent, ActType
 from address.models import Address
 import json
@@ -53,7 +54,7 @@ class OpenActorView(APIView):
         return Response(payload, status=status.HTTP_200_OK)
 
 
-class ActorView(APIView):
+class FileUploadView(APIView):
 
     parser_class = (FileUploadParser,)
 
@@ -62,18 +63,12 @@ class ActorView(APIView):
 
         if request.user.role != User.REDACTOR and request.user.role != User.ADMIN:
             return Response(UNAUTHORIZED_USER, status=status.HTTP_403_FORBIDDEN)
-        #
-        # def file_upload(request):
-        #     save_path = os.path.join(settings.MEDIA_ROOT, 'uploads', request.FILES['file'])
-        #     path = default_storage.save(save_path, request.FILES['file'])
-        #     return default_storage.path(path)
 
         file = request.FILES['file']
 
-        data = request.data
-        print(data)
-        print(file)
-        filename = "media/" + file.name
+        # data = request.data
+        filepath = "images/" + str(file.name)
+        filename = "media/" + filepath
 
         # try:
         #     os.mkdir(folder):
@@ -81,10 +76,34 @@ class ActorView(APIView):
             for chunk in file.chunks():
                 destination.write(chunk)
 
+
+        file_serializer = FileSerializer(data=request.data)
+        if file_serializer.is_valid():
+            saved_user = file_serializer.save()
+
+        payload = {
+            "upload": file_serializer.data,
+            "status": "success"
+        }
+
+        return Response(payload, status=status.HTTP_200_OK)
+
+
+class ActorView(APIView):
+
+    @never_cache
+    def post(self, request):
+
+        if request.user.role != User.REDACTOR and request.user.role != User.ADMIN:
+            return Response(UNAUTHORIZED_USER, status=status.HTTP_403_FORBIDDEN)
+
+
+        data = request.data
+
         name = data['name']
         year = int(data['year'])
         try:
-            picture = str(file.name)# data['picture']
+            picture = "/images/" + str(data['picture'])
             new_actor = Actor.objects.create(name=name, year=year, picture=picture)
         except Exception:
             new_actor = Actor.objects.create(name=name, year=year)
@@ -481,7 +500,7 @@ class ActView(APIView):
         description = data['description']
 
         try:
-            picture = data['picture']
+            picture = "/images/" + str(data['picture'])
             new_act = Act.register_new_act(name=name, act_type=act_type, length=length, picture=picture, genre=genre,
                                            cast=cast, director=director, rating=rating, description=description)
         except Exception:

@@ -58,7 +58,8 @@ urlpatterns = [
     path('genre', cinemaviews.GenreView.as_view()),
     path('genres', cinemaviews.OpenGenreView.as_view()),
     path('genre/<uuid:genre_id>', cinemaviews.GenreView.as_view()),
-    path('addresses', addressviews.AddressView.as_view()),
+    path('addresses', addressviews.OpenAddressesView.as_view()),
+    path('address', addressviews.AddressView.as_view()),
     # path('countries', addressviews.countries_view),
     path('hall', cinemaviews.HallView.as_view()),
     path('halls', cinemaviews.OpenHallView.as_view()),
@@ -73,6 +74,7 @@ urlpatterns = [
     path('seats/<uuid:seat_id>', cinemaviews.SeatView.as_view()),
     path('seats-in-event', cinemaviews.SeatInEventView.as_view()),
     path('seats-in-event/<uuid:event_id>', cinemaviews.SeatInEventView.as_view()),
+    path('upload', cinemaviews.FileUploadView.as_view()),
 
     # user views
     path('current_user', userviews.current_user),

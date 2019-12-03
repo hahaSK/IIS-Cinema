@@ -4,6 +4,11 @@ from address.models import Address
 from user.models import *
 
 
+class File(models.Model):
+    file = models.FileField(blank=False, null=False)
+    def __str__(self):
+        return self.file.name
+
 class Actor(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=120, blank=False, default="John Doe")

@@ -21,7 +21,7 @@ UNAUTHORIZED_USER = {
 #     return Response(EU_countries.countries, status=status.HTTP_200_OK)
 
 
-class AddressesView(APIView):
+class OpenAddressesView(APIView):
     permission_classes = []
     authentication_classes = []
 
