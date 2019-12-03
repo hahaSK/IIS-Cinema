@@ -1,8 +1,12 @@
 # todo/serializers.py
 
 from rest_framework import serializers
-from .models import Actor, Director, Genre, Hall, Act, Event, Reservation, Seat, SeatInEvent, ActType
+from .models import Actor, Director, Genre, Hall, Act, Event, Reservation, Seat, SeatInEvent, ActType, File
 
+class FileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = File
+        fields = "__all__"
 
 class ActorSerializer(serializers.ModelSerializer):
     class Meta:

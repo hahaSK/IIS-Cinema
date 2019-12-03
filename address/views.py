@@ -7,25 +7,23 @@ from rest_framework.views import APIView
 
 from user.models import User
 from .serializers import AddressSerializer
-from .models import Address, EU_countries
+from .models import Address
+
+# EU_countries
 
 UNAUTHORIZED_USER = {
     "error": "Unauthorized user"
 }
 
 
-@api_view(['GET'])
-def countries_view(request):
-    return Response(EU_countries.countries, status=status.HTTP_200_OK)
+# @api_view(['GET'])
+# def countries_view(request):
+#     return Response(EU_countries.countries, status=status.HTTP_200_OK)
 
 
-class AddressView(APIView):
-
-    def get_permissions(self):
-        if self.request.method == 'GET':
-            return [permissions.AllowAny()]
-        else:
-            return [permissions.IsAuthenticated()]
+class OpenAddressesView(APIView):
+    permission_classes = []
+    authentication_classes = []
 
     @never_cache
     def get(self, request, address_id=None):
@@ -46,6 +44,10 @@ class AddressView(APIView):
 
         return Response(payload, status=status.HTTP_200_OK)
 
+
+class AddressView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
     @never_cache
     def post(self, request):
         """
@@ -54,18 +56,14 @@ class AddressView(APIView):
         :return:
         """
         data = request.data
-        if data["street1"]:
-            street1 = data["street1"]
-        else:
-            street1 = ""
+        print(data)
         street2 = data["street2"]
-        houseNumber = data["houseNumber"]
+        houseNumber = data["house_number"]
         city = data["city"]
         psc = data["psc"]
         # country = data["country"]
 
-        new_address = Address.objects.create(street1=street1, street2=street2, houseNumber=houseNumber, city=city,
-                                             psc=psc) # , country=country)
+        new_address = Address.objects.create(street2=street2, houseNumber=houseNumber, city=city, psc=psc)
 
         address_serializer = AddressSerializer(new_address)
 
