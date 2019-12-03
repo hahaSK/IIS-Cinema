@@ -32,9 +32,6 @@ class OpenActorView(APIView):
     authentication_classes = ()
     permission_classes = [AllowAny]
 
-    authentication_classes = ()
-
-    @permission_classes([])
     @never_cache
     def get(self, request, actor_id=None):
         """
