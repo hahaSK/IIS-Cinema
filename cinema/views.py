@@ -3,7 +3,6 @@ import os
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from rest_framework import status, permissions
-from rest_framework.decorators import permission_classes, authentication_classes
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_jwt.settings import api_settings
@@ -119,8 +118,6 @@ class OpenDirectorView(APIView):
 
     authentication_classes = ()
     permission_classes = [AllowAny]
-
-    authentication_classes = ()
 
     @never_cache
     def get(self, request, director_id=None):
@@ -756,19 +753,6 @@ class OpenReservationView(APIView):
 
 
 class ReservationView(APIView):
-
-    @never_cache
-    def get(self, request, reservation_id=None):
-
-        reservations = Reservation.objects.all()
-
-        reservation_serializer = ReservationSerializer(reservations, many=True)
-
-        payload = {
-            "reservation": reservation_serializer.data,
-        }
-
-        return Response(payload, status=status.HTTP_200_OK)
 
     @never_cache
     def put(self, request, reservation_id):
