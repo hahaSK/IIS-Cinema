@@ -11,6 +11,8 @@ import BackendRequest from "../../Models/REST/BackendRequest";
 import InstantAction from "../../Models/Utils/InstantAction";
 import {ADD_ACT, UPDATE_ACT} from "../../Models/Entities/Act";
 import Select from 'react-select';
+import MasterDispatcher from "../../Models/Utils/MasterDispatcher";
+import {ADD_ACTOR} from "../../Models/Entities/Actor";
 
 
 class PerformanceForm extends Component {
@@ -76,7 +78,7 @@ class PerformanceForm extends Component {
                 name: "",
                 type: 0,
                 length: "",
-                picture: "",
+                picture: null,
                 genre: [],
                 cast: [],
                 director: [],
@@ -85,6 +87,7 @@ class PerformanceForm extends Component {
                 directorHelp : null,
                 rating: 50,
                 description: "",
+                message: ""
             }
         }
 
@@ -101,6 +104,13 @@ class PerformanceForm extends Component {
             [name]: value
         });
     };
+
+    handleFileChange(selectorFiles: FileList)
+    {
+        this.setState({
+            picture: selectorFiles[0],
+        });
+    }
 
 
     handleGenreChange = genreHelp => {
@@ -126,16 +136,6 @@ class PerformanceForm extends Component {
         });
     };
 
-    onFilesChange = (files) => {
-        this.setState({
-            picture: files[0].name
-        });
-    };
-
-    onFilesError = (error, files) => {
-        console.log('error code ' + error.code + ': ' + error.message)
-    };
-
     /**
      * Handle Submit
      * @param event
@@ -143,6 +143,60 @@ class PerformanceForm extends Component {
     handleSubmit(event) {
 
         event.preventDefault();
+
+        if (this.state.name === ""){
+            this.setState({
+                message: "Zadejte název."
+            });
+            return;
+        }
+        else if (this.state.picture === null){
+            this.setState({
+                message: "Nahrajte obrázek."
+            });
+            return;
+        }
+        else if (this.state.type === 0){
+            this.setState({
+                message: "Vyberte typ představení."
+            });
+            return;
+        }
+        else if (this.state.genreHelp === null){
+            this.setState({
+                message: "Vyberte žánr(y)."
+            });
+            return;
+        }
+        else if (this.state.castHelp === null){
+            this.setState({
+                message: "Vyberte herce."
+            });
+            return;
+        }
+        else if (this.state.directorHelp === null){
+            this.setState({
+                message: "Vyberte režiséra/y."
+            });
+            return;
+        }
+        else if (this.state.length === ""){
+            this.setState({
+                message: "Zadejte délku představení."
+            });
+            return;
+        }
+        else if (this.state.description === ""){
+            this.setState({
+                message: "Zadejte popis představení."
+            });
+            return;
+        }
+        else {
+            this.setState({
+                message: ""
+            })
+        }
 
         /**
          * Function on success adding
@@ -155,8 +209,43 @@ class PerformanceForm extends Component {
                     payload: response.data.act,
                 });
             }
-            this.props.handler();
-            InstantAction.setToast("Představení vytvořeno");
+            MasterDispatcher.dispatch(response.data);
+
+            if (this.state.picture !== null) {
+
+                /**
+                 * Function on success adding
+                 */
+                const onSuccess = (response) => {
+
+                    MasterDispatcher.dispatch(response.data);
+                    this.props.handler();
+                    InstantAction.setToast("Představení vytvořeno");
+                };
+
+                /**
+                 * On Error
+                 * @param response
+                 */
+                const onError = (response) => {
+
+                };
+
+                /**
+                 * Payload to send
+                 * @type {{areaId: *}}
+                 */
+                const data = {
+                    file: this.state.picture,
+                };
+
+                BackendRequest("post", "upload", data, onSuccess, onError, onError );
+
+            }
+            else {
+                this.props.handler();
+                InstantAction.setToast("Představení vytvořeno");
+            }
         };
 
         /**
@@ -170,6 +259,7 @@ class PerformanceForm extends Component {
                     payload: response.data.act,
                 });
             }
+            MasterDispatcher.dispatch(response.data);
             this.props.handler();
             InstantAction.setToast("Představení upraveno");
         };
@@ -181,11 +271,6 @@ class PerformanceForm extends Component {
         const onError = (response) => {
 
         };
-
-        /**
-         * Payload to send
-         * @type {{areaId: *}}
-         */
 
         let genre_array = [];
         for (let i = 0; i < this.state.genreHelp.length; i++)
@@ -199,11 +284,10 @@ class PerformanceForm extends Component {
         for (let i = 0; i < this.state.directorHelp.length; i++)
             director_array.push(this.state.directorHelp[i].value);
 
-
         const data = {
             name: this.state.name,
-            picture: this.state.picture,
             type: this.state.type,
+            picture: this.state.picture.name,
             genre: JSON.stringify(genre_array),
             cast: JSON.stringify(cast_array),
             director: JSON.stringify(director_array),
@@ -215,7 +299,7 @@ class PerformanceForm extends Component {
         if (this.state.id !== "")
             BackendRequest("put", "act/" + this.props.act.id, data, onPutSuccess, onError, onError );
         else
-            BackendRequest("post", "acts", data, onPostSuccess, onError, onError );
+            BackendRequest("post", "act", data, onPostSuccess, onError, onError );
     }
 
     arrayMaker = (array) => {
@@ -255,18 +339,7 @@ class PerformanceForm extends Component {
                                 <Row>
                                     <h3>Plakát:&nbsp;</h3>
                                     <div className={"image-input"}>
-                                        <Files
-                                            className='files-dropzone'
-                                            onChange={this.onFilesChange}
-                                            onError={this.onFilesError}
-                                            accepts={['image/png', 'image/jpg']}
-                                            maxFiles={1}
-                                            maxFileSize={10000000}
-                                            minFileSize={0}
-                                            clickable
-                                        >
-                                            {(this.state.picture === "") ? "Vložte obrázek nebo klikněte a následně vyberte obrázek" : this.state.picture}
-                                        </Files>
+                                        <input type="file" accept="image/png, image/jpeg" onChange={ (e) => this.handleFileChange(e.target.files) } />
                                     </div>
                                 </Row>
                                 <Row>
@@ -321,7 +394,7 @@ class PerformanceForm extends Component {
                                 <textarea name={"description"} id={"description"} value={this.state.description} onChange={this.handleChange} />
                             </div>
                             <br/>
-                            <br/>
+                            <p style={{color: "red", margin: 0, textAlign: "right", paddingRight: "4rem"}}>{this.state.message}</p>
                             <button onClick={this.handleSubmit}>Uložit</button>
                         </div>
                     </div>

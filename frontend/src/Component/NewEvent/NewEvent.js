@@ -60,6 +60,30 @@ class NewEvent extends Component {
 
         event.preventDefault();
 
+        if (this.state.act === 0){
+            this.setState({
+                message: "Vyberte představení."
+            });
+            return;
+        }
+        else if (this.state.hall === 0){
+            this.setState({
+                message: "Vyberte sál."
+            });
+            return;
+        }
+        else if (this.state.price === ""){
+            this.setState({
+                message: "Zadejte cenu."
+            });
+            return;
+        }
+        else {
+            this.setState({
+                message: ""
+            })
+        }
+
         /**
          * Function on success adding
          */
@@ -71,6 +95,7 @@ class NewEvent extends Component {
                     payload: response.data.event,
                 });
             }
+            MasterDispatcher.dispatch(response.data);
             this.props.handler();
             InstantAction.setToast("Událost vytvořena");
         };
@@ -91,7 +116,7 @@ class NewEvent extends Component {
             ...this.state
         };
 
-        BackendRequest("post", "events", data, onSuccess, onError, onError );
+        BackendRequest("post", "event", data, onSuccess, onError, onError );
     }
 
     fetchHalls = () => {
@@ -177,6 +202,7 @@ class NewEvent extends Component {
                     <Row>
                         <Col xs={6}/>
                         <Col xs={6} style={{display: "flex", justifyContent: "flex-end"}}>
+                            <p style={{color: "red", margin: 0}}>{this.state.message}</p>
                             <button onClick={this.handleSubmit}>Vytvořit</button>
                         </Col>
                     </Row>

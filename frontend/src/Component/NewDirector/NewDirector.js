@@ -7,6 +7,7 @@ import BackendRequest from "../../Models/REST/BackendRequest";
 import InstantAction from "../../Models/Utils/InstantAction";
 import {ADD_DIRECTOR} from "../../Models/Entities/Director";
 import Files from 'react-files';
+import MasterDispatcher from "../../Models/Utils/MasterDispatcher";
 
 class NewDirector extends Component {
 
@@ -21,6 +22,7 @@ class NewDirector extends Component {
             name: "",
             year: "",
             picture: "",
+            message: "",
         };
 
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -31,9 +33,6 @@ class NewDirector extends Component {
         const target = event.target;
         const value = target.type === "checkbox" ? target.checked : target.value;
         const name = target.name;
-
-        console.log(name);
-        console.log(value);
 
         this.setState({
             [name]: value
@@ -58,6 +57,24 @@ class NewDirector extends Component {
 
         event.preventDefault();
 
+        if (this.state.name === ""){
+            this.setState({
+                message: "Zadejte jméno."
+            });
+            return;
+        }
+        else if (this.state.year === ""){
+            this.setState({
+                message: "Zadejte ročník narození."
+            });
+            return;
+        }
+        else {
+            this.setState({
+                message: ""
+            })
+        }
+
         /**
          * Function on success adding
          */
@@ -69,6 +86,7 @@ class NewDirector extends Component {
                     payload: response.data.director,
                 });
             }
+            MasterDispatcher.dispatch(response.data);
             this.props.handler();
             InstantAction.setToast("Režisér vytvořen");
         };
@@ -89,7 +107,7 @@ class NewDirector extends Component {
             ...this.state
         };
 
-        BackendRequest("post", "directors", data, onSuccess, onError, onError );
+        BackendRequest("post", "director", data, onSuccess, onError, onError );
     }
 
     render() {
@@ -104,7 +122,7 @@ class NewDirector extends Component {
                             <input type="text" name={"name"} id={"name"} value={this.state.name} onChange={this.handleChange}/>
                         </Col>
                         <Col xs={1}>
-                            <h3>Věk:</h3>
+                            <h3>Ročník:</h3>
                             <input type="text" name={"year"} id={"year"} value={this.state.year} onChange={this.handleChange}/>
                         </Col>
                         <Col xs={4}>
@@ -128,6 +146,7 @@ class NewDirector extends Component {
                     <Row>
                         <Col xs={6}/>
                         <Col xs={6} style={{display: "flex", justifyContent: "flex-end"}}>
+                            <p style={{color: "red", margin: 0}}>{this.state.message}</p>
                             <button onClick={this.handleSubmit}>Vytvořit režiséra</button>
                         </Col>
                     </Row>

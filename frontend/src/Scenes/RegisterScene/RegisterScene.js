@@ -43,6 +43,31 @@ class RegisterScene extends Component {
      */
     handleSubmit = () => {
 
+        if (this.state.username === ""){
+            this.setState({
+                responseMessage: "Zadejte uživatelské jméno."
+            });
+            return;
+        }
+        else if (this.state.email === ""){
+            this.setState({
+                responseMessage: "Zadejte email."
+            });
+            return;
+        }
+        else if (this.state.password === ""){
+            this.setState({
+                responseMessage: "Zadejte heslo."
+            });
+            return;
+        }
+        else {
+            this.setState({
+                responseMessage: ""
+            })
+        }
+
+
         /**
          * Function on success adding
          */
