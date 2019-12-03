@@ -81,7 +81,7 @@ class ActorView(APIView):
         name = data['name']
         year = int(data['year'])
         try:
-            picture = data['picture']
+            picture = str(file.name)# data['picture']
             new_actor = Actor.objects.create(name=name, year=year, picture=picture)
         except Exception:
             new_actor = Actor.objects.create(name=name, year=year)
