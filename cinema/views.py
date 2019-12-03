@@ -532,7 +532,7 @@ class ActView(APIView):
             act.name = data['name']
             type_id = data['type']
             act.act_type = ActType.objects.get(id=type_id)
-            act.length = data['length']
+            act.length = int(data['length'])
             try:
                 act.picture = data['picture']
             except Exception:
@@ -550,7 +550,7 @@ class ActView(APIView):
             for current_element in json.loads(str(data["director"])):
                 act.director.add(current_element)
 
-            act.rating = data['rating']
+            act.rating = int(data['rating'])
             act.description = data['description']
 
             act.save()
