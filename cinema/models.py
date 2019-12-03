@@ -62,7 +62,7 @@ class Act(models.Model):
     name = models.CharField(max_length=120, blank=False, default="Unknown Act")
     type = models.ForeignKey(ActType, on_delete=models.CASCADE)
     length = models.PositiveSmallIntegerField(blank=False, default=0)
-    picture = models.ImageField(upload_to='images/')
+    picture = models.ImageField(blank=True, upload_to='images/')
     genre = models.ManyToManyField(Genre)
     cast = models.ManyToManyField(Actor)
     director = models.ManyToManyField(Director)

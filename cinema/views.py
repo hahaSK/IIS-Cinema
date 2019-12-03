@@ -61,9 +61,11 @@ class ActorView(APIView):
         data = request.data
         name = data['name']
         year = int(data['year'])
-        picture = data['picture']
-
-        new_actor = Actor.objects.create(name=name, year=year, picture=picture)
+        try:
+            picture = data['picture']
+            new_actor = Actor.objects.create(name=name, year=year, picture=picture)
+        except Exception:
+            new_actor = Actor.objects.create(name=name, year=year)
 
         actor_serializer = ActorSerializer(new_actor)
 
@@ -126,9 +128,11 @@ class DirectorView(APIView):
         data = request.data
         name = data['name']
         year = int(data['year'])
-        picture = data['picture']
-
-        new_director = Director.objects.create(name=name, year=year, picture=picture)
+        try:
+            picture = data['picture']
+            new_director = Director.objects.create(name=name, year=year, picture=picture)
+        except Exception:
+            new_director = Director.objects.create(name=name, year=year)
 
         director_serializer = DirectorSerializer(new_director)
 
@@ -423,7 +427,6 @@ class ActView(APIView):
         type_id = data['type']
         act_type = ActType.objects.get(id=type_id)
         length = int(data['length'])
-        picture = data['picture']
 
         genre = []
         for current_element in json.loads(str(data['genre'])):
@@ -441,7 +444,13 @@ class ActView(APIView):
         rating = int(data['rating'])
         description = data['description']
 
-        new_act = Act.register_new_act(name=name, act_type=act_type, length=length, picture=picture, genre=genre, cast=cast, director=director, rating=rating, description=description)
+        try:
+            picture = data['picture']
+            new_act = Act.register_new_act(name=name, act_type=act_type, length=length, picture=picture, genre=genre,
+                                           cast=cast, director=director, rating=rating, description=description)
+        except Exception:
+            new_act = Act.register_new_act(name=name, act_type=act_type, length=length, genre=genre, cast=cast,
+                                           director=director, rating=rating, description=description)
 
         act_serializer = ActSerializer(new_act)
 
@@ -482,7 +491,10 @@ class ActView(APIView):
             type_id = data['type']
             act.act_type = ActType.objects.get(id=type_id)
             act.length = data['length']
-            act.picture = data['picture']
+            try:
+                act.picture = data['picture']
+            except Exception:
+                pass
 
             act.genre.clear()
             for current_element in json.loads(str(data["genre"])):
