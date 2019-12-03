@@ -12,7 +12,6 @@ import InstantAction from "../../Models/Utils/InstantAction";
 import {ADD_ACT, UPDATE_ACT} from "../../Models/Entities/Act";
 import Select from 'react-select';
 import MasterDispatcher from "../../Models/Utils/MasterDispatcher";
-import {ADD_ACTOR} from "../../Models/Entities/Actor";
 
 
 class PerformanceForm extends Component {
@@ -61,7 +60,7 @@ class PerformanceForm extends Component {
                 name: props.act.name,
                 type: props.act._fields.type,
                 length: props.act.length,
-                picture: props.act.picture,
+                picture: props.act.picture.name,
                 genre: [],
                 cast: [],
                 director: [],
@@ -260,8 +259,41 @@ class PerformanceForm extends Component {
                 });
             }
             MasterDispatcher.dispatch(response.data);
-            this.props.handler();
-            InstantAction.setToast("Představení upraveno");
+            if (this.state.picture !== null) {
+
+                /**
+                 * Function on success adding
+                 */
+                const onSuccess = (response) => {
+
+                    MasterDispatcher.dispatch(response.data);
+                    this.props.handler();
+                    InstantAction.setToast("Představení upraveno");
+                };
+
+                /**
+                 * On Error
+                 * @param response
+                 */
+                const onError = (response) => {
+
+                };
+
+                /**
+                 * Payload to send
+                 * @type {{areaId: *}}
+                 */
+                const data = {
+                    file: this.state.picture,
+                };
+
+                BackendRequest("post", "upload", data, onSuccess, onError, onError );
+
+            }
+            else {
+                this.props.handler();
+                InstantAction.setToast("Představení upraveno");
+            }
         };
 
         /**
