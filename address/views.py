@@ -21,13 +21,9 @@ UNAUTHORIZED_USER = {
 #     return Response(EU_countries.countries, status=status.HTTP_200_OK)
 
 
-class AddressView(APIView):
-
-    def get_permissions(self):
-        if self.request.method == 'GET':
-            return [permissions.AllowAny()]
-        else:
-            return [permissions.IsAuthenticated()]
+class AddressesView(APIView):
+    permission_classes = []
+    authentication_classes = []
 
     @never_cache
     def get(self, request, address_id=None):
@@ -47,6 +43,10 @@ class AddressView(APIView):
         }
 
         return Response(payload, status=status.HTTP_200_OK)
+
+
+class AddressView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
 
     @never_cache
     def post(self, request):
