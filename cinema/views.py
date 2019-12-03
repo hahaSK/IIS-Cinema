@@ -3,6 +3,7 @@ import os
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from rest_framework import status, permissions
+from rest_framework.parsers import FileUploadParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_jwt.settings import api_settings
@@ -53,6 +54,8 @@ class OpenActorView(APIView):
 
 
 class ActorView(APIView):
+
+    parser_class = (FileUploadParser,)
 
     @never_cache
     def post(self, request):
