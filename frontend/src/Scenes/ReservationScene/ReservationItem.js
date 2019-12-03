@@ -129,7 +129,7 @@ class ReservationItem extends Component {
                 <Col xs={2}>{moment(reservation.event.date).format("D. MMMM")} {moment(reservation.event.date).format("HH:mm")}</Col>
                 <Col xs={2}>{reservation._fields.seats.length}</Col>
                 <Col xs={1}>
-                    <input type="checkbox" defaultValue={this.state.paid} name="paid" onChange={this.handleInputChange}/>
+                    <input type="checkbox" checked={this.state.paid} name="paid" onChange={this.handleInputChange}/>
                 </Col>
                 <Col xs={2}>
                     <button onClick={() => {this.handleDeleteClick()}}>Zrušit</button>

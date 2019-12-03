@@ -7,6 +7,7 @@ import BackendRequest from "../../Models/REST/BackendRequest";
 import InstantAction from "../../Models/Utils/InstantAction";
 import {ADD_ACTOR} from "../../Models/Entities/Actor";
 import Files from 'react-files';
+import MasterDispatcher from "../../Models/Utils/MasterDispatcher";
 
 class NewActor extends Component {
 
@@ -21,6 +22,7 @@ class NewActor extends Component {
             name: "",
             year: "",
             picture: "",
+            message: "",
         };
 
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -58,6 +60,24 @@ class NewActor extends Component {
 
         event.preventDefault();
 
+        if (this.state.name === ""){
+            this.setState({
+                message: "Zadejte jméno."
+            });
+            return;
+        }
+        else if (this.state.year === ""){
+            this.setState({
+                message: "Zadejte ročník narození."
+            });
+            return;
+        }
+        else {
+            this.setState({
+                message: ""
+            })
+        }
+
         /**
          * Function on success adding
          */
@@ -69,6 +89,7 @@ class NewActor extends Component {
                     payload: response.data.actor,
                 });
             }
+            MasterDispatcher.dispatch(response.data);
             this.props.handler();
             InstantAction.setToast("Herec vytvořen");
         };
@@ -89,7 +110,7 @@ class NewActor extends Component {
             ...this.state
         };
 
-        BackendRequest("post", "actors", data, onSuccess, onError, onError );
+        BackendRequest("post", "actor", data, onSuccess, onError, onError );
     }
 
     render() {
@@ -104,7 +125,7 @@ class NewActor extends Component {
                             <input type="text" name={"name"} id={"name"} value={this.state.name} onChange={this.handleChange}/>
                         </Col>
                         <Col xs={1}>
-                            <h3>Věk:</h3>
+                            <h3>Ročník:</h3>
                             <input type="text" name={"year"} id={"year"} value={this.state.year} onChange={this.handleChange}/>
                         </Col>
                         <Col xs={4}>
@@ -128,6 +149,7 @@ class NewActor extends Component {
                     <Row>
                         <Col xs={6}/>
                         <Col xs={6} style={{display: "flex", justifyContent: "flex-end"}}>
+                            <p style={{color: "red", margin: 0}}>{this.state.message}</p>
                             <button onClick={this.handleSubmit}>Vytvořit herce</button>
                         </Col>
                     </Row>

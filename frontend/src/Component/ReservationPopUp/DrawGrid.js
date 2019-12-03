@@ -11,7 +11,7 @@ class DrawGrid extends Component {
 
         let width_compute = (100 / (this.props.columns)) - 0.7 ;
         let width = width_compute.toString() + "%";
-        let i = 1;
+        let i = 0;
 
         return (
             <div className="container">
@@ -19,12 +19,12 @@ class DrawGrid extends Component {
                     <tbody>
                     <tr>
                         {this.props.seat.map (row => { //všechna sedadla pro danou událost 1 - n
-
+                            i = i + 1;
                             if (this.props.reserved.indexOf(row) > -1) {
                                 return (
                                     <td
                                         className={"reserved"}
-                                        key={row} style={{width: width}} onClick = {e => this.onClickSeat(row)}>{row}
+                                        key={row} style={{width: width}} onClick = {e => this.onClickSeat(row)}>{i}
                                     </td>
                                 );
                             }
@@ -33,7 +33,7 @@ class DrawGrid extends Component {
                                     return (
                                         <td
                                             className={"occupied"}
-                                            key={row} style={{width: width}}>{row}
+                                            key={row} style={{width: width}}>{i}
                                         </td>
                                     );
                                 }
@@ -41,7 +41,7 @@ class DrawGrid extends Component {
                                     return (
                                         <td
                                             className={"available"}
-                                            key={row} style={{width: width}} onClick = {e => this.onClickSeat(row)}>{row}
+                                            key={row} style={{width: width}} onClick = {e => this.onClickSeat(row)}>{i}
                                         </td>
                                     );
                                 }

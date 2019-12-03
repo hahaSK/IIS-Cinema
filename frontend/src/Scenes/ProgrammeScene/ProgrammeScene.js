@@ -247,7 +247,6 @@ class Programme extends Component {
                         <ReservationPopUp
                             event={this.state.event}
                             closePopup={this.toggleReservationPopUp.bind(this)}
-                            //handler={this.toggleReservationPopUp(this)}
                         />
                         : null
                     }

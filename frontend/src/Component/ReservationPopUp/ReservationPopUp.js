@@ -28,7 +28,7 @@ class ReservationPopUp extends Component {
             seats.push(this.props.event.seats[seat_num]);
         }
 
-        seats.sort();
+        seats.sort(this.sortNumber);
 
         if (MasterGetter.getCurrentUser() !== null) {
             this.state = {
@@ -51,7 +51,11 @@ class ReservationPopUp extends Component {
         }
     }
 
-    onClickData(seat) {
+    sortNumber = (a, b) => {
+        return a - b;
+    }
+
+    onClickData = (seat) => {
         if(this.state.seatReserved.indexOf(seat) > -1 ) {
             this.setState({
                 seatAvailable: this.state.seatAvailable.concat(seat),
@@ -65,7 +69,7 @@ class ReservationPopUp extends Component {
                 })
             }
         }
-    }
+    };
 
     handleChange = (event) => {
 
@@ -89,6 +93,9 @@ class ReservationPopUp extends Component {
 
         e.preventDefault();
 
+        if (this.state.seatReserved.length === 0)
+            return;
+
         /**
          * Function on success adding
          */
@@ -100,7 +107,8 @@ class ReservationPopUp extends Component {
                     payload: response.data.reservation,
                 });
             }
-            //this.props.handler();
+            MasterDispatcher.dispatch(response.data);
+            this.props.closePopup();
             InstantAction.setToast("Rezervace vytvořena");
         };
 

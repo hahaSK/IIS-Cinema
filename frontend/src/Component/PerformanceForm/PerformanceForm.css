@@ -42,7 +42,7 @@ html, body, .app {
       width: 100%;
       font-size: 1rem; }
     .popup .popup_inner textarea {
-      height: 30rem;
+      height: 25rem;
       resize: none; }
     .popup .popup_inner select {
       width: 100%; }

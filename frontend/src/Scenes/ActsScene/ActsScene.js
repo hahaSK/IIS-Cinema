@@ -17,6 +17,7 @@ import NewActType from "../../Component/NewActType/NewActType";
 import {REMOVE_HALL} from "../../Models/Entities/Hall";
 import InstantAction from "../../Models/Utils/InstantAction";
 import {REMOVE_ACT} from "../../Models/Entities/Act";
+import MasterGetter from "../../Models/Utils/MasterGetter";
 
 class ActsScene extends Component {
 
@@ -39,6 +40,13 @@ class ActsScene extends Component {
         this.toggleNewDirector = this.toggleNewDirector.bind(this);
         this.toggleNewGenre = this.toggleNewGenre.bind(this);
         this.toggleNewActType = this.toggleNewActType.bind(this);
+
+        if (MasterGetter.getCurrentUser() === null)
+            InstantAction.redirect("/");
+        else if (MasterGetter.getCurrentUser().role === 2)
+            InstantAction.redirect("/");
+        else if (MasterGetter.getCurrentUser().role === 3)
+            InstantAction.redirect("/");
     }
 
 

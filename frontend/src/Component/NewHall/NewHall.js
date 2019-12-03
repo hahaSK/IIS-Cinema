@@ -7,6 +7,8 @@ import BackendRequest from "../../Models/REST/BackendRequest";
 import InstantAction from "../../Models/Utils/InstantAction";
 import {ADD_HALL} from "../../Models/Entities/Hall";
 import orm from "../../Models/ORM";
+import MasterDispatcher from "../../Models/Utils/MasterDispatcher";
+import MasterGetter from "../../Models/Utils/MasterGetter";
 
 class NewHall extends Component {
 
@@ -22,6 +24,8 @@ class NewHall extends Component {
             address: 0,
             rows: 0,
             columns: 0,
+            message: "",
+            user: MasterGetter.getCurrentUser()
         };
 
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -49,6 +53,36 @@ class NewHall extends Component {
 
         event.preventDefault();
 
+        if (this.state.name === ""){
+            this.setState({
+                message: "Zadejte název."
+            });
+            return;
+        }
+        else if (this.state.address === 0){
+            this.setState({
+                message: "Vyberte adresu."
+            });
+            return;
+        }
+        else if (this.state.rows === 0){
+            this.setState({
+                message: "Zadejte počet řad."
+            });
+            return;
+        }
+        else if (this.state.columns === 0){
+            this.setState({
+                message: "Zadejte počet sedadel v řadě."
+            });
+            return;
+        }
+        else {
+            this.setState({
+                message: ""
+            })
+        }
+
         /**
          * Function on success adding
          */
@@ -60,6 +94,7 @@ class NewHall extends Component {
                     payload: response.data.hall,
                 });
             }
+            MasterDispatcher.dispatch(response.data);
             this.props.handler();
             InstantAction.setToast("Sál vytvořen");
         };
@@ -80,7 +115,7 @@ class NewHall extends Component {
             ...this.state
         };
 
-        BackendRequest("post", "halls", data, onSuccess, onError, onError );
+        BackendRequest("post", "hall", data, onSuccess, onError, onError );
     }
 
     render() {
@@ -119,6 +154,7 @@ class NewHall extends Component {
                     <Row>
                         <Col xs={6}/>
                         <Col xs={6} style={{display: "flex", justifyContent: "flex-end"}}>
+                            <p style={{color: "red", margin: 0}}>{this.state.message}</p>
                             <button onClick={this.handleSubmit}>Vytvořit sál</button>
                         </Col>
                     </Row>

@@ -6,6 +6,7 @@ import connect from "react-redux/es/connect/connect";
 import BackendRequest from "../../Models/REST/BackendRequest";
 import InstantAction from "../../Models/Utils/InstantAction";
 import {ADD_ADDRESS} from "../../Models/Entities/Address";
+import MasterDispatcher from "../../Models/Utils/MasterDispatcher";
 
 class NewAddress extends Component {
 
@@ -17,10 +18,11 @@ class NewAddress extends Component {
         super(props);
 
         this.state = {
-            street: "",
+            street2: "",
             house_number: "",
             city: "",
             psc: "",
+            message: "",
         };
 
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -48,17 +50,48 @@ class NewAddress extends Component {
 
         event.preventDefault();
 
+        if (this.state.street2 === ""){
+            this.setState({
+                message: "Zadejte ulici."
+            });
+            return;
+        }
+        else if (this.state.house_number === ""){
+            this.setState({
+                message: "Zadejte číslo popisné."
+            });
+            return;
+        }
+        else if (this.state.city === ""){
+            this.setState({
+                message: "Zadejte město."
+            });
+            return;
+        }
+        else if (this.state.psc === ""){
+            this.setState({
+                message: "Zadejte PSČ."
+            });
+            return;
+        }
+        else {
+            this.setState({
+                message: ""
+            })
+        }
+
         /**
          * Function on success adding
          */
         const onSuccess = (response) => {
 
-            if (response.data.hall !== undefined) {
+            if (response.data.address !== undefined) {
                 InstantAction.dispatch({
                     type: ADD_ADDRESS,
-                    payload: response.data.hall,
+                    payload: response.data.address,
                 });
             }
+            MasterDispatcher.dispatch(response.data);
             this.props.handler();
             InstantAction.setToast("Adresa vytvořena");
         };
@@ -79,7 +112,7 @@ class NewAddress extends Component {
             ...this.state
         };
 
-        BackendRequest("post", "addresses", data, onSuccess, onError, onError );
+        BackendRequest("post", "address", data, onSuccess, onError, onError );
     }
 
     render() {
@@ -91,7 +124,7 @@ class NewAddress extends Component {
                         <Col xs={3}/>
                         <Col xs={3}>
                             <h3>Ulice:</h3>
-                            <input type="text" name={"street"} id={"street"} value={this.state.street} onChange={this.handleChange}/>
+                            <input type="text" name={"street2"} id={"street2"} value={this.state.street2} onChange={this.handleChange}/>
                         </Col>
                         <Col xs={2}>
                             <h3>Číslo popisné:</h3>
@@ -109,6 +142,7 @@ class NewAddress extends Component {
                     <Row>
                         <Col xs={6}/>
                         <Col xs={6} style={{display: "flex", justifyContent: "flex-end"}}>
+                            <p style={{color: "red", margin: 0}}>{this.state.message}</p>
                             <button onClick={this.handleSubmit}>Vytvořit adresu</button>
                         </Col>
                     </Row>

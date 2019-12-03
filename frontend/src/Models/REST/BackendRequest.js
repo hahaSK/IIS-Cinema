@@ -3,6 +3,7 @@ import qs from "qs";
 import {getCookie} from "../Utils/Cookies";
 import InstantActions from "../Utils/InstantAction";
 import {getTokenFromStorage} from "../Utils/JWT";
+import MasterGetter from "../Utils/MasterGetter";
 //import {setLoggingInProgress} from "../Aurora/Aurora.actions";
 
 /**
