@@ -444,9 +444,6 @@ class OpenActView(APIView):
 
 class ActView(APIView):
 
-    authentication_classes = ()
-    permission_classes = [AllowAny]
-
     @never_cache
     def post(self, request):
         """
