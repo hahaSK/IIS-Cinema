@@ -41,6 +41,7 @@ def current_user(request):
 
 
 class UserRegisterView(APIView):
+    authentication_classes = []
     permission_classes = [permissions.AllowAny]
 
     @never_cache
@@ -67,6 +68,7 @@ class UserRegisterView(APIView):
 
 
 class PasswordEditView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
 
     @never_cache
     def put(self, request, user_id):

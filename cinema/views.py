@@ -3,6 +3,7 @@ import os
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from rest_framework import status, permissions
+from rest_framework.decorators import permission_classes, authentication_classes
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_jwt.settings import api_settings
@@ -32,6 +33,9 @@ class OpenActorView(APIView):
     authentication_classes = ()
     permission_classes = [AllowAny]
 
+    authentication_classes = ()
+
+    @permission_classes([])
     @never_cache
     def get(self, request, actor_id=None):
         """
@@ -68,7 +72,8 @@ class ActorView(APIView):
         file = request.FILES['file']
 
         data = request.data
-
+        print(data)
+        print(file)
         filename = "media/" + file.name
 
         # try:
@@ -114,6 +119,8 @@ class OpenDirectorView(APIView):
 
     authentication_classes = ()
     permission_classes = [AllowAny]
+
+    authentication_classes = ()
 
     @never_cache
     def get(self, request, director_id=None):
@@ -181,6 +188,8 @@ class OpenGenreView(APIView):
     authentication_classes = ()
     permission_classes = [AllowAny]
 
+    authentication_classes = ()
+
     @never_cache
     def get(self, request, genre_id=None):
         """
@@ -243,6 +252,8 @@ class OpenActTypeView(APIView):
 
     authentication_classes = ()
     permission_classes = [AllowAny]
+
+    authentication_classes = ()
 
     @never_cache
     def get(self, request, act_type_id=None):
@@ -307,6 +318,8 @@ class OpenHallView(APIView):
     authentication_classes = ()
     permission_classes = [AllowAny]
 
+    # @authentication_classes([])
+    # @permission_classes([])
     @never_cache
     def get(self, request, hall_id=None):
         """
@@ -441,6 +454,8 @@ class OpenActView(APIView):
 
 class ActView(APIView):
 
+    authentication_classes = ()
+
     @never_cache
     def post(self, request):
         """
@@ -565,6 +580,8 @@ class OpenEventView(APIView):
 
     authentication_classes = ()
     permission_classes = [AllowAny]
+
+    authentication_classes = ()
 
     @staticmethod
     def get_event(event_id):
@@ -702,6 +719,8 @@ class OpenReservationView(APIView):
 
         return Response(payload, status=status.HTTP_200_OK)
 
+    authentication_classes = ()
+
     @never_cache
     def post(self, request):
         """
@@ -830,6 +849,8 @@ class SeatView(APIView):
     authentication_classes = ()
     permission_classes = [AllowAny]
 
+    authentication_classes = ()
+
     @never_cache
     def get(self, request, seat_id=None):
 
@@ -848,6 +869,8 @@ class SeatInEventView(APIView):
 
     authentication_classes = ()
     permission_classes = [AllowAny]
+
+    authentication_classes = ()
 
     @never_cache
     def get(self, request, event_id=None):
