@@ -20,7 +20,7 @@ configobj==5.0.6
 constantly==15.1.0
 cryptography==2.3
 daphne==2.2.0
-Django==2.2.6
+Django==2.2.21
 django-address==0.2.1
 django-cors-headers==3.0.2
 django-countries==5.5
